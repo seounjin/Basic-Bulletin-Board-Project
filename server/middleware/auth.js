@@ -15,7 +15,8 @@ let auth = (req, res, next) => {
         }
 
         req.token = token;
-        req.user = user;
+        req.user = user[0];
+        console.log(user[0]);
         next();
 
     });

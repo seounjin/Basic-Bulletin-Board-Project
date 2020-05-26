@@ -42,7 +42,7 @@ router.post("/login", (req, res) => {
 
 router.get("/logout", auth, (req, res)=> {
 
-    userLogout(req.id, (err) =>{
+    userLogout(req.user.id, (err) =>{
         if (err) return res.json({ success: false, err});
 
         return res.status(200).send({
