@@ -1,7 +1,0 @@
-{
-    "host": "localhost",
-    "user": "root",
-    "password": "4321",
-    "database": "BulletinBoard",
-    "connectionLimit": 30
-}

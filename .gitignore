@@ -1,3 +1,5 @@
 node_modules
 
 dbConnect.js
+
+db_config.json
