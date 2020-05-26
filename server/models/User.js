@@ -104,5 +104,59 @@ const generateToken = function(data, cb) {
   
 }
 
+const findByToken = function(token, cb) {
 
-module.exports = { userRegister, userLogin, generateToken }
+    jwt.verify(token,'secret',function(err, decode){
+
+      getConnection((conn) => {
+        var sql = "SELECT * FROM User WHERE id=? and token=?";
+        var user = [decode, token]
+
+        conn.query(sql, user, function (err, rows, fields) {
+  
+          if (err) {
+              console.log(err);
+              conn.release();
+              return cb(err);
+          }
+          else {
+            conn.release();
+            return cb(null, rows);
+          }
+    
+        });
+
+      
+      });
+
+  })
+
+}
+
+const userLogout = function(userId, cb) {
+
+  getConnection((conn) => {
+    var sql = "UPDATE `User` SET `token` = '', `tokenExp` = '' WHERE (`id` = ?)" ;
+    var user = [userId];
+
+    conn.query(sql, user, function (err, rows, fields) {
+
+      if (err) {
+        console.log(err);
+        conn.release();
+        return cb(err);
+      }
+      else {
+        conn.release();
+        return cb(null);
+      }
+
+  
+    });
+
+  });
+
+}
+
+
+module.exports = { userRegister, userLogin, generateToken, findByToken, userLogout }

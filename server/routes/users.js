@@ -1,7 +1,7 @@
 const express = require('express');
-const { userRegister, userLogin, generateToken } = require('../models/User');
+const { userRegister, userLogin, generateToken, userLogout } = require('../models/User');
 const router = express.Router();
-const cookie_parser = require('cookie-parser');
+const { auth } = require("../middleware/auth");
 
 
 router.post("/register", (req, res) => {
@@ -39,5 +39,20 @@ router.post("/login", (req, res) => {
     });
 
 });
+
+router.get("/logout", auth, (req, res)=> {
+
+    userLogout(req.id, (err) =>{
+        if (err) return res.json({ success: false, err});
+
+        return res.status(200).send({
+            success: true
+        })
+
+    });
+
+
+});
+
 
 module.exports = router;
