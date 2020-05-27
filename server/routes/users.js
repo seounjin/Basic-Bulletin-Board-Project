@@ -21,6 +21,11 @@ router.post("/login", (req, res) => {
         if (err) return res.json({ 
             loginSuccess: false
         });
+        if (!isMatch) {
+            return res.json({ 
+                loginSuccess: false
+            });
+        }
 
         
         generateToken(req.body,(err,token) => {

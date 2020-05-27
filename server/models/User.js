@@ -44,22 +44,25 @@ const userRegister = function(data, cb) {
 const userLogin = function(data, cb) {
 
   getConnection((conn) => {
-    //var sql = 'SELECT id, password FROM User where id=? and password=?';
-    var sql = 'SELECT password FROM User where id=?'
+
+    var sql = 'SELECT password, id FROM BulletinBoard.User where id=?'
 
     var user = [data.id];
+    console.log(user);
     conn.query(sql, user, function (err, rows, fields) { //row == results
   
         if (err) {
             console.log(err);
             conn.release();
             return cb(err);
+        } 
+        else if(rows.length === 0) {
+
+          //err === null, DB에서 모든 속성이 NULL인 행을 돌려줌.
+          conn.release();
+          return cb(err, false);
         }
         else {
-
-          console.log(rows);
-          console.log(rows[0].password);
-
           bcrypt.compare(data.password, rows[0].password, function(err, isMatch){
             
             if (err) {
@@ -68,7 +71,7 @@ const userLogin = function(data, cb) {
             }
 
             conn.release();
-          
+            // console.log('로그인 성공!!!!')
             cb(null, isMatch);
           })
         }
@@ -136,7 +139,7 @@ const findByToken = function(token, cb) {
 const userLogout = function(userId, cb) {
 
   getConnection((conn) => {
-    var sql = "UPDATE `User` SET `token` = '', `tokenExp` = '' WHERE (`id` = ?)" ;
+    var sql = "UPDATE `User` SET `token` = NULL, `tokenExp` = NULL WHERE (`id` = ?)" ;
     var user = [userId];
 
     conn.query(sql, user, function (err, rows, fields) {
@@ -150,8 +153,7 @@ const userLogout = function(userId, cb) {
         conn.release();
         return cb(null);
       }
-
-  
+      
     });
 
   });
