@@ -7,7 +7,7 @@ let auth = (req, res, next) => {
     findByToken(token, (err, user)=> {
 
         if (err) throw err;
-        if (!user){
+        if (user.length === 0){
             return res.json({
                 isAuth: false,
                 error: true
@@ -15,8 +15,9 @@ let auth = (req, res, next) => {
         }
 
         req.token = token;
-        req.user = user[0];
-        console.log(user[0]);
+        req.user = user[0];//여기
+        console.log("user[0]", user[0]);
+        console.log("user[02]", user);
         next();
 
     });

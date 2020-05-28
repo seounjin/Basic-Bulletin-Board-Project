@@ -11,24 +11,24 @@ const userRegister = function(data, cb) {
 
       //연결 성공
       bcrypt.genSalt(saltRounds, function(err, salt) {
-        if(err) console.log(err);
+        if(err) //console.log(err);
     
         bcrypt.hash(data.password, salt, function(err, hash){
-            if(err) console.log(err);
+            if(err) //console.log(err);
 
             var sql = 'INSERT INTO `User` (`id`, `password`, `email`, `role`) VALUES (?, ?, ?, ?)';
             data.password = hash 
-            var user = [data.id, data.password, data.email, data.role];
+            var user = [data.id, data.password, data.email, 0];
     
             conn.query(sql, user, function (err, rows, fields) { //row == results
     
                 if (err) {
-                    console.log(err);
+                    //console.log(err);
                     return cb(err);
                 }
                 else {
-                  console.log('rows', rows);
-                  console.log('fields', fields);
+                  //console.log('rows', rows);
+                  //console.log('fields', fields);
                   conn.release();
                   return cb(null);
                 }
@@ -48,18 +48,20 @@ const userLogin = function(data, cb) {
     var sql = 'SELECT password, id FROM BulletinBoard.User where id=?'
 
     var user = [data.id];
-    console.log(user);
+    //console.log(user);
     conn.query(sql, user, function (err, rows, fields) { //row == results
   
         if (err) {
-            console.log(err);
+            //console.log(err);
             conn.release();
+            //console.log('로그인 실패!!!!')
             return cb(err);
         } 
         else if(rows.length === 0) {
 
           //err === null, DB에서 모든 속성이 NULL인 행을 돌려줌.
           conn.release();
+          //console.log('로그인 실패!!!!')
           return cb(err, false);
         }
         else {
@@ -71,7 +73,7 @@ const userLogin = function(data, cb) {
             }
 
             conn.release();
-            // console.log('로그인 성공!!!!')
+            //console.log('로그인 성공!!!!')
             cb(null, isMatch);
           })
         }
@@ -92,7 +94,7 @@ const generateToken = function(data, cb) {
     conn.query(sql, user, function (err, rows, fields) {
   
       if (err) {
-          console.log(err);
+          //console.log(err);
           conn.release();
           return cb(err);
       }
@@ -118,7 +120,7 @@ const findByToken = function(token, cb) {
         conn.query(sql, user, function (err, rows, fields) {
   
           if (err) {
-              console.log(err);
+              //console.log(err);
               conn.release();
               return cb(err);
           }
@@ -145,7 +147,7 @@ const userLogout = function(userId, cb) {
     conn.query(sql, user, function (err, rows, fields) {
 
       if (err) {
-        console.log(err);
+        //console.log(err);
         conn.release();
         return cb(err);
       }
