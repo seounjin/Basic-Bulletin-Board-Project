@@ -37,11 +37,13 @@
 }
 
 .menu__container .menu_left {
-  float: left;
+    float: left;
+    padding: 10px;
 }
 
 .menu__container .menu_rigth {
-  float: right;
+    float: right;
+    padding: 10px;
 }
 
 .menu__mobile-button {
