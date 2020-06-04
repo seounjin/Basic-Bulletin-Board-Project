@@ -14,6 +14,7 @@ function BoardPage(props) {
         
     }, [])
 
+
     const requestBoardList = () => {
         Axios.get('/api/board/openpage')
             .then(response =>{

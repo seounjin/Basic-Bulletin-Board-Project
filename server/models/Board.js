@@ -9,7 +9,6 @@ const getBoardList = function(cb){
         var sql = 'SELECT * FROM BulletinBoard.postInfo';
 
         conn.query(sql, function (err, rows, fields) {
-        
             if (err) {
                 conn.release();
                 return cb(err);

@@ -6,7 +6,9 @@ import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import BoardPage from "./views/BoardPage/BoardPage.js";
 import WritePage from "./views/BoardPage/write.js";
 import NavBar from "./views/NavBar/NavBar";
-import Auth from '../hoc/auth'
+import Footer from "./views/Footer/Footer";
+
+import Auth from '../hoc/auth';
 
 
 function App() {
@@ -20,8 +22,11 @@ function App() {
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
           <Route exact path="/board" component={Auth(BoardPage, null)} />
           <Route exact path="/write" component={Auth(WritePage, null)} />
+          <Route exact path="/boardform" component={ Auth(BoardForm, null) } />
         </Switch>
       </div>
+      <Footer />
+
     </Suspense>
   );
 }
