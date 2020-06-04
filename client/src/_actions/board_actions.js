@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BOARD_REQUEST } from './types';
+import { BOARD_REQUEST, BOARDFORM_REQUEST } from './types';
 
 export function requestBoardList() {
 
@@ -8,6 +8,17 @@ export function requestBoardList() {
 
     return {
         type: BOARD_REQUEST,
+        payload: request
+    }
+}
+
+export function requestBoardForm(postNum) {
+
+    const request = axios.get(`/api/board/:${postNum}`)
+        .then(response => response.data)
+
+    return {
+        type: BOARDFORM_REQUEST,
         payload: request
     }
 }

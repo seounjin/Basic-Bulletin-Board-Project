@@ -7,7 +7,7 @@ import BoardPage from "./views/BoardPage/BoardPage.js";
 import WritePage from "./views/BoardPage/write.js";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
-import BoardForm from "./views/BoardPage/BoardForm"
+import BoardForm from "./views/BoardPage/BoardForm";
 
 import Auth from '../hoc/auth';
 
