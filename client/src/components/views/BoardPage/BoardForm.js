@@ -1,14 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { List, Avatar, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import Comments from './Sections/Comments';
+import { useDispatch } from 'react-redux';
+import { requestBoardForm } from '../../../_actions/board_actions';
+
 import SingleComment from './Sections/SingleComment';
 
 function BoardForm(props) {
 
     
     const { Title } = Typography;
+    const dispatch = useDispatch(); 
+    const [content, setcontent] = useState("");
+    const postNum = props.match.params.postNum;
+    
+    useEffect(()=>{
+
+        dispatch(requestBoardForm(postNum))
+            .then(response =>{
+                console.log("게시판 내용",response)
+
+            if (response.payload.success){
+                setcontent(response.payload.content);
+            } else {
+                alert('게시판 내용을 가져오는데 실패했습니다.')
+            }
+        })
+    
+    },[])
+
 
     return (
         <div style={{
@@ -28,8 +50,10 @@ function BoardForm(props) {
              </List.Item>
             <hr />
 
+
             <div>
                 {/* 글쓰여진 부분 */}
+                { content }
             </div>
 
             {/* 코멘트 */}

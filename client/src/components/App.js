@@ -7,6 +7,7 @@ import BoardPage from "./views/BoardPage/BoardPage.js";
 import WritePage from "./views/BoardPage/write.js";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
+import BoardForm from "./views/BoardPage/BoardForm";
 
 import Auth from '../hoc/auth';
 
@@ -22,7 +23,7 @@ function App() {
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
           <Route exact path="/board" component={Auth(BoardPage, null)} />
           <Route exact path="/write" component={Auth(WritePage, null)} />
-          <Route exact path="/boardform" component={ Auth(BoardForm, null) } />
+          <Route exact path="/boardform/:postNum" component={ Auth(BoardForm, null) } />
         </Switch>
       </div>
       <Footer />

@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import Axios from 'axios';
 import './board.css';
 import { withRouter } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { requestBoardList } from '../../../_actions/board_actions';
 
 
 function BoardPage(props) {
 
     const [List, setList] = useState([])
+    const dispatch = useDispatch(); 
 
     useEffect(() => {
 
-        requestBoardList()
+        requestBoard()
         
     }, [])
 
 
-    const requestBoardList = () => {
-        Axios.get('/api/board/openpage')
-            .then(response =>{
-                    console.log(response)
-                if (response.data.success){
-                    setList(response.data.boardList);
-                } else {
-                    alert('게시판 정보를 가져오는데 실패했습니다.')
-                }
-            });
-    }
+    const requestBoard = () => {
 
+        dispatch(requestBoardList())
+            .then(response =>{
+                console.log("보드리스트",response)
+            if (response.payload.success){
+                setList(response.payload.boardList);
+            } else {
+                alert('게시판 정보를 가져오는데 실패했습니다.')
+            }
+
+        })
+    }
+    
     // 타이틀을 눌렀을 시 해당 게시글로 가게 함.
     const goToPost = () => {
     }
@@ -36,7 +40,7 @@ function BoardPage(props) {
 
         return <tr key = { index }>
             <td>{ list.postnum }</td>
-            <td className="goToPost">{ list.title }</td>
+            <td><a href={`/boardform/${list.postnum}`}>{ list.title }</a></td>
             <td>{ list.writer }</td>
             <td>{ list.date }</td>
             <td>{ list.views }</td>

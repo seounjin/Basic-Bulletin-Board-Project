@@ -16,7 +16,7 @@ const getBoardList = function(cb){
             else {
             
                 conn.release();
-                return cb(rows, null);
+                return cb(null, rows);
             }
         })
     })
