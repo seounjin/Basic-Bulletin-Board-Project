@@ -36,7 +36,7 @@ function BoardPage(props) {
 
         return <tr key = { index }>
             <td>{ list.postnum }</td>
-            <td className="goToPost">{ list.title }</td>
+            <td><a href={`/boardform/${list.postnum}`}>{ list.title }</a></td>
             <td>{ list.writer }</td>
             <td>{ list.date }</td>
             <td>{ list.views }</td>
