@@ -14,7 +14,8 @@ export function requestBoardList() {
 
 export function requestBoardForm(postNum) {
 
-    const request = axios.get(`/api/board/:${postNum}`)
+    console.log("클라이언트 포스트넘버  ", postNum)
+    const request = axios.post('/api/board/postnum', postNum)
         .then(response => response.data)
 
     return {
