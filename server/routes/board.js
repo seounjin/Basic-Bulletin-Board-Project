@@ -7,9 +7,9 @@ router.get("/openpage", (req, res) => {
 
     getBoardList( (boardList, err) =>{
 
-        if (err) return res.json({ success: false })
+        if (err) return res.status(400).json( { success: false, err } )
         
-        return res.json(boardList)
+        return res.status(200).json( {success: true, boardList} )
 
     })
 

@@ -3,9 +3,14 @@ import { Menu } from 'antd';
 
 function LeftMenu(props) {
     return (
+
         <Menu mode={props.mode}>
             <Menu.Item key="board">
-                <a href="/">board</a>
+                <a href="/board">board</a>
+            </Menu.Item>
+
+            <Menu.Item key="write">
+                <a href="/write">write</a>
             </Menu.Item>
         </Menu>
     )

@@ -22,7 +22,6 @@ function NavBar() {
                 <div className="menu_rigth">
                   <RightMenu mode="horizontal" />
                 </div>
-
             </div>
            
         </nav>

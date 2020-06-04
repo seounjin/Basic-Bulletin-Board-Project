@@ -5,6 +5,7 @@ const getBoardList = function(cb){
 
     getConnection((conn) => {
 
+        //바꿔야함.
         var sql = 'SELECT * FROM BulletinBoard.postInfo';
 
         conn.query(sql, function (err, rows, fields) {
@@ -18,9 +19,6 @@ const getBoardList = function(cb){
                 conn.release();
                 return cb(rows, null);
             }
-            
-
-
         })
     })
 

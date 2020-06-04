@@ -11,10 +11,10 @@ const userRegister = function(data, cb) {
 
       //연결 성공
       bcrypt.genSalt(saltRounds, function(err, salt) {
-        if(err) //console.log(err);
+        if(err) console.log(err);
     
         bcrypt.hash(data.password, salt, function(err, hash){
-            if(err) //console.log(err);
+            if(err) console.log(err);
 
             var sql = 'INSERT INTO `User` (`id`, `password`, `email`, `role`) VALUES (?, ?, ?, ?)';
             data.password = hash 
