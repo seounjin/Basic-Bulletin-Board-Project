@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 
 function BoardPage() {
@@ -12,14 +14,14 @@ function BoardPage() {
         
     }, [])
 
+
     const requestBoardList = () => {
         Axios.get('/api/board/openpage') // 무엇을 보내야 할까
         .then(response =>{
-
             if (response.data.success){
-                setList(response.data.boardlist);
+                setList(response.data.boardList);
             } else {
-                alert('오류')
+                alert('실패요')
             }
         });
 
@@ -69,4 +71,4 @@ function BoardPage() {
     )
 }
 
-export default BoardPage
+export default withRouter(BoardPage)

@@ -19,7 +19,7 @@ router.post("/login", (req, res) => {
     console.log('로그인 ㄱㄱ!!!!')
 
     userLogin(req.body, (err, isMatch) => {
-
+        console.log(err, isMatch)
         if (err) return res.json({ 
             loginSuccess: false
         });

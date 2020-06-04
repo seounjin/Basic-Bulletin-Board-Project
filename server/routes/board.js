@@ -5,11 +5,11 @@ const { getBoardList } = require('../models/Board');
 
 router.get("/openpage", (req, res) => {
 
-    getBoardList( (boardList, err) =>{
+    getBoardList( (err, boardList) =>{
 
         if (err) return res.json({ success: false })
         
-        return res.json(boardList)
+        return res.json({success: true, boardList})
 
     })
 
