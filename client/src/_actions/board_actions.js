@@ -13,7 +13,7 @@ export function requestBoardList() {
 }
 
 export function requestBoardForm(postNum) {
-
+    
     const request = axios.post('/api/board/postnum', postNum)
         .then(response => response.data)
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { List, Avatar, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
@@ -13,17 +13,23 @@ function BoardForm(props) {
     
     const { Title } = Typography;
     const dispatch = useDispatch(); 
-    const [content, setcontent] = useState("");
-    const postNum = props.match.params.postNum;
+    const [content, setcontent] = useState([]);
+    //const postNum = props.match.params.postNum;
     
+    let body = {
+        postNum : props.match.params.postNum
+    }
+
     useEffect(()=>{
 
-        dispatch(requestBoardForm(postNum))
+        dispatch(requestBoardForm(body))
             .then(response =>{
                 console.log("게시판 내용",response)
 
             if (response.payload.success){
-                setcontent(response.payload.content);
+                setcontent(response.payload.content[0].pContent);
+                console.log("콘텐츠의 내용!!!  ", content)
+                console.log("콘텐츠의 내용!!!!!!!!!  ", response.payload.content[0].pContent)
             } else {
                 alert('게시판 내용을 가져오는데 실패했습니다.')
             }
@@ -42,7 +48,7 @@ function BoardForm(props) {
             
             {/* 이미지,아이디,날짜,조회수 */}
              <List.Item>
-                <List.Item.Meta
+                <List.Item.Meta 
                     avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
                     title={ "아이디" }
                     description={ "날짜 , 조회수" }
@@ -53,13 +59,16 @@ function BoardForm(props) {
 
             <div>
                 {/* 글쓰여진 부분 */}
-                { content }
+                {content && 
+                    <p2>content</p2>
+                }
+                <p>이바보야!!!!!!!!!</p>
             </div>
 
             {/* 코멘트 */}
             <div>
                 <br />
-                <p> (게시글좋아요), 댓글 수</p>
+                <p> (게시글좋아요), 댓글 수, </p>
                 <hr />
 
                 <Comments></Comments>
