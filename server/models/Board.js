@@ -6,7 +6,7 @@ const getBoardList = function(cb){
     getConnection((conn) => {
 
         //바꿔야함.
-        var sql = 'SELECT * FROM BulletinBoard.PostInfo';
+        var sql = `SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as date, views, favorite FROM BulletinBoard.PostInfo`;
 
         conn.query(sql, function (err, rows, fields) {
             if (err) {
@@ -33,12 +33,10 @@ const getBoardContent = function(postNum, cb){
 
         conn.query(sql, pn, function (err, rows, fields) {
             if (err) {
-                console.log("실패  getBoardContent  ", err)
                 conn.release();
                 return cb(err);
             }
             else {
-                console.log("성공성공    ", rows)
                 conn.release();
                 return cb(rows, null);
             }

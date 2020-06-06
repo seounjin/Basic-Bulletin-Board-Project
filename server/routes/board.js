@@ -17,14 +17,11 @@ router.get("/openpage", (req, res) => {
 router.post("/postnum", (req, res) => {
 
         const postNum = req.body.postNum
-        console.log("포스트넘버1  ", postNum)
-        console.log("포스트넘버2  ", req.body)
 
         getBoardContent(postNum, (content, err) =>{
     
                 if (err) return res.status(400).json( { success: false, err } )
                 
-                console.log(typeof(content))
                 return res.status(200).json( {success: true, content} )
             })
     

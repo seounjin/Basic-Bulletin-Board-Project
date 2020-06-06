@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Input } from 'antd';
 import SingleComment from './SingleComment';
 
 
-function Comments() {
+function Comments(props) {
 
     const { TextArea } = Input;
+    const [Comment, setComment] = useState("")
 
+
+    // 댓글 저장
     const onSubmit = (event) =>{
         event.preventDefault();
     }
@@ -14,9 +17,17 @@ function Comments() {
 
     return (
         <div>
-            
-            <SingleComment></SingleComment>            
 
+            {props.CommentLists && props.CommentLists.map((comment,index)=>(
+                // responseTo만 없는 애들만 출력
+                (!comment.responseTo &&  
+                    <React.Fragment>
+                        <SingleComment comment={comment}/>
+                    </React.Fragment>
+                )
+
+            ))}
+            
 
             {/* 코멘트 쓰는곳  */}
             <form style={{ display: 'flex' }}>

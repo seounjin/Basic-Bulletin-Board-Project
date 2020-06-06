@@ -6,7 +6,7 @@ const { TextArea } = Input;
 
 
 
-function SingleComment() {
+function SingleComment(props) {
 
     const [OpenReply, setOpenReply] = useState(false)
 
@@ -23,11 +23,11 @@ function SingleComment() {
         <div>
             <Comment
                 actions={actions}
-                author={<a> 작성자 </a>}
+                author={<a> { props.comment.cWriter } </a>}
                 avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
                 content={
                     <p>
-                        더미데이터
+                        { props.comment.pComment } 
                     </p>
                 }
 

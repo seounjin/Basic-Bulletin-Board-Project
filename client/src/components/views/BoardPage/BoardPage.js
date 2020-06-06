@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import './board.css';
-import { withRouter } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom'
+import { useDispatch,useSelector } from 'react-redux';
 import { requestBoardList } from '../../../_actions/board_actions';
+
 
 
 function BoardPage(props) {
 
     const [List, setList] = useState([])
     const dispatch = useDispatch(); 
+
+    const boardInfo = useSelector(state => state.board) // state에서 state유저정보를 가져와서
+
+    const a = 1
+    console.log("스토어", boardInfo)
 
     useEffect(() => {
 
@@ -21,7 +27,6 @@ function BoardPage(props) {
 
         dispatch(requestBoardList())
             .then(response =>{
-                console.log("보드리스트",response)
             if (response.payload.success){
                 setList(response.payload.boardList);
             } else {
@@ -35,12 +40,27 @@ function BoardPage(props) {
     const goToPost = () => {
     }
 
+    
+
     //<td>{ list.title }</td> 누르면 내용을 보는 페이지로 가게끔 해야함.
     const boardList = List.map((list, index) => {
 
         return <tr key = { index }>
-            <td>{ list.postnum }</td>
-            <td><a href={`/boardform/${list.postnum}`}>{ list.title }</a></td>
+            <td>{ list.postnum }</td> 
+
+            <td>
+            <Link to={{
+                pathname : `/boardform/${list.postnum}`,
+                state : {
+                    writer : list.writer
+                    }
+                }}> 
+                { list.title }
+
+            </Link>       
+            </td>
+
+
             <td>{ list.writer }</td>
             <td>{ list.date }</td>
             <td>{ list.views }</td>
