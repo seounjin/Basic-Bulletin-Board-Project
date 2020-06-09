@@ -16,10 +16,7 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
 
-    console.log('로그인 ㄱㄱ!!!!')
-
     userLogin(req.body, (err, isMatch) => {
-        console.log(err, isMatch)
         if (err) return res.json({ 
             loginSuccess: false
         });
@@ -58,10 +55,6 @@ router.get("/logout", auth, (req, res)=> {
 
 
 router.get("/auth", auth, (req, res) => {
-
-    //console.log("여기여기여기여기   ", req);
-    console.log("여기여기여기   ", req.user);
-    console.log("여기여기   ", req.user.id);
     
     res.status(200).json({
         id: req.user.id,

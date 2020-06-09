@@ -22,6 +22,9 @@ function BoardForm(props) {
 
     useEffect(()=>{
 
+        // props.location ==> Array[0 ~ 3] ==> 0:title, 1: writer, 2: views, 3: favorite
+        console.log("sdfsdfsaf", props.location)
+
         dispatch(requestBoardForm(body))
             .then(response =>{
                 console.log("게시판 내용",response)
