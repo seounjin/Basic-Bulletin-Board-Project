@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import './board.css';
 import { withRouter, Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { requestBoardList } from '../../../_actions/board_actions';
 import { Button } from 'antd';
+
 
 
 function BoardPage(props) {
 
     const [List, setList] = useState([])
     const dispatch = useDispatch();
+
+    const boardInfo = useSelector(state => state.board) // state에서 state유저정보를 가져와서
+
+    const a = 1
+    console.log("스토어", boardInfo)
 
     useEffect(() => {
 
@@ -22,7 +28,6 @@ function BoardPage(props) {
 
         dispatch(requestBoardList())
             .then(response =>{
-                console.log("보드리스트",response)
             if (response.payload.success){
                 setList(response.payload.boardList);
             } else {
@@ -31,9 +36,6 @@ function BoardPage(props) {
 
         })
     }
-
-    // const goToWrite = () => {
-    // }
 
     const boardList = List.map((list, index) => {
 

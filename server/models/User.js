@@ -23,12 +23,9 @@ const userRegister = function(data, cb) {
             conn.query(sql, user, function (err, rows, fields) { //row == results
     
                 if (err) {
-                    //console.log(err);
                     return cb(err);
                 }
                 else {
-                  //console.log('rows', rows);
-                  //console.log('fields', fields);
                   conn.release();
                   return cb(null);
                 }

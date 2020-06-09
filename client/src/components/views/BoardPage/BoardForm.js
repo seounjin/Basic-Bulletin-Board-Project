@@ -5,41 +5,58 @@ import { UserOutlined } from '@ant-design/icons';
 import Comments from './Sections/Comments';
 import { useDispatch } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
+import { getComment } from '../../../_actions/comment_actions';
 
-import SingleComment from './Sections/SingleComment';
 
 function BoardForm(props) {
-
     
     const { Title } = Typography;
     const dispatch = useDispatch(); 
-    const [content, setcontent] = useState([]);
-    //const postNum = props.match.params.postNum;
-    
+    const [Content, setcontent] = useState([]);
+    const [CommentLists, setCommentLists] = useState([])
+
     let body = {
-        postNum : props.match.params.postNum
+        postNum : parseInt(props.match.params.postNum)
     }
 
+
     useEffect(()=>{
-
+        
         // props.location ==> Array[0 ~ 3] ==> 0:title, 1: writer, 2: views, 3: favorite
-        console.log("sdfsdfsaf", props.location)
-
         dispatch(requestBoardForm(body))
             .then(response =>{
-                console.log("게시판 내용",response)
-
             if (response.payload.success){
-                setcontent(response.payload.content[0].pContent);
-                console.log("콘텐츠의 내용!!!  ", content)
-                console.log("콘텐츠의 내용!!!!!!!!!  ", response.payload.content[0].pContent)
+                setcontent(response.payload.content);
             } else {
                 alert('게시판 내용을 가져오는데 실패했습니다.')
             }
         })
-    
+        
+        // 코멘트 요청
+        dispatch(getComment(body))
+            .then(response =>{
+            if (response.payload.success){
+                setCommentLists(response.payload.comment);
+            } else {
+                alert('게시판 내용을 가져오는데 실패했습니다.')
+            }
+        })
+
+
     },[])
 
+    const updateComment = (newComment) => {
+
+        setCommentLists(CommentLists.concat(newComment))
+    }
+
+    const boardcontent = Content.map((contents, index) => {
+
+        return <div key={index}>
+                {contents.pContent}
+               </div>
+
+    })
 
     return (
         <div style={{
@@ -53,7 +70,7 @@ function BoardForm(props) {
              <List.Item>
                 <List.Item.Meta 
                     avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
-                    title={ "아이디" }
+                    title={ props.location.state.writer }
                     description={ "날짜 , 조회수" }
                 />
              </List.Item>
@@ -62,10 +79,7 @@ function BoardForm(props) {
 
             <div>
                 {/* 글쓰여진 부분 */}
-                {content && 
-                    <p2>content</p2>
-                }
-                <p>이바보야!!!!!!!!!</p>
+                {boardcontent}
             </div>
 
             {/* 코멘트 */}
@@ -74,7 +88,7 @@ function BoardForm(props) {
                 <p> (게시글좋아요), 댓글 수, </p>
                 <hr />
 
-                <Comments></Comments>
+                <Comments CommentLists={CommentLists} refreshComment={updateComment}> </Comments>
             </div>
 
         </div>

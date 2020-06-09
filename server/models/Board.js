@@ -4,9 +4,7 @@ const getConnection = require('./db');
 const getBoardList = function(cb){
 
     getConnection((conn) => {
-
-        //바꿔야함.
-        //var sql = 'SELECT * FROM BulletinBoard.PostInfo';
+        
         var sql = `SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as date, views, favorite FROM BulletinBoard.PostInfo ORDER BY postnum desc`;
 
         conn.query(sql, function (err, rows, fields) {
