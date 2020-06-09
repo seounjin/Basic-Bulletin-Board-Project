@@ -3,27 +3,20 @@ import { List, Avatar, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import Comments from './Sections/Comments';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
 import { getComment } from '../../../_actions/comment_actions';
 
 
-import SingleComment from './Sections/SingleComment';
-
 function BoardForm(props) {
-
-
+    
     const { Title } = Typography;
     const dispatch = useDispatch(); 
     const [Content, setcontent] = useState([]);
-
     const [CommentLists, setCommentLists] = useState([])
 
-    const boardInfo = useSelector(state => state.board) // state에서 state유저정보를 가져와서
-
-
     let body = {
-        postNum : props.match.params.postNum
+        postNum : parseInt(props.match.params.postNum)
     }
 
 
@@ -52,10 +45,14 @@ function BoardForm(props) {
 
     },[])
 
+    const updateComment = (newComment) => {
+
+        setCommentLists(CommentLists.concat(newComment))
+    }
 
     const boardcontent = Content.map((contents, index) => {
 
-        return <div>
+        return <div key={index}>
                 {contents.pContent}
                </div>
 
@@ -91,7 +88,7 @@ function BoardForm(props) {
                 <p> (게시글좋아요), 댓글 수, </p>
                 <hr />
 
-                <Comments CommentLists={CommentLists}></Comments>
+                <Comments CommentLists={CommentLists} refreshComment={updateComment}> </Comments>
             </div>
 
         </div>

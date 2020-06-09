@@ -6,11 +6,11 @@ const { saveComment, getComment } = require("../models/Comment");
 
 router.post("/saveComment",(req, res) =>{
 
-    saveComment(req.body, (err) => {
-
+    saveComment(req.body, (cGroupSquence, err) => {
+        
         if (err) return res.json({ success: false, err });
 
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ success: true, cGroupSquence });
     });
 
 

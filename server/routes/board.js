@@ -22,7 +22,7 @@ router.post("/postnum", (req, res) => {
     
                 if (err) return res.status(400).json( { success: false, err } )
                 
-                return res.status(200).json( {success: true, content} )
+                return res.status(200).json( {success: true, content, postnum:postNum} )
             })
     
 });

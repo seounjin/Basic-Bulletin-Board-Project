@@ -9,17 +9,18 @@ const saveComment = function(commentData, cb){
 
     getConnection((conn) => {
 
-        var sql = 'INSERT INTO `User` (`pNum`, `cWriter`, `pComment`, `responseto`, `date`) VALUES (?, ?, ?, ?, ?)';
+        var sql = 'INSERT INTO `Comment` (`pNum`, `cWriter`, `pComment`, `responseto`, `date`) VALUES (?, ?, ?, ?, ?)';
         var comment = [commentData.pNum, commentData.cWriter, commentData.pComment, commentData.responseto, commentData.date];
     
         conn.query(sql, comment, function (err, rows, fields) { 
         
             if (err) {
+                console.log("코멘트에러",err)
                 return cb(err);
             }
-            else {
+            else {  
               conn.release();
-              return cb(null);
+              return cb(rows.insertId, null);
             }
         });
     
@@ -30,8 +31,6 @@ const saveComment = function(commentData, cb){
 //댓글 가져오기
 
 const getComment = function(pNum, cb){
-
-    console.log("피넘",pNum)
 
     getConnection((conn) => {
 
@@ -45,13 +44,14 @@ const getComment = function(pNum, cb){
             }
             else {
             conn.release();
-            console.log("코멘트",rows)
             return cb(rows, null);
             }
         });
     })
 
 }
+
+
 
 
 module.exports = { saveComment, getComment }

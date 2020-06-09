@@ -58,10 +58,6 @@ router.get("/logout", auth, (req, res)=> {
 
 
 router.get("/auth", auth, (req, res) => {
-
-    //console.log("여기여기여기여기   ", req);
-    console.log("여기여기여기   ", req.user);
-    console.log("여기여기   ", req.user.id);
     
     res.status(200).json({
         id: req.user.id,

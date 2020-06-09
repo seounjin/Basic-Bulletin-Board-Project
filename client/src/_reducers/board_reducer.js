@@ -9,7 +9,7 @@ export default function (state = {}, action) {
             return { ...state, boardData: action.payload }
 
         case BOARDFORM_REQUEST:
-            return { ...state, boardcontent: action.payload }
+            return { ...state, boardContent: action.payload }
 
         default:
             return state;
