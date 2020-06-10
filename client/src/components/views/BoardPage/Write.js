@@ -33,6 +33,7 @@ function Write(props) {
         return alert('빈 곳이 없는지 확인해주세요!!')
       }
 
+      //pContent : Content.replace(/(\n|\r\n)/g, '<br/>')
       const body = {
         writer : user.userData.id,
         date : moment().format('YYYY-MM-DD HH:mm:ss'),
