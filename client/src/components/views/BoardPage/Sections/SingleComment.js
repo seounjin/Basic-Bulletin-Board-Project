@@ -1,5 +1,5 @@
-import React, { useState }  from 'react';
-import { Comment, Avatar, Button, Input, Tooltip } from 'antd';
+import React, { useState, useEffect }  from 'react';
+import { Comment, Avatar, Button, Input, Tooltip, Popconfirm, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
@@ -13,7 +13,11 @@ function SingleComment(props) {
 
     const [OpenReply, setOpenReply] = useState(false)
     const [replyComment, setReplyComment] = useState("")
-    const [Delete, setDelete] = useState(false)
+    const [Delete, setDelete] = useState([])
+
+    const board = useSelector(state => state.board) 
+    const user = useSelector(state => state.user) 
+
 
     const openReply = () =>{
         setOpenReply(!OpenReply)
@@ -23,19 +27,53 @@ function SingleComment(props) {
         setReplyComment(event.currentTarget.value)
     }
 
-    const board = useSelector(state => state.board) 
-    const user = useSelector(state => state.user) 
+    const confirm = (event) => { // 댓글 삭제 버튼
+        message.success('Click on Yes');
+
+        const cGroupSquence = props.comment.cGroupSquence
+
+        //삭제할 시퀀스 넘버 보내기
+        axios.post('/api/comment/deleteComment', cGroupSquence)
+            .then(response => {
+                if(response.data.success){
+                    alert('댓글이 삭제되었습니다')
+                    //삭제 된 댓글 리플래쉬
+                } else {
+                    alert('댓글 삭제에 실패 하셨습니다')
+                }
+    
+    
+            })
+
+    }
+      
+    const cancel = (event)=> { //댓글 삭제 버튼 취소
+        console.log(event);
+        message.error('Click on No');
+    }
+
+    
     
     const actions = [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>,
                     <span> 수정</span>,
-                    <span> 삭제</span>
-                    ]
-            
+                    <Popconfirm title="댓글을 삭제하시겠습니까?"
+                        onConfirm={confirm}
+                        onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No">삭제</Popconfirm>
+                    ];
+
     
+    // const actions3 = (user.userData.id === props.comment.cWriter ? [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>,
+    //         <span> 수정</span>,
+    //         <span> 삭제</span>
+    //         ] : [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>]
+    // )
+
+
         // 댓글 저장
         const onSubmit = (event) =>{
             event.preventDefault();     
-            
             let body = {
                 pNum: board.boardContent.postnum, // 글써져있는곳
                 cWriter: user.userData.id, //작성자
@@ -50,8 +88,8 @@ function SingleComment(props) {
                         setReplyComment("") // 코멘트 초기화
 
                         body.cGroupSquence = response.data.cGroupSquence
-                        console.log("바아디", body)
                         props.refreshComment(body)// 코멘트 리프래쉬
+
                         setOpenReply(!OpenReply)
                     } else {
                         alert('댓글 저장에 실패 하셨습니다')
@@ -62,10 +100,13 @@ function SingleComment(props) {
     
         }
 
-
+        
     return (
+
         <div>
-            <Comment
+            {/* content가 null일 경우 삭제된 댓글 */}
+
+            { props.comment.pComment ? <Comment
                 actions={actions}
                 author={<a> { props.comment.cWriter } </a>}
                 avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
@@ -81,7 +122,17 @@ function SingleComment(props) {
                     </Tooltip>
                 }
             >
+            </Comment> :
+            <Comment
+                content={
+                    <p>
+                       삭제된 댓글 입니다.
+                    </p>
+                }
+
+            >
             </Comment>
+            }
             
             {/* 답글쓰기 */}
             

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { saveComment, getComment } = require("../models/Comment");
+const { saveComment, getComment, deleteComment} = require("../models/Comment");
 
 
 
 router.post("/saveComment",(req, res) =>{
-
+    
     saveComment(req.body, (cGroupSquence, err) => {
         
         if (err) return res.json({ success: false, err });
@@ -28,6 +28,19 @@ router.post("/getComment",(req, res) =>{
 
 
 });
+
+router.post("/deleteComment",(req, res) =>{
+
+    deleteComment(req.body.cGroupSquence, (err) => {
+
+        if (err) return res.json({ success: false, err });
+
+        return res.status(200).json({ success: true });
+    });
+
+
+});
+
 
 
 module.exports = router;    

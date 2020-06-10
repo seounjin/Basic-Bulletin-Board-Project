@@ -52,6 +52,30 @@ const getComment = function(pNum, cb){
 }
 
 
+// 댓글 삭제
+// 서버에서 삭제할 댓글 넘버를  cGroupSquence 0으로 변경
+
+const deleteComment = function(cGroupSquence, cb){
+
+    getConnection((conn) => {
+
+        var sql = '';
+        var comment = [cGroupSquence];
+
+        conn.query(sql, comment, function (err, rows, fields) { 
+        
+            if (err) {
+                return cb(err);
+            }
+            else {
+            conn.release();
+            return cb(null);
+            }
+        });
+    })
+
+}
 
 
-module.exports = { saveComment, getComment }
+
+module.exports = { saveComment, getComment, deleteComment }

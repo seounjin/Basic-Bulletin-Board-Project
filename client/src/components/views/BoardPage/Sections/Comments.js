@@ -45,18 +45,17 @@ function Comments(props) {
 
 
             })
-
     }
 
     return (
         <div>
             
             {props.CommentLists && props.CommentLists.map((comment,index)=>(
-                
+                            
                 // responseTo가 0 즉 루트 노드
                 (!comment.responseto &&  
                     <React.Fragment>
-                        <SingleComment comment={comment} parentCommentId={comment.cGroupSquence } refreshComment={props.refreshComment} />
+                        <SingleComment comment={comment} parentCommentId={comment.cGroupSquence } refreshComment={props.refreshComment } />
                         <ReplyComment CommentLists={props.CommentLists} parentCommentId={comment.cGroupSquence}  refreshComment={props.refreshComment}/>
                     </React.Fragment>
                 )
@@ -76,6 +75,7 @@ function Comments(props) {
                     <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>등록</Button>
             </form>
         </div>
+
     )
 
 

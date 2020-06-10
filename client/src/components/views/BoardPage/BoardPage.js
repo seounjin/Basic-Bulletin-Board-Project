@@ -13,8 +13,7 @@ function BoardPage(props) {
 
     const boardInfo = useSelector(state => state.board) // state에서 state유저정보를 가져와서
 
-    const a = 1
-    console.log("스토어", boardInfo)
+
 
     useEffect(() => {
 
