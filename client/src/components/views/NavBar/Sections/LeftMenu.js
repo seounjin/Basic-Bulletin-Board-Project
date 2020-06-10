@@ -9,9 +9,9 @@ function LeftMenu(props) {
                 <a href="/board">board</a>
             </Menu.Item>
 
-            <Menu.Item key="write">
-                <a href="/write">write</a>
-            </Menu.Item>
+            {/* <Menu.Item key="write">
+                <a href="/board/write">write</a>
+            </Menu.Item> */}
         </Menu>
     )
 }
