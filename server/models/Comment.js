@@ -59,7 +59,7 @@ const deleteComment = function(cGroupSquence, cb){
 
     getConnection((conn) => {
 
-        var sql = '';
+        var sql = 'UPDATE `BulletinBoard`.`Comment` SET `pComment` = NULL WHERE (`cGroupSquence` = ?)';
         var comment = [cGroupSquence];
 
         conn.query(sql, comment, function (err, rows, fields) { 
@@ -76,6 +76,27 @@ const deleteComment = function(cGroupSquence, cb){
 
 }
 
+// 댓글 수정
 
+const modifyComment = function(data, cb){
 
-module.exports = { saveComment, getComment, deleteComment }
+    getConnection((conn) => {
+
+        var sql = 'UPDATE `BulletinBoard`.`Comment` SET `pComment` = ? WHERE (`cGroupSquence` = ?)';
+        var comment = [data.pComment, data.cGroupSquence];
+
+        conn.query(sql, comment, function (err, rows, fields) { 
+        
+            if (err) {
+                return cb(err);
+            }
+            else {
+            conn.release();
+            return cb(null);
+            }
+        });
+    })
+
+}
+
+module.exports = { saveComment, getComment, deleteComment, modifyComment }

@@ -4,14 +4,15 @@ import SingleComment from './SingleComment';
 function ReplyComment(props) {
 
 
+
     let renderReplyComment = (parentCommentId) => 
         props.CommentLists.map((comment, index)=>(
             <React.Fragment>
                  
                 {comment.responseto === parentCommentId &&
                     <div style={{ width: '80%', marginLeft: '40px' }}>
-                        <SingleComment comment={comment}  parentCommentId={comment.cGroupSquence} refreshComment={props.refreshComment} />
-                        <ReplyComment CommentLists={props.CommentLists} parentCommentId={comment.cGroupSquence}  refreshComment={props.refreshComment}/>
+                        <SingleComment comment={comment}  parentCommentId={comment.cGroupSquence} refreshComment={props.refreshComment} deleteFuction = {props.deleteFuction} modifyFunction = {props.modifyFunction} />
+                        <ReplyComment CommentLists={props.CommentLists} parentCommentId={comment.cGroupSquence}  refreshComment={props.refreshComment} deleteFuction = {props.deleteFuction} modifyFunction = {props.modifyFunction}/>
                     </div>
                 }
             </React.Fragment>

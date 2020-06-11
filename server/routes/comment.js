@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { saveComment, getComment, deleteComment} = require("../models/Comment");
+const { saveComment, getComment, deleteComment, modifyComment } = require("../models/Comment");
 
 
 
@@ -32,7 +32,18 @@ router.post("/getComment",(req, res) =>{
 router.post("/deleteComment",(req, res) =>{
 
     deleteComment(req.body.cGroupSquence, (err) => {
+        if (err) return res.json({ success: false, err });
 
+        return res.status(200).json({ success: true });
+    });
+
+
+});
+
+router.post("/modifyComment",(req, res) =>{
+
+    console.log("aa", req.body)
+    modifyComment(req.body, (err) => {
         if (err) return res.json({ success: false, err });
 
         return res.status(200).json({ success: true });

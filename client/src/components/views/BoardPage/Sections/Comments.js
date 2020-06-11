@@ -35,7 +35,9 @@ function Comments(props) {
             .then(response => {
                 if(response.data.success){
                     setComment("") // 코멘트 초기화
-                    
+
+                    console.log("cGroupSquence", response.data.cGroupSquence)
+
                     body.cGroupSquence = response.data.cGroupSquence
 
                     props.refreshComment(body)// 코멘트 리프래쉬
@@ -48,15 +50,15 @@ function Comments(props) {
     }
 
     return (
+
         <div>
-            
             {props.CommentLists && props.CommentLists.map((comment,index)=>(
-                            
+                
                 // responseTo가 0 즉 루트 노드
                 (!comment.responseto &&  
                     <React.Fragment>
-                        <SingleComment comment={comment} parentCommentId={comment.cGroupSquence } refreshComment={props.refreshComment } />
-                        <ReplyComment CommentLists={props.CommentLists} parentCommentId={comment.cGroupSquence}  refreshComment={props.refreshComment}/>
+                        <SingleComment comment={comment} parentCommentId={comment.cGroupSquence } refreshComment={props.refreshComment}  deleteFuction = {props.deleteFuction} modifyFunction = {props.modifyFunction}/>
+                        <ReplyComment CommentLists={props.CommentLists} parentCommentId={comment.cGroupSquence}  refreshComment={props.refreshComment} deleteFuction = {props.deleteFuction}  modifyFunction = {props.modifyFunction}/>
                     </React.Fragment>
                 )
 
@@ -74,6 +76,7 @@ function Comments(props) {
                     <br />
                     <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>등록</Button>
             </form>
+
         </div>
 
     )

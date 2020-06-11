@@ -15,23 +15,24 @@ function BoardForm(props) {
     const [Content, setcontent] = useState([]);
     const [CommentLists, setCommentLists] = useState([])
 
+
     let body = {
         postNum : parseInt(props.match.params.postNum)
     }
+    
 
+    useEffect(() => {
 
-    useEffect(()=>{
-        
-        // props.location ==> Array[0 ~ 3] ==> 0:title, 1: writer, 2: views, 3: favorite
+        // 게시판 내용 요청
         dispatch(requestBoardForm(body))
-            .then(response =>{
-            if (response.payload.success){
-                setcontent(response.payload.content);
-            } else {
-                alert('게시판 내용을 가져오는데 실패했습니다.')
-            }
+        .then(response =>{
+        if (response.payload.success){
+            setcontent(response.payload.content);
+        } else {
+            alert('게시판 내용을 가져오는데 실패했습니다.')
+        }
         })
-        
+
         // 코멘트 요청
         dispatch(getComment(body))
             .then(response =>{
@@ -45,10 +46,26 @@ function BoardForm(props) {
 
     },[])
 
+
     const updateComment = (newComment) => {
 
-        setCommentLists(CommentLists.concat(newComment))
+        setCommentLists(CommentLists.concat(newComment))    
+        
     }
+    
+    const deleteComment = (cGroupSquence) => {
+        setCommentLists(CommentLists.map(item => item.cGroupSquence === cGroupSquence 
+            ? ({...item, pComment: null}) : item
+            ))  
+    }
+
+    const modifyComment = (pComment, cGroupSquence) => {
+        
+        setCommentLists(CommentLists.map(item => item.cGroupSquence === cGroupSquence 
+            ? ({...item, pComment: pComment}) : item
+            ))  
+    }
+    
 
     const boardcontent = Content.map((contents, index) => {
 
@@ -88,7 +105,7 @@ function BoardForm(props) {
                 <p> (게시글좋아요), 댓글 수, </p>
                 <hr />
 
-                <Comments CommentLists={CommentLists} refreshComment={updateComment}> </Comments>
+                <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} >  </Comments>
             </div>
 
         </div>
