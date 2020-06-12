@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import { withRouter } from 'react-router-dom'
 import axios from 'axios';
@@ -6,6 +6,10 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 function Write(props) {
+
+  console.log("111122222111111", props.location.state[0])
+  console.log("11111111111111", props.location.state[1])
+  console.log("11111111111111", props.location.state[2])
 
   const [Title, setTitle] = useState("");
   const [Content, setContent] = useState("");
@@ -27,11 +31,13 @@ function Write(props) {
 
   // 제출을 눌렀을 때
   const createPost = (event) => {
-      event.preventDefault();
+    event.preventDefault();
 
-      if(!Title || !Content) {
-        return alert('빈 곳이 없는지 확인해주세요!!')
-      }
+    if(!Title || !Content) {
+      return alert('빈 곳이 없는지 확인해주세요!!')
+    }
+
+    if(props.location.state[0] === 0) {
 
       const body = {
         writer : user.userData.id,
@@ -48,50 +54,70 @@ function Write(props) {
                     alert('글 작성에 실패했습니다.')
                 }
             })
-    };
 
-    return (
-      <div style={{ alignItems: 'center', width: '60%', margin: '5rem auto' }}>
+    }
 
-            <h2> 글쓰기 </h2>
-            <br></br>
+    else {
 
-            <Form {...layout} name="write" label="글쓰기" >
-            
-            <Form.Item
-              name={['post', 'title']}
-              label="제 목"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input value={Title} onChange={onTitleHandler} />
-            </Form.Item>
+      const body = {
+        pNum : props.location.state[0],
+        title : Title,
+        pContent : Content
+      }
 
-            <Form.Item 
-              name={['post', 'mainText']} 
-              label="내 용"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input.TextArea value={Content} onChange={onContentHandler} rows={10} />
-            </Form.Item>
+      axios.post('/api/board/modifyPost', body)
+            .then(response => {
+                if (response.data.success) {
+                  props.history.push(`/boardform/:${props.location.state[0]}`)
+                } else {
+                    alert('글 수정에 실패했습니다.')
+                }
+            })
+    }
 
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 16 }}>
-              <Button onClick={createPost} type="primary" htmlType="submit">
-                제출
-              </Button>
-            </Form.Item>
+  };
 
-          </Form>
+  return (
+    <div style={{ alignItems: 'center', width: '60%', margin: '5rem auto' }}>
 
-        </div>
-    )
+          <h2> 글쓰기 </h2>
+          <br></br>
+
+          <Form {...layout} name="write" label="글쓰기" >
+          
+          <Form.Item
+            label="제 목"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input defaultValue={props.location.state[1]} value={Title} onChange={onTitleHandler} />
+          </Form.Item>
+
+          <Form.Item
+            label="내 용"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input.TextArea defaultValue={props.location.state[2]} value={Content} onChange={onContentHandler} rows={10} />
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 16 }}>
+            <Button onClick={createPost} type="primary" htmlType="submit">
+              제출
+            </Button>
+          </Form.Item>
+
+        </Form>
+
+    </div>
+  )
+
 }
 
 export default withRouter(Write)

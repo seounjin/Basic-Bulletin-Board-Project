@@ -43,10 +43,10 @@ function BoardPage(props) {
             <td><Link to={{
                 pathname : `/boardform/${list.postnum}`,
                 state : 
-                    [list.title, 
-                    list.writer,
-                    list.views, 
-                    list.favorite]
+                    [ list.title, 
+                      list.writer,
+                      list.views, 
+                      list.favorite]    
             }}>{ list.title }</Link></td>
             <td>{ list.writer }</td>
             <td>{ list.date }</td>
@@ -84,7 +84,13 @@ function BoardPage(props) {
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 
                 <Button type="primary" htmlType="submit">
-                    <Link to={"/board/write"}>글쓰기</Link>
+                    <Link to={{
+                        pathname : `/board/write`,
+                        state : 
+                            [ 0,
+                            "",
+                            ""]    
+                    }}>글쓰기</Link>
                 </Button>
 
             </div>
