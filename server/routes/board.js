@@ -15,20 +15,6 @@ router.get("/openpage", (req, res) => {
 
 });
 
-// router.post("/postnum", (req, res) => {
-
-//         const postNum = req.body.postNum
-
-//         getBoardContent(postNum, (content, err) =>{
-    
-//                 if (err) return res.status(400).json( { success: false, err } )
-                
-//                 return res.status(200).json( {success: true, content, postnum:postNum } )
-//             })
-    
-// });
-
-//return res.status(200).json( {success: true} )
 router.post("/createPost", (req, res) => {
 
     const post = req.body

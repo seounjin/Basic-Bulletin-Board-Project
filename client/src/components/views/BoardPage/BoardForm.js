@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { List, Avatar, Typography, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, HeartTwoTone } from '@ant-design/icons';
 import Comments from './Sections/Comments';
 import { useDispatch } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
@@ -111,7 +111,7 @@ function BoardForm(props) {
             {/* 코멘트 */}
             <div>
                 <br />
-                <p> (게시글좋아요), 댓글 수, </p>
+                <p>  <HeartTwoTone twoToneColor="#eb2f96" /> 좋아요(숫자), 댓글 수, </p>
                 <hr />
 
                 <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} >  </Comments>
