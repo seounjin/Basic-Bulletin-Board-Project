@@ -15,18 +15,18 @@ router.get("/openpage", (req, res) => {
 
 });
 
-router.post("/postnum", (req, res) => {
+// router.post("/postnum", (req, res) => {
 
-        const postNum = req.body.postNum
+//         const postNum = req.body.postNum
 
-        getBoardContent(postNum, (content, err) =>{
+//         getBoardContent(postNum, (content, err) =>{
     
-                if (err) return res.status(400).json( { success: false, err } )
+//                 if (err) return res.status(400).json( { success: false, err } )
                 
-                return res.status(200).json( {success: true, content, postnum:postNum} )
-            })
+//                 return res.status(200).json( {success: true, content, postnum:postNum } )
+//             })
     
-});
+// });
 
 //return res.status(200).json( {success: true} )
 router.post("/createPost", (req, res) => {
@@ -50,6 +50,40 @@ router.post("/createPost", (req, res) => {
         })       
     })
 });
+
+// 해당 게시판 (내용,조회수,날짜 응답), db 조회수 업데이트
+
+router.post("/postnum", async (req, res) => {
+
+    const postNum = req.body.postNum
+    const conn = await pool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+        
+        const [content] = await conn.query("SELECT pContent,views, date_format(date, '%y.%m.%d. %h:%i') as date FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum", [postNum]);
+        
+        await conn.query('UPDATE `BulletinBoard`.`PostInfo` SET views = views + 1 WHERE (`postNum` = ?)', [postNum]);
+
+
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json( {success: true, content, postnum:postNum });
+    
+    } catch (err) {
+        console.log(err)
+       
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+
+});
+
 
 //pNum 하나 들어옴, 해당 pNum의 PostInfo, PostContents, Comment테이블의 행을 제거
 router.post("/deletePost", async (req, res) =>{

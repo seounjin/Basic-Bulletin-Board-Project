@@ -8,7 +8,6 @@ import { requestBoardForm } from '../../../_actions/board_actions';
 import { getComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
 
-
 function BoardForm(props) {
     
     const { Title } = Typography;
@@ -16,6 +15,9 @@ function BoardForm(props) {
     const [Content, setcontent] = useState([]);
     const [CommentLists, setCommentLists] = useState([])
     const [date, setDate] = useState("")
+    const [views, setViews] = useState(0)
+
+
 
     let body = {
         postNum : parseInt(props.match.params.postNum)
@@ -24,17 +26,17 @@ function BoardForm(props) {
 
     useEffect(() => {
 
-        // 게시판 내용 요청
-        dispatch(requestBoardForm(body))
-        .then(response =>{
-        if (response.payload.success){
-            setcontent(response.payload.content[0].pContent);
-            setDate(response.payload.content[0].date )
-            console.log("피콘텐트" + response.payload.content[0].pContent)
-            
-        } else {
-            alert('게시판 내용을 가져오는데 실패했습니다.')
-        }
+            // 게시판 내용 요청
+            dispatch(requestBoardForm(body))
+            .then(response =>{
+            if (response.payload.success){
+                setcontent(response.payload.content[0].pContent);
+                setDate(response.payload.content[0].date )
+                setViews(response.payload.content[0].views + 1)
+
+            } else {
+                alert('게시판 내용을 가져오는데 실패했습니다.')
+            }
         })
 
         // 코멘트 요청
@@ -95,7 +97,7 @@ function BoardForm(props) {
                 <List.Item.Meta 
                     avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
                     title={ props.location.state[1] }
-                    description={ date + " 조회 " + props.location.state[2] }
+                    description={ date + " 조회 " + views }
                 />
              </List.Item>
             <hr />
