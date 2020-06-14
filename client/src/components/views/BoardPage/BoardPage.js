@@ -3,7 +3,7 @@ import './board.css';
 import { withRouter, Link } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux';
 import { requestBoardList } from '../../../_actions/board_actions';
-import { Button } from 'antd';
+import { Button, Pagination } from 'antd';
 
 
 
@@ -11,10 +11,8 @@ function BoardPage(props) {
 
     const [List, setList] = useState([])
     const dispatch = useDispatch();
-
+    const [Total, setTotal] = useState(0)
     const boardInfo = useSelector(state => state.board) // state에서 state유저정보를 가져와서
-
-
 
     useEffect(() => {
 
@@ -22,10 +20,37 @@ function BoardPage(props) {
         
     }, [])
 
+    const onShowSizeChange = (current, pageSize) => {
+        console.log("onShowSizeChange", current, pageSize);
+    }
+
+    const pageSelect = (page) => {
+        console.log("page", page);
+
+        const body = {
+            currentPage : page
+        }
+
+        dispatch(requestBoardList(body))
+            .then(response =>{
+            if (response.payload.success){
+                setList(response.payload.boardList);
+                setTotal(response.payload.totalPage)
+            } else {
+                alert('게시판 정보를 가져오는데 실패했습니다.')
+            }
+
+        })
+    }
+
 
     const requestBoard = () => {
+        
+        const body = {
+            currentPage : 1
+        }
 
-        dispatch(requestBoardList())
+        dispatch(requestBoardList(body))
             .then(response =>{
             if (response.payload.success){
                 setList(response.payload.boardList);
@@ -94,6 +119,18 @@ function BoardPage(props) {
                 </Button>
 
             </div>
+
+            <div>
+                <Pagination
+                    showSizeChanger
+                    onShowSizeChange={onShowSizeChange}
+                    current={1}
+                    total={Total}
+                    onChange = {pageSelect}
+                    pageSizeOptions = {[2,4,6]}
+                    />
+            </div>
+            
 
         </div>
     )

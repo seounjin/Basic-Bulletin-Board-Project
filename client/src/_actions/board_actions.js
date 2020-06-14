@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { BOARD_REQUEST, BOARDFORM_REQUEST } from './types';
 
-export function requestBoardList() {
+export function requestBoardList(currentPage) {
 
-    const request = axios.get('/api/board/openpage')
+    const request = axios.post('/api/board/getPage', currentPage)
         .then(response => response.data)
 
     return {
