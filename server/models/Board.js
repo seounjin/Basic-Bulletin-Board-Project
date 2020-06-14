@@ -26,8 +26,6 @@ const getBoardContent = function(postNum, cb){
 
     getConnection((conn) => {
 
-        //바꿔야함.
-        var sql2 = 'SELECT pContent FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum';
         var sql = "SELECT pContent, date_format(date, '%y.%m.%d. %h:%i') as date FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum";
         var pn = postNum
         
@@ -103,4 +101,23 @@ const insertContent = function(num, post, cb) {
     })
 }
 
-module.exports = { getBoardList, getBoardContent, boardPostRegister, getPostNum, insertContent }
+const deletePost = function(post, cb) {
+
+    getConnection((conn) => {
+
+        var sql = 'INSERT INTO `BulletinBoard`.`PostInfo` (`title`, `writer`, `date`, `views`, `favorite`) VALUES (?, ?, ?, ?, ?)';
+        var pi = [post.title, post.writer, post.date, 0, 0]; //postinfo
+      
+            conn.query(sql, pi, function (err, rows, fields) { //row == results
+      
+                if (err) {
+                    return cb(err);
+                }
+                else {
+                    return cb(null)
+                }
+            });
+    })
+}
+
+module.exports = { getBoardList, getBoardContent, boardPostRegister, getPostNum, insertContent, deletePost }
