@@ -17,16 +17,14 @@ function BoardForm(props) {
     const [date, setDate] = useState("")
     const [views, setViews] = useState(0)
 
-
+    console.log("들어오는 값 확인", props.location)
 
     let body = {
         postNum : parseInt(props.match.params.postNum)
     }
     
-    useEffect(()=>{
 
-        // props.location ==> Array[0 ~ 3] ==> 0:title, 1: writer, 2: views, 3: favorite
-        dispatch(requestBoardForm(body))
+    useEffect(() => {
             // 게시판 내용 요청
             dispatch(requestBoardForm(body))
             .then(response =>{
@@ -74,20 +72,20 @@ function BoardForm(props) {
     }
     
 
-    const boardcontent = Content.map((contents, index) => {
+    // const boardcontent = Content.map((contents, index) => {
 
-        console.log("contents.pContent", contents.title)
-        let data = contents.pContent
+    //     console.log("contents.pContent", contents.title)
+    //     let data = contents.pContent
         
-        // https://velopert.com/1896 참고함.
-        return <div>
-                {
-                    data.split('\n').map( line => {
-                        return (<span>{line}<br/></span>)
-                    })
-                }
-               </div>
-    })
+    //     // https://velopert.com/1896 참고함.
+    //     return <div>
+    //             {
+    //                 data.split('\n').map( line => {
+    //                     return (<span>{line}<br/></span>)
+    //                 })
+    //             }
+    //            </div>
+    // })
 
     return (
         <div style={{

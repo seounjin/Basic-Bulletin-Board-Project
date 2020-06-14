@@ -40,6 +40,8 @@ router.post("/createPost2", (req, res) => {
 //select문 두 개 쓰는 라우터
 router.post("/createPost", async (req, res) => {
 
+    console.log("createPost   글을 새로 만듭니다!!!!!!")
+
     const post = req.body;
     const conn = await pool.getConnection();
     var e = false;
@@ -69,7 +71,7 @@ router.post("/createPost", async (req, res) => {
 
         return res.status(200).json( {success: true} );
     }
-    
+
 });
 
 // 해당 게시판 (내용,조회수,날짜 응답), db 조회수 업데이트
@@ -85,7 +87,6 @@ router.post("/postnum", async (req, res) => {
         const [content] = await conn.query("SELECT pContent,views, date_format(date, '%y.%m.%d. %h:%i') as date FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum", [postNum]);
         
         await conn.query('UPDATE `BulletinBoard`.`PostInfo` SET views = views + 1 WHERE (`postNum` = ?)', [postNum]);
-
 
         await conn.commit();
 
@@ -145,6 +146,8 @@ router.post("/deletePost", async (req, res) =>{
 });
 
 router.post("/modifyPost", async (req, res) =>{
+
+    console.log("modifyPost   글의 제목과 내용을 수정합니다.")
 
     const post = req.body;
     const conn = await pool.getConnection();
