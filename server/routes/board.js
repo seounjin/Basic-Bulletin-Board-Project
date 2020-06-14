@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getBoardList, getBoardContent, boardPostRegister, getPostNum, insertContent, deletePost } = require('../models/Board');
-const pool = require('../config/pool')
-
+const pool = require('../config/pool');
 
 router.get("/openpage", (req, res) => {
 
@@ -15,26 +14,41 @@ router.get("/openpage", (req, res) => {
 
 });
 
-router.post("/createPost", (req, res) => {
+//select문 두 개 쓰는 라우터
+router.post("/createPost", async (req, res) => {
 
-    const post = req.body
+    console.log("createPost   글을 새로 만듭니다!!!!!!")
 
-    boardPostRegister(post, (err) =>{
+    const post = req.body;
+    const conn = await pool.getConnection();
+    var e = false;
 
-        if (err) return res.status(400).json( { success: false, err } )
+    try {
+        await conn.beginTransaction();
 
-        getPostNum(post, (err, num) =>{
+        const ins_1 = await conn.query('INSERT INTO `BulletinBoard`.`PostInfo` (`title`, `writer`, `date`, `views`, `favorite`) VALUES (?, ?, ?, ?, ?)', [post.title, post.writer, post.date, 0, 0]);
+        //console.log("ins_1 출력:     ", ins_1);
 
-            if (err) return res.status(400).json( { success: false, err } )
+        const [postNum] = await conn.query('SELECT postnum FROM BulletinBoard.PostInfo WHERE writer = ? and date = ?', [post.writer, post.date]);
+        //console.log("postNum 출력:     ", postNum[0].postnum);
+        
+        const ins_2 = await conn.query('INSERT INTO `BulletinBoard`.`PostContents` (`pNum`, `pContent`) VALUES (?, ?)', [postNum[0].postnum, post.pContent]);
+        //console.log("ins_2 출력:     ", ins_2);
 
-            insertContent(num, post, (err) =>{
+        await conn.commit();
 
-                if (err) return res.status(400).json( { success: false, err } )
+    } catch (err) {
+        //console.log("에러가 발생했어요~~!!", err);
+        e = true;
+        conn.rollback();
+    } finally {
+        conn.release();
 
-                return res.status(200).json( {success: true} )
-            })
-        })       
-    })
+        if (e) return res.status(400).json( { success: false, err } );
+
+        return res.status(200).json( {success: true} );
+    }
+
 });
 
 // 해당 게시판 (내용,조회수,날짜 응답), db 조회수 업데이트
@@ -50,7 +64,6 @@ router.post("/postnum", async (req, res) => {
         const [content] = await conn.query("SELECT pContent,views, date_format(date, '%y.%m.%d. %h:%i') as date FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum", [postNum]);
         
         await conn.query('UPDATE `BulletinBoard`.`PostInfo` SET views = views + 1 WHERE (`postNum` = ?)', [postNum]);
-
 
         await conn.commit();
 
@@ -111,6 +124,8 @@ router.post("/deletePost", async (req, res) =>{
 
 router.post("/modifyPost", async (req, res) =>{
 
+    console.log("modifyPost   글의 제목과 내용을 수정합니다.")
+
     const post = req.body;
     const conn = await pool.getConnection();
     
@@ -137,7 +152,6 @@ router.post("/modifyPost", async (req, res) =>{
 
         return res.status(400).json( { success: false, err } );
     }
-
 });
 
 module.exports = router;

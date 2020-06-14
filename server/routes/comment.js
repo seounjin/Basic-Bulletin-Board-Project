@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { saveComment, getComment, deleteComment, modifyComment } = require("../models/Comment");
+const pool = require('../config/pool');
 
 
 
@@ -50,6 +51,34 @@ router.post("/modifyComment",(req, res) =>{
     });
 
 
+});
+
+router.post("/deleteComment2", async (req, res) =>{
+
+    const cGroupSquence = req.body.cGroupSquence;
+    const conn = await pool.getConnection();
+    var e = false;
+
+    try {
+        await conn.beginTransaction();
+
+        await conn.query('UPDATE `BulletinBoard`.`Comment` SET `pComment` = NULL WHERE (`cGroupSquence` = ?)', [cGroupSquence]);
+
+        await conn.commit();
+
+    } catch {
+
+        e = true;
+        conn.rollback();
+
+    } finally {
+
+        conn.release();
+
+        if (err) return res.json({ success: false, err });
+
+        return res.status(200).json({ success: true });
+    }
 });
 
 
