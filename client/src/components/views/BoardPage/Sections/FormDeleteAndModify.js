@@ -21,7 +21,7 @@ function FormDeleteAndModify(props) {
       axios.post('/api/board/deletePost', body)
             .then(response => {
                 if (response.data.success) {
-                    props.history.push("/board")
+                    props.history.push("/board1")
                 } else {
                     alert('글 삭제에 실패했습니다.')
                 }
@@ -33,7 +33,7 @@ function FormDeleteAndModify(props) {
             {/* 수정,삭제 버튼 */}
                 <Button type="primary" htmlType="submit">
                     <Link to={{
-                        pathname : `/board/write`,
+                        pathname : `/write`,
                         state : 
                             [ props.num,
                             props.title,

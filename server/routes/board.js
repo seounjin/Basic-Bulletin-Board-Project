@@ -144,7 +144,7 @@ router.post("/modifyPost", async (req, res) =>{
     
     } catch (err) {
 
-        console.log("에러가 발생했어요~~!!", err);
+        console.log("modifyPost 에러가 발생했어요~~!!", err);
 
         conn.rollback();
 
@@ -159,13 +159,15 @@ router.post("/getPage", async (req, res) => {
 
     const currentPage = req.body.currentPage; // 클라이언트가 요청하는 페이지
 
-    const maxPost = 2; // 10개
+    const maxPost = req.body.pageSize; // 10개
 
-    const maxPage = 10;
+    console.log("hjhjhjhjhjhjhjhjh",currentPage,"   ", maxPost)
 
-    const startPage = Math.floor((currentPage -1 /maxPage) * maxPage ) + 1;
+    //const maxPage = 10;
 
-    const endPage = startPage + maxPage - 1;
+    // startPage = Math.floor((currentPage -1 /maxPage) * maxPage ) + 1;
+
+    //const endPage = startPage + maxPage - 1;
 
 
     const conn = await pool.getConnection();
@@ -175,19 +177,19 @@ router.post("/getPage", async (req, res) => {
 
         const [totalPost] = await conn.query("SELECT COUNT(*) AS cnt FROM BulletinBoard.PostInfo");
 
-        console.log("totalPost", totalPost[0].cnt)
+        //console.log("totalPost", totalPost[0].cnt)
 
-        const totalPage = Math.ceil(totalPost / maxPost)
+        //const totalPage = Math.ceil(totalPost / maxPost)
 
         const [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as date, views, favorite FROM BulletinBoard.PostInfo order by date desc limit ?, ?", [(currentPage - 1) * maxPost, maxPost]);
 
         //console.log("boardList", boardList)
 
-        console.log("totalPage", totalPost[0].cnt)
+        //console.log("boardList", boardList)
 
         const pageData = {
-            startPage : Math.floor((currentPage -1 /maxPage) * maxPage ) + 1,
-            endPage : startPage + maxPage - 1,
+            //startPage : Math.floor((currentPage -1 /maxPage) * maxPage ) + 1,
+            //endPage : startPage + maxPage - 1,
             totalPage : totalPost[0].cnt
         }
 
@@ -199,7 +201,7 @@ router.post("/getPage", async (req, res) => {
     
     } catch (err) {
 
-        console.log("에러가 발생했어요~~!!", err);
+        console.log("getPage 에러가 발생했어요~~!!", err);
 
         conn.rollback();
 

@@ -50,7 +50,7 @@ function Write(props) {
       axios.post('/api/board/createPost', body)
             .then(response => {
                 if (response.data.success) {
-                  props.history.push("/board")
+                  props.history.push("/board/1")
                 } else {
                     alert('글 작성에 실패했습니다.')
                 }
@@ -68,7 +68,7 @@ function Write(props) {
         axios.post('/api/board/modifyPost', body)
               .then(response => {
                   if (response.data.success) {
-                    props.history.push(`/board`)
+                    props.history.push(`/board/1`)
                   } else {
                       alert('글 수정에 실패했습니다.')
                   }
