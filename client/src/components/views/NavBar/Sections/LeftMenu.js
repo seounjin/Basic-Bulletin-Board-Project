@@ -6,7 +6,7 @@ function LeftMenu(props) {
 
         <Menu mode={props.mode}>
             <Menu.Item key="board">
-                <a href="/board">board</a>
+                <a href="/board/1">board</a>
             </Menu.Item>
 
             {/* <Menu.Item key="write">

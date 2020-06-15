@@ -25,8 +25,8 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)} />
           <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
-          <Route exact path="/board" component={Auth(BoardPage, null)} />
-          <Route exact path="/board/write" component={Auth(WritePage, true)} />
+          <Route exact path="/board/:pageNum" component={Auth(BoardPage, null)} />
+          <Route exact path="/write" component={Auth(WritePage, true)} />
           <Route exact path="/boardform/:postNum" component={ Auth(BoardForm, null) } />
         </Switch>
       </div>
