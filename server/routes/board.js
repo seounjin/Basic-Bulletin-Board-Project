@@ -159,7 +159,7 @@ router.post("/getPage", async (req, res) => {
 
     const currentPage = req.body.currentPage; // 클라이언트가 요청하는 페이지
 
-    const maxPost = 2; // 10개
+    const maxPost = 10; // 10개
 
     const maxPage = 10;
 

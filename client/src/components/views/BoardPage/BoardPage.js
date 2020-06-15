@@ -12,7 +12,8 @@ function BoardPage(props) {
     const [List, setList] = useState([])
     const dispatch = useDispatch();
     const [Total, setTotal] = useState(0)
-    const boardInfo = useSelector(state => state.board) // state에서 state유저정보를 가져와서
+    const [CurrentPage, setCurrentPage] = useState(1)
+
 
     useEffect(() => {
 
@@ -26,7 +27,7 @@ function BoardPage(props) {
 
     const pageSelect = (page) => {
         console.log("page", page);
-
+        setCurrentPage(page)
         const body = {
             currentPage : page
         }
@@ -35,7 +36,8 @@ function BoardPage(props) {
             .then(response =>{
             if (response.payload.success){
                 setList(response.payload.boardList);
-                setTotal(response.payload.totalPage)
+                console.type(response.payload.totalPage);
+                setTotal(response.payload.totalPage);
             } else {
                 alert('게시판 정보를 가져오는데 실패했습니다.')
             }
@@ -54,6 +56,12 @@ function BoardPage(props) {
             .then(response =>{
             if (response.payload.success){
                 setList(response.payload.boardList);
+                setTotal(response.payload.pageData.totalPage);
+
+                console.log(response.payload.pageData.totalPage);
+
+                console.log(typeof(response.payload.totalPage));
+
             } else {
                 alert('게시판 정보를 가져오는데 실패했습니다.')
             }
@@ -124,9 +132,10 @@ function BoardPage(props) {
                 <Pagination
                     showSizeChanger
                     onShowSizeChange={onShowSizeChange}
-                    current={1}
+                    current={CurrentPage}
                     total={Total}
                     onChange = {pageSelect}
+                    pageSize = {15}
                     pageSizeOptions = {[2,4,6]}
                     />
             </div>
