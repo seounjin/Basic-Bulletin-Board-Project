@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { List, Avatar, Typography, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { UserOutlined, HeartTwoTone } from '@ant-design/icons';
+import { UserOutlined, HeartTwoTone, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import Comments from './Sections/Comments';
 import { useDispatch } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
 import { getComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
+import Favorites from './Sections/Favorites'
 
 function BoardForm(props) {
     
     const { Title } = Typography;
     const dispatch = useDispatch(); 
     const [Content, setcontent] = useState([]);
-    const [CommentLists, setCommentLists] = useState([])
-    const [date, setDate] = useState("")
-    const [views, setViews] = useState(0)
+    const [CommentLists, setCommentLists] = useState([]);
+    const [date, setDate] = useState("");
+    const [views, setViews] = useState(0);
 
-    console.log("들어오는 값 확인", props.location)
-
-    let body = {
+    const body = {
         postNum : parseInt(props.match.params.postNum)
     }
     
@@ -87,6 +86,7 @@ function BoardForm(props) {
     //            </div>
     // })
 
+
     return (
         <div style={{
             maxWidth: '700px', margin: '2rem auto'
@@ -114,12 +114,11 @@ function BoardForm(props) {
                 {Content}
             </div>
 
-            {/* 코멘트 */}
+            {/* 좋아요 */} 
+                <Favorites postNum={ body }> </Favorites>
+            
+            {/* 코멘트 */} 
             <div>
-                <br />
-                <p>  <HeartTwoTone twoToneColor="#eb2f96" /> 좋아요(숫자), 댓글 수, </p>
-                <hr />
-
                 <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} >  </Comments>
             </div>
 

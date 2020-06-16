@@ -76,8 +76,6 @@ function SingleComment(props) {
             pComment: ModifyComment,
         };
 
-        console.log("바디", body)
-
         axios.post('/api/comment/modifyComment', body)
             .then(response => {
                 if(response.data.success){

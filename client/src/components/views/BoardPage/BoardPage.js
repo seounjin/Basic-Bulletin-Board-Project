@@ -18,23 +18,24 @@ function BoardPage(props) {
     const dispatch = useDispatch();
     const [Total, setTotal] = useState(0)
 
-    const [currentPage, setcurrentPage] = useState(parseInt(props.match.params.pageNum))
-    const [PageSize, setPageSize] = useState(10)
+    const [currentPage, setCurrentPage] = useState(parseInt(props.match.params.pageNum))
 
-    useEffect(() => {
-        
+    const [PageSize, setPageSize] = useState(()=> {
+
         const { search } = props.location;
         const queryObj = queryStirng.parse(search);
         const { list_num } = queryObj;
-
-        
-        console.log("list_num      ", list_num)
-
+ 
         if (list_num) {
-            console.log("fffffffffffff      ", list_num)
-            setPageSize(parseInt(list_num))
+            return parseInt(list_num)
+        } else{
+            return 10
         }
 
+    })
+
+    useEffect(() => {
+        
         requestBoard()
         
     }, [])
@@ -52,7 +53,7 @@ function BoardPage(props) {
             if (response.payload.success){
                 setList(response.payload.boardList);
                 setTotal(response.payload.pageData.totalPage)
-                setcurrentPage(current);
+                setCurrentPage(current);
                 props.history.push(`${current}?list_num=${pageSize}`)
                 setPageSize(pageSize)
             } else {
@@ -78,7 +79,7 @@ function BoardPage(props) {
                 setList(response.payload.boardList);
 
                 setTotal(response.payload.pageData.totalPage)
-                setcurrentPage(page);
+                setCurrentPage(page);
 
                 if (PageSize === 10)
                     props.history.push(`${page}`)
@@ -95,23 +96,9 @@ function BoardPage(props) {
 
     const requestBoard = () => {
 
-        const { search } = props.location;
-        const queryObj = queryStirng.parse(search);
-        const { list_num } = queryObj;
-
         let body = {
             currentPage : currentPage,
             pageSize : PageSize
-        }
-
-        if (list_num) {
-            console.log("fffffffffffff      ", list_num)
-            setPageSize(parseInt(list_num))
-
-            body = {
-                currentPage : currentPage,
-                pageSize : parseInt(list_num)
-            }
         }
 
         dispatch(requestBoardList(body))

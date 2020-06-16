@@ -159,11 +159,7 @@ router.post("/getPage", async (req, res) => {
 
     const currentPage = req.body.currentPage; // 클라이언트가 요청하는 페이지
 
-<<<<<<< HEAD
-    const maxPost = 10; // 10개
-=======
     const maxPost = req.body.pageSize; // 10개
->>>>>>> 4adc70298b9625175a9e542d3e4d9bca1e857a74
 
     console.log("hjhjhjhjhjhjhjhjh",currentPage,"   ", maxPost)
 
@@ -213,11 +209,46 @@ router.post("/getPage", async (req, res) => {
 
         return res.status(400).json( { success: false, err } );
     }
-    
 
 });
 
+    
+router.post("/favorite", async (req, res) => {
 
+    const userId = req.body.userId;
+    const postNum = req.body.postNum;
+
+    const conn = await pool.getConnection();
+
+    //해당 유저가 좋아요 정보를 눌렀는지 보내주기
+
+    try {
+        await conn.beginTransaction();
+        
+        const [favorite] = await conn.query("SELECT * FROM BulletinBoard.Favorite where id = ? and postNum = ?", [userId, postNum]);
+        
+        
+        await conn.commit();
+
+        conn.release();
+
+        if (!favorite.length){
+            return res.status(200).json( {success: true, favorite: false } );            
+        } else {
+            return res.status(200).json( {success: true, favorite: true } );            
+        }
+    
+    } catch (err) {
+
+        console.log("에에러",err)
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+
+});
 
 
 module.exports = router;
