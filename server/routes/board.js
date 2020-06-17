@@ -163,8 +163,6 @@ router.post("/getPage", async (req, res) => {
 
     const maxPost = req.body.pageSize; // 10개
 
-    console.log("hjhjhjhjhjhjhjhjh",currentPage,"   ", maxPost)
-
     //const maxPage = 10;
 
     // startPage = Math.floor((currentPage -1 /maxPage) * maxPage ) + 1;
@@ -215,7 +213,7 @@ router.post("/getPage", async (req, res) => {
 });
 
     
-router.post("/favorite", async (req, res) => {
+router.post("/getFavorite", async (req, res) => {
 
     const userId = req.body.userId;
     const postNum = req.body.postNum;
@@ -242,7 +240,75 @@ router.post("/favorite", async (req, res) => {
     
     } catch (err) {
 
-        console.log("에에러",err)
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+
+});
+
+router.post("/favorite", async (req, res) => {  
+
+    const userId = req.body.userId;
+    const postNum = req.body.postNum;
+    
+    const conn = await pool.getConnection();
+
+    // 좋아요 추가
+    try {
+        await conn.beginTransaction();
+    
+        await conn.query("INSERT INTO `BulletinBoard`.`Favorite` (`id`, `postNum`) VALUES (?, ?)", [userId, postNum]);
+
+        //좋아요 업데이트
+        await conn.query("UPDATE `BulletinBoard`.`PostInfo` SET favorite = favorite + 1 WHERE (`postnum` = ?)", [postNum]);
+
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json( {success: true } );            
+    
+    
+    } catch (err) {
+
+
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+
+});
+
+router.post("/unFavorite", async (req, res) => {
+
+    const userId = req.body.userId;
+    const postNum = req.body.postNum;
+
+    const conn = await pool.getConnection();
+
+    // 좋아요 취소
+    try {
+        await conn.beginTransaction();
+    
+        await conn.query("DELETE FROM `BulletinBoard`.`Favorite` WHERE (`postNum` = ?) and (`id` = ?)", [postNum, userId]);
+        
+        //좋아요 업데이트
+        await conn.query("UPDATE `BulletinBoard`.`PostInfo` SET favorite = favorite - 1 WHERE (`postnum` = ?)", [postNum]);
+
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json( {success: true } );            
+    
+    
+    } catch (err) {
+
         conn.rollback();
 
         conn.release();

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { List, Avatar, Typography, Button } from 'antd';
+import { List, Avatar, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { UserOutlined, HeartTwoTone, HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { UserOutlined, CommentOutlined } from '@ant-design/icons';
 import Comments from './Sections/Comments';
 import { useDispatch } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
@@ -19,7 +19,9 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [CommentLists, setCommentLists] = useState([]);
     const [date, setDate] = useState("");
     const [views, setViews] = useState(0);
-    // props.match.params.pageNum
+    const [FavoriteCount, setFavoriteCount] = useState(0);
+    const [CommentCnt, setCommentCnt] = useState(0);
+
     const body = {
         postNum : parseInt(props.match.params.postNum)
     }
@@ -31,13 +33,13 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             .then(response =>{
             if (response.payload.success){
                 setcontent(response.payload.content[0].pContent);
-                setDate(response.payload.content[0].date )
-                setViews(response.payload.content[0].views + 1)
                 setPtitle(response.payload.content[0].title )
                 setWriter(response.payload.content[0].writer)
-
+                setDate(response.payload.content[0].date );
+                setViews(response.payload.content[0].views + 1);
+                setFavoriteCount(response.payload.content[0].favorite);
             } else {
-                alert('게시판 내용을 가져오는데 실패했습니다.')
+                alert('게시판 내용을 가져오는데 실패했습니다.');
             }
         })
 
@@ -46,8 +48,10 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             .then(response =>{
             if (response.payload.success){
                 setCommentLists(response.payload.comment);
+                console.log("response.payload.comment.length", response.payload.comment.length)
+                setCommentCnt(response.payload.comment.length);
             } else {
-                alert('게시판 내용을 가져오는데 실패했습니다.')
+                alert('댓글을 가져오는데 실패했습니다.');
             }
         })
 
@@ -56,7 +60,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
 
     const updateComment = (newComment) => {
-
+        setCommentCnt(CommentCnt + 1)
         setCommentLists(CommentLists.concat(newComment))    
         
     }
@@ -105,8 +109,9 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             </div>
             <br/><br/>
 
-            {/* 좋아요 */} 
-                <Favorites postNum={ body }> </Favorites>
+            {/* 좋아요 */}                          
+            {localStorage.getItem('userId') ?  <Favorites favoriteData={ body } CommentCnt={CommentCnt} favorite={FavoriteCount} > </Favorites> 
+                                            :  <p> <CommentOutlined /> 댓글 {CommentCnt} </p> }
             
             {/* 코멘트 */} 
             <div>
