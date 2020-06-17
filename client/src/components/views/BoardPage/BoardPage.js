@@ -121,13 +121,10 @@ function BoardPage(props) {
             <td><Link to={{
                 pathname : `/boardform/${list.postnum}`,
                 state : 
-                    [ list.title, 
-                      list.writer,
-                      list.views, 
-                      list.favorite]    
+                    [props.match.params.pageNum]    
             }}>{ list.title }</Link></td>
             <td>{ list.writer }</td>
-            <td>{ list.date }</td>
+            <td>{ list.d }</td>
             <td>{ list.views }</td>
             <td>{ list.favorite }</td>
         </tr>
@@ -167,7 +164,8 @@ function BoardPage(props) {
                         state : 
                             [ 0,
                             "",
-                            ""]    
+                            "",
+                            0]    
                     }}>글쓰기</Link>
                 </Button>
 

@@ -9,15 +9,17 @@ import { getComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
 import Favorites from './Sections/Favorites'
 
-function BoardForm(props) {
+function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 번호 and 목록버튼 만들기!!!
     
     const { Title } = Typography;
     const dispatch = useDispatch(); 
-    const [Content, setcontent] = useState([]);
+    const [Ptitle, setPtitle] = useState("");
+    const [Writer, setWriter] = useState("");
+    const [Content, setcontent] = useState("");
     const [CommentLists, setCommentLists] = useState([]);
     const [date, setDate] = useState("");
     const [views, setViews] = useState(0);
-
+    // props.match.params.pageNum
     const body = {
         postNum : parseInt(props.match.params.postNum)
     }
@@ -31,6 +33,8 @@ function BoardForm(props) {
                 setcontent(response.payload.content[0].pContent);
                 setDate(response.payload.content[0].date )
                 setViews(response.payload.content[0].views + 1)
+                setPtitle(response.payload.content[0].title )
+                setWriter(response.payload.content[0].writer)
 
             } else {
                 alert('게시판 내용을 가져오는데 실패했습니다.')
@@ -69,50 +73,37 @@ function BoardForm(props) {
             ? ({...item, pComment: pComment}) : item
             ))  
     }
-    
-
-    // const boardcontent = Content.map((contents, index) => {
-
-    //     console.log("contents.pContent", contents.title)
-    //     let data = contents.pContent
-        
-    //     // https://velopert.com/1896 참고함.
-    //     return <div>
-    //             {
-    //                 data.split('\n').map( line => {
-    //                     return (<span>{line}<br/></span>)
-    //                 })
-    //             }
-    //            </div>
-    // })
-
 
     return (
         <div style={{
             maxWidth: '700px', margin: '2rem auto'
         }}>
             <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
-            <Title level={2}> { props.location.state[0] } </Title>
+            <Title level={2}> { Ptitle } </Title>
             </div>
 
             {/*글번호, 제목, 글내용*/}
-            <FormDeleteAndModify num={props.match.params.postNum} title={props.location.state[0]} content={Content} />
+            <FormDeleteAndModify num={props.match.params.postNum} title={Ptitle} content={Content} />
 
             {/* 이미지,아이디,날짜,조회수 */}
              <List.Item>
                 <List.Item.Meta 
                     avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
-                    title={ props.location.state[1] }
+                    title={ Writer }
                     description={ date + " 조회 " + views }
                 />
              </List.Item>
             <hr />
 
-
+            <br/>
             <div>
-                {/* 글쓰여진 부분 */}
-                {Content}
+                {
+                    Content.split('\n').map( line => {
+                        return (<span>{line}<br/></span>)
+                    })
+                }
             </div>
+            <br/><br/>
 
             {/* 좋아요 */} 
                 <Favorites postNum={ body }> </Favorites>

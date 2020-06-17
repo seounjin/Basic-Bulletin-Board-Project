@@ -7,9 +7,10 @@ import { Link, withRouter } from 'react-router-dom'
 
 function FormDeleteAndModify(props) {
 
-    console.log("FormDeleteAndModify", props.num)
+    console.log("FormDeleteAndModify", props.num) // 0
     console.log("FormDeleteAndModify", props.title)
-    console.log("FormDeleteAndModify", props.content)
+    console.log("FormDeleteAndModify", props.content) // 0
+    console.log("FormDeleteAndModify", props.boardNum)
 
     const DeletePost = (event) => {
         event.preventDefault();
@@ -21,7 +22,7 @@ function FormDeleteAndModify(props) {
       axios.post('/api/board/deletePost', body)
             .then(response => {
                 if (response.data.success) {
-                    props.history.push("/board1")
+                    props.history.push(`/board/${props.boardNum}`)
                 } else {
                     alert('글 삭제에 실패했습니다.')
                 }
@@ -36,8 +37,9 @@ function FormDeleteAndModify(props) {
                         pathname : `/write`,
                         state : 
                             [ props.num,
-                            props.title,
-                            props.content]    
+                              props.title,
+                              props.content,
+                              props.num]    
                     }}>수 정</Link>
                 </Button>
 

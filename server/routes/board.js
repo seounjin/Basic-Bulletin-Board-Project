@@ -37,16 +37,18 @@ router.post("/createPost", async (req, res) => {
 
         await conn.commit();
 
-    } catch (err) {
-        //console.log("에러가 발생했어요~~!!", err);
-        e = true;
-        conn.rollback();
-    } finally {
         conn.release();
 
-        if (e) return res.status(400).json( { success: false, err } );
+        return res.status(200).json( {success: true, postNum : postNum[0].postnum});
 
-        return res.status(200).json( {success: true} );
+    } catch (err) {
+        //console.log("에러가 발생했어요~~!!", err);
+        conn.rollback();
+
+        conn.release();
+
+        if (err) return res.status(400).json( { success: false, err } );
+
     }
 
 });
@@ -61,7 +63,7 @@ router.post("/postnum", async (req, res) => {
     try {
         await conn.beginTransaction();
         
-        const [content] = await conn.query("SELECT pContent,views, date_format(date, '%y.%m.%d. %h:%i') as date FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum", [postNum]);
+        const [content] = await conn.query("SELECT title, writer, pContent,views, date_format(date, '%y.%m.%d. %h:%i') as date, favorite FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum", [postNum]);
         
         await conn.query('UPDATE `BulletinBoard`.`PostInfo` SET views = views + 1 WHERE (`postNum` = ?)', [postNum]);
 
@@ -181,11 +183,11 @@ router.post("/getPage", async (req, res) => {
 
         //const totalPage = Math.ceil(totalPost / maxPost)
 
-        const [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as date, views, favorite FROM BulletinBoard.PostInfo order by date desc limit ?, ?", [(currentPage - 1) * maxPost, maxPost]);
+        const [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo order by date desc limit ?, ?", [(currentPage - 1) * maxPost, maxPost]);
 
         //console.log("boardList", boardList)
 
-        //console.log("boardList", boardList)
+        console.log("boardList", boardList)
 
         const pageData = {
             //startPage : Math.floor((currentPage -1 /maxPage) * maxPage ) + 1,
