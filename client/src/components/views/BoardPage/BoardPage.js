@@ -9,10 +9,11 @@ import queryStirng from 'query-string'
 
 function BoardPage(props) {
 
+    // 3번 호출되는거 알아봐야 함 
     // console.log("props.match.params.pageNum",   props.match.params.pageNum)
     // console.log("props.match.params.pageSize",   props.match.params.pageSize)
-    console.log("props.history",   props.history)
-    console.log("props.location",   props.location)
+    // console.log("props.history",   props.history)
+    // console.log("props.location",   props.location)
 
     const [List, setList] = useState([])
     const dispatch = useDispatch();
