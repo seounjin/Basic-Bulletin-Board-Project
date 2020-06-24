@@ -25,7 +25,22 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [CommentCnt, setCommentCnt] = useState(0);
     const user = useSelector(state => state.user)
 
+    const [LatestComment, setrLatestComment] = useState(false);
+    const [RegisterComment, setRegisterComment] = useState(true);
+
     console.log("props.match.params.postNum", props.match.params.postNum)
+
+    const [CommentPage, setCommentPage] = useState(() =>{
+        const { search } = props.location;
+        const queryObj = queryStirng.parse(search);
+        const { comment_page } = queryObj;
+        if (comment_page) {
+        return parseInt(comment_page)
+        } else{
+        return 1
+        }
+        
+        });
 
     const body = {
         postNum : parseInt(props.match.params.postNum)
