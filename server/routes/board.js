@@ -230,9 +230,6 @@ router.post("/getPage", async (req, res) => {
         const [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo order by date desc limit ?, ?", [(currentPage - 1) * maxPost, maxPost]);
 
         //console.log("boardList", boardList)
-
-        //console.log("boardList", boardList)
-
         const pageData = {
             //startPage : Math.floor((currentPage -1 /maxPage) * maxPage ) + 1,
             //endPage : startPage + maxPage - 1,

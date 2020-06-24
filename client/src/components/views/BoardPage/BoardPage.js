@@ -24,7 +24,6 @@ function BoardPage(props) {
 
         window.sessionStorage.setItem('pageSize', pageSize);
         window.sessionStorage.setItem('currentPage', current);
-
         //console.log("onShowSizeChange - pageSize", typeof(window.sessionStorage.pageSize))
         //console.log("onShowSizeChange - pageSize", typeof(window.sessionStorage.currentPage))
 
@@ -41,7 +40,6 @@ function BoardPage(props) {
         //console.log("onShowSizeChange - pageSelect", typeof(window.sessionStorage.currentPage))
 
         requestBoard()
-
     }
 
     const requestBoard = () => {

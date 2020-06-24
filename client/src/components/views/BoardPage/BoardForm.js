@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { List, Avatar, Typography, Button } from 'antd';
+import { List, Avatar, Typography, Pagination, Button } from 'antd';
 import { withRouter, Link } from 'react-router-dom';
 import { UserOutlined, CommentOutlined } from '@ant-design/icons';
 import Comments from './Sections/Comments';
 import { useDispatch, useSelector } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
-import { getComment } from '../../../_actions/comment_actions';
+import { getComment, getLatestComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
-import Favorites from './Sections/Favorites'
+import Favorites from './Sections/Favorites';
+import queryStirng from 'query-string'
+
 
 function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 번호 and 목록버튼 만들기!!!
     
-    const { Title } = Typography;
+    const { Title, Text } = Typography;
     const dispatch = useDispatch(); 
     const [Ptitle, setPtitle] = useState("");
     const [Writer, setWriter] = useState("");
@@ -21,7 +23,6 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [views, setViews] = useState(0);
     const [FavoriteCount, setFavoriteCount] = useState(0);
     const [CommentCnt, setCommentCnt] = useState(0);
-
     const user = useSelector(state => state.user)
 
     console.log("props.match.params.postNum", props.match.params.postNum)
@@ -30,8 +31,14 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
         postNum : parseInt(props.match.params.postNum)
     }
     
-
+   
     useEffect(() => {
+
+            const commentBody = {
+                postNum : parseInt(props.match.params.postNum),
+                commentPage : CommentPage
+            }
+
             // 게시판 내용 요청
             dispatch(requestBoardForm(body))
             .then(response =>{
@@ -47,14 +54,15 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 alert('게시판 내용을 가져오는데 실패했습니다.');
             }
         })
-
+        
         // 코멘트 요청
-        dispatch(getComment(body))
+        dispatch(getComment(commentBody))
             .then(response =>{
             if (response.payload.success){
                 setCommentLists(response.payload.comment);
-                console.log("response.payload.comment.length", response.payload.comment.length)
-                setCommentCnt(response.payload.comment.length);
+                setCommentCnt(response.payload.commentCnt.totalComment);
+                
+                //setCommentPage(CommentPage);
             } else {
                 alert('댓글을 가져오는데 실패했습니다.');
             }
@@ -65,8 +73,8 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
 
     const updateComment = (newComment) => {
-        setCommentCnt(CommentCnt + 1)
-        setCommentLists(CommentLists.concat(newComment))    
+        setCommentCnt(CommentCnt + 1);
+        setCommentLists(newComment);
         
     }
     
@@ -77,7 +85,6 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     }
 
     const modifyComment = (pComment, cGroupSquence) => {
-        
         setCommentLists(CommentLists.map(item => item.cGroupSquence === cGroupSquence 
             ? ({...item, pComment: pComment}) : item
             ))  
@@ -85,9 +92,97 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             // htmlType="submit">
     }
 
+    const commentPageSelect = (commentPage) => {
+
+        setCommentPage(commentPage);
+
+        const commentBody = {
+            postNum : parseInt(props.match.params.postNum),
+            commentPage : commentPage
+        }
+
+        if (RegisterComment){
+             // 코멘트 요청
+                dispatch(getComment(commentBody))
+                .then(response =>{
+                if (response.payload.success){
+                    setCommentLists(response.payload.comment);
+                    setCommentCnt(response.payload.commentCnt.totalComment);
+                    props.history.push(`${body.postNum}?comment_page=${commentPage}`);
+                } else {
+                    alert('댓글을 가져오는데 실패했습니다.');
+                }
+            })
+        } else {
+            dispatch(getLatestComment(commentBody))
+            .then(response =>{
+                if (response.payload.success){
+                    setCommentLists(response.payload.comment);
+                    setCommentCnt(response.payload.commentCnt.totalComment);
+
+                } else {
+                    alert('댓글을 가져오는데 실패했습니다.');
+                }
+            })
+
+        }
+       
+
+    }   
+
+    const registerComment = (event) =>{
+            event.preventDefault();
+            console.log("등록순");
+            setRegisterComment(true);
+            setrLatestComment(false);
+
+            const commentBody = {
+                postNum : parseInt(props.match.params.postNum),
+                commentPage : CommentPage
+            }
+
+            dispatch(getComment(commentBody))
+            .then(response =>{
+            if (response.payload.success){
+                setCommentLists(response.payload.comment);
+                setCommentCnt(response.payload.commentCnt.totalComment);
+                        } else {
+                alert('댓글을 가져오는데 실패했습니다.');
+            }
+
+    })
+        }
+        
+    const latestComment = (event) =>{
+            event.preventDefault();
+
+            const commentBody = {
+                postNum : parseInt(props.match.params.postNum),
+                commentPage : CommentPage
+            }
+
+            
+            console.log("최신순")
+            setRegisterComment(false);
+            setrLatestComment(true);
+
+            dispatch(getLatestComment(commentBody))
+            .then(response =>{
+                if (response.payload.success){
+                    setCommentLists(response.payload.comment);
+                    setCommentCnt(response.payload.commentCnt.totalComment);
+
+                } else {
+                    alert('댓글을 가져오는데 실패했습니다.');
+                }
+            })
+
+
+        }
+
     return (
         <div style={{
-            maxWidth: '700px', margin: '2rem auto'
+            maxWidth: '700px', margin: '2rem auto',
         }}>
             <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
             <Title level={2}> { Ptitle } </Title>
@@ -120,8 +215,8 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                     description={ date + " 조회 " + views }
                 />
              </List.Item>
-            <hr />
 
+            <hr />
             <br/>
             <div>
                 {
@@ -135,10 +230,26 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             {/* 좋아요 */}                          
             {localStorage.getItem('userId') ?  <Favorites favoriteData={ body } CommentCnt={CommentCnt} favorite={FavoriteCount} > </Favorites> 
                                             :  <p> <CommentOutlined /> 댓글 {CommentCnt} </p> }
+            
             <hr />
+
+            {/* 등록순 최신순 */}
+            <div>
+                {RegisterComment ? <a><Text strong onClick={registerComment}> 등록순 </Text></a> : <a><Text type="secondary" onClick={registerComment}> 등록순 </Text></a>}
+                {LatestComment ? <a><Text strong onClick={latestComment}> 최신순 </Text></a> : <a><Text type="secondary" onClick={latestComment}> 최신순 </Text></a>}
+            </div>
             {/* 코멘트 */} 
             <div>
-                <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} >  </Comments>
+                <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} commentPage ={CommentPage}>  </Comments>
+            </div>
+
+            {/* Pagination */}
+            <div style={{ textAlign: 'center' , marginTop: '2rem' }}>
+                <Pagination
+                    current={CommentPage}
+                    total={CommentCnt}
+                    onChange = {commentPageSelect}
+                />
             </div>
 
         </div>

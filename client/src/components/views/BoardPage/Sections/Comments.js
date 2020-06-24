@@ -27,20 +27,19 @@ function Comments(props) {
             pNum: board.boardContent.postnum, // 글써져있는곳
             cWriter: user.userData.id, //작성자
             pComment: Comment, // 내용
-            responseto: 0, //루트 댓글이므로 0
-            date: moment().format('YYYY-MM-DD HH:mm:ss')
+            gDepth: 0, // 루트
+            date: moment().format('YYYY-MM-DD HH:mm:ss'),
+            commentPage: props.commentPage
         }
 
-        axios.post('/api/comment/saveComment', body)
+        axios.post('/api/comment/saveComment2', body)
             .then(response => {
                 if(response.data.success){
                     setComment("") // 코멘트 초기화
 
-                    console.log("cGroupSquence", response.data.cGroupSquence)
-
                     body.cGroupSquence = response.data.cGroupSquence
 
-                    props.refreshComment(body)// 코멘트 리프래쉬
+                    props.refreshComment(response.data.comment)// 코멘트 리프래쉬
                 } else {
                     alert('댓글 저장에 실패 하셨습니다')
                 }
@@ -52,36 +51,32 @@ function Comments(props) {
     return (
 
         <div>
+
             {props.CommentLists && props.CommentLists.map((comment,index)=>(
                 
-                // responseTo가 0 즉 루트 노드
-                (!comment.responseto &&  
-                    <React.Fragment>
-                        <SingleComment comment={comment} parentCommentId={comment.cGroupSquence } refreshComment={props.refreshComment}  deleteFuction = {props.deleteFuction} modifyFunction = {props.modifyFunction}/>
-                        <ReplyComment CommentLists={props.CommentLists} parentCommentId={comment.cGroupSquence}  refreshComment={props.refreshComment} deleteFuction = {props.deleteFuction}  modifyFunction = {props.modifyFunction}/>
-                    </React.Fragment>
-                )
+                <SingleComment comment={comment} parentCommentId={comment.cGroupSquence } refreshComment={props.refreshComment}  
+                                                 deleteFuction = {props.deleteFuction} modifyFunction = {props.modifyFunction}
+                                                 commentPage={props.commentPage}
+                                                 />
 
             ))}
             
-
-            {/* 코멘트 쓰는곳  */}
-            <form style={{ display: 'flex' }}>
-                    <TextArea
-                        style={{ width: '100%', borderRadius: '5px' }}
-                        onChange={handleChange}
-                        value={Comment}
-                        placeholder="댓글을 남겨 보세요"
-                    />
-                    <br />
-                    <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>등록</Button>
-            </form>
+            {localStorage.getItem('userId') &&
+                <form style={{ display: 'flex' }}>
+                        <TextArea
+                            style={{ width: '100%', borderRadius: '5px' }}
+                            onChange={handleChange}
+                            value={Comment}
+                            placeholder="댓글을 남겨 보세요"
+                        />
+                        <br />
+                        <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>등록</Button>
+                </form>
+            }
 
         </div>
 
     )
-
-
 
 }
 
