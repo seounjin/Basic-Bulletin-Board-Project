@@ -26,7 +26,7 @@ function BoardPage(props) {
         const { search } = props.location;
         const queryObj = queryStirng.parse(search);
         const { list_num } = queryObj;
- 
+        
         if (list_num) {
             return parseInt(list_num)
         } else{
@@ -50,7 +50,7 @@ function BoardPage(props) {
         }
 
         dispatch(requestBoardList(body))
-            .then(response =>{
+            .then(response => {
             if (response.payload.success){
                 setList(response.payload.boardList);
                 setTotal(response.payload.pageData.totalPage)
@@ -67,8 +67,8 @@ function BoardPage(props) {
 
     const pageSelect = (page) => {
 
-        console.log("page", page);
         setCurrentPage(page)
+
         const body = {
             currentPage : page,
             pageSize : PageSize

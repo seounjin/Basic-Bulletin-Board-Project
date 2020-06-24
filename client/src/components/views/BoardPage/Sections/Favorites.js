@@ -86,7 +86,6 @@ function Favorites(props) {
                     }
                 &nbsp;좋아요 {props.favorite + FavoriteCount} &nbsp; <CommentOutlined /> 댓글 {props.CommentCnt}
                 </p>
-            <hr />
         </div>
     )
 }

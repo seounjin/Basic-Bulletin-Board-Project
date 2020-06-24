@@ -185,8 +185,6 @@ router.post("/getPage", async (req, res) => {
 
         //console.log("boardList", boardList)
 
-        console.log("boardList", boardList)
-
         const pageData = {
             //startPage : Math.floor((currentPage -1 /maxPage) * maxPage ) + 1,
             //endPage : startPage + maxPage - 1,

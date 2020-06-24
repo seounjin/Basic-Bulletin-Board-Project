@@ -7,11 +7,6 @@ import { Link, withRouter } from 'react-router-dom'
 
 function FormDeleteAndModify(props) {
 
-    console.log("FormDeleteAndModify", props.num) // 0
-    console.log("FormDeleteAndModify", props.title)
-    console.log("FormDeleteAndModify", props.content) // 0
-    console.log("FormDeleteAndModify", props.boardNum)
-
     const DeletePost = (event) => {
         event.preventDefault();
 

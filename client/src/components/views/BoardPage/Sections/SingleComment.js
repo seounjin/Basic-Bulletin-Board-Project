@@ -102,7 +102,9 @@ function SingleComment(props) {
                 onCancel={cancel}
                 okText="Yes"
                 cancelText="No">삭제</Popconfirm>
-            ] : [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>]
+            ] : localStorage.getItem('userId') &&
+            
+            [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>]
 
         )
 
@@ -111,22 +113,25 @@ function SingleComment(props) {
         const onSubmit = (event) =>{
 
             event.preventDefault();     
-
             let body = {
-                pNum: board.boardContent.success, // 글써져있는곳
+                pNum: board.boardContent.postnum, // 글써져있는곳
                 cWriter: user.userData.id, //작성자
                 pComment: replyComment, // 내용
-                responseto: props.parentCommentId, // 부모 번호
-                date: moment().format('YYYY-MM-DD HH:mm:ss')
+                gNum: props.comment.gNum, // 부모 번호
+                gDepth: props.comment.gDepth + 1, // 루트                
+                date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                cID: props.comment.cWriter,
+                commentPage : props.commentPage
             }
     
-            axios.post('/api/comment/saveComment', body)
+            axios.post('/api/comment/saveComment3', body)
                 .then(response => {
                     if(response.data.success){
                         setReplyComment("") // 코멘트 초기화
                         
                         body.cGroupSquence = response.data.cGroupSquence
-                        props.refreshComment(body)// 코멘트 리프래쉬
+                        console.log("ㅇㅇㅇ", response.data.comment)
+                        props.refreshComment(response.data.comment)// 코멘트 리프래쉬
 
                         setOpenReply(!OpenReply)
                     } else {
@@ -141,51 +146,53 @@ function SingleComment(props) {
     if (!Modify){
 
         return (
+ 
+            <div style={{ width: props.comment.gDepth >= 1 ? '80%' : '' , marginLeft: props.comment.gDepth >= 1 ? '40px' : '' }}>
 
-            <div>
                 {/* content가 null일 경우 삭제된 댓글 */}
-    
-                { props.comment.pComment ? <Comment
-                    actions={actions}
-                    author={<a> { props.comment.cWriter } </a>}
-                    avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
-                    content={
-                        <p>
-                            { props.comment.pComment } 
-                        </p>
+                
+                    { props.comment.pComment ? <Comment
+                        actions={actions}
+                        author={<a> { props.comment.cWriter } </a>}
+                        avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>} /> }
+                        content={
+                            <span>
+                                { props.comment.gDepth >= 2 &&
+                                    <span style={{fontWeight:'600' }}> 
+                                        {props.comment.cID } &nbsp;&nbsp;  
+                                    </span>
+                                }       
+                                { props.comment.pComment } 
+                            </span>
+                        }
+        
+                        datetime={
+                            <span>{props.comment.date}</span>
+                        }
+                    >
+                    </Comment> : <Comment
+                                    content={
+                                        <p>
+                                        삭제된 댓글 입니다.
+                                        </p>
+                                    }
+                    
+                                ></Comment> }
+                    
+                    {/* 답글쓰기 */}
+                    
+                    {OpenReply &&
+                        <form style={{ display: 'flex' }}>
+                            <TextArea
+                                style={{ width: '100%', borderRadius: '5px' }}
+                                onChange={handleChange}
+                                value={replyComment}
+                                placeholder= {props.comment.cWriter + "님에게 답글 쓰기"}
+                            />
+                            <br />
+                            <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>등록</Button>
+                        </form>
                     }
-    
-                    datetime={
-                        <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                        <span>{moment().fromNow()}</span>
-                        </Tooltip>
-                    }
-                >
-                </Comment> : <Comment
-                                content={
-                                    <p>
-                                    삭제된 댓글 입니다.
-                                    </p>
-                                }
-                
-                            ></Comment> }
-                
-                {/* 답글쓰기 */}
-                
-                {OpenReply &&
-                    <form style={{ display: 'flex' }}>
-                        <TextArea
-                            style={{ width: '100%', borderRadius: '5px' }}
-                            onChange={handleChange}
-                            value={replyComment}
-                            placeholder="누구누구님에게 답글 쓰기"
-                        />
-                        <br />
-                        <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>등록</Button>
-                    </form>
-                }
-    
-    
             </div>
         )
     } else {
