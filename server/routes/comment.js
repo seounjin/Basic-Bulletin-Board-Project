@@ -32,6 +32,8 @@ router.post("/getComment",(req, res) =>{
 
 router.post("/deleteComment",(req, res) =>{
 
+    console.log("req.body",req.body)
+
     deleteComment(req.body.cGroupSquence, (err) => {
         if (err) return res.json({ success: false, err });
 

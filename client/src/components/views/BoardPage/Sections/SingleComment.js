@@ -113,7 +113,7 @@ function SingleComment(props) {
             event.preventDefault();     
 
             let body = {
-                pNum: board.boardContent.success, // 글써져있는곳
+                pNum: board.boardContent.postnum, // 글써져있는곳
                 cWriter: user.userData.id, //작성자
                 pComment: replyComment, // 내용
                 responseto: props.parentCommentId, // 부모 번호

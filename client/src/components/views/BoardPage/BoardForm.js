@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { List, Avatar, Typography } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { List, Avatar, Typography, Button } from 'antd';
+import { withRouter, Link } from 'react-router-dom';
 import { UserOutlined, CommentOutlined } from '@ant-design/icons';
 import Comments from './Sections/Comments';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
 import { getComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
@@ -22,6 +22,10 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [FavoriteCount, setFavoriteCount] = useState(0);
     const [CommentCnt, setCommentCnt] = useState(0);
 
+    const user = useSelector(state => state.user)
+
+    console.log("props.match.params.postNum", props.match.params.postNum)
+
     const body = {
         postNum : parseInt(props.match.params.postNum)
     }
@@ -32,6 +36,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             dispatch(requestBoardForm(body))
             .then(response =>{
             if (response.payload.success){
+                console.log("response.payload.content", response.payload.content)
                 setcontent(response.payload.content[0].pContent);
                 setPtitle(response.payload.content[0].title )
                 setWriter(response.payload.content[0].writer)
@@ -76,6 +81,8 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
         setCommentLists(CommentLists.map(item => item.cGroupSquence === cGroupSquence 
             ? ({...item, pComment: pComment}) : item
             ))  
+            // type="primary" 
+            // htmlType="submit">
     }
 
     return (
@@ -86,8 +93,24 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             <Title level={2}> { Ptitle } </Title>
             </div>
 
-            {/*글번호, 제목, 글내용*/}
-            <FormDeleteAndModify num={props.match.params.postNum} title={Ptitle} content={Content} />
+            <form style={{ display: 'flex'}}>
+                {localStorage.getItem('userId') === Writer && <FormDeleteAndModify
+                    style={{width: '100%'}}
+                    num={props.match.params.postNum}    
+                    title={Ptitle} 
+                    content={Content} 
+                />}
+
+                <div
+                    style={{ marginLeft: localStorage.getItem('userId') === Writer ? '32rem' : '40rem'}}
+                >
+                    <Button>
+                        <Link to={{
+                                pathname : `/board/${window.sessionStorage.currentPage}`
+                        }}>목 록</Link>
+                    </Button>
+                </div>
+            </form>
 
             {/* 이미지,아이디,날짜,조회수 */}
              <List.Item>
@@ -112,7 +135,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             {/* 좋아요 */}                          
             {localStorage.getItem('userId') ?  <Favorites favoriteData={ body } CommentCnt={CommentCnt} favorite={FavoriteCount} > </Favorites> 
                                             :  <p> <CommentOutlined /> 댓글 {CommentCnt} </p> }
-            
+            <hr />
             {/* 코멘트 */} 
             <div>
                 <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} >  </Comments>

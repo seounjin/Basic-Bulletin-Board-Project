@@ -62,7 +62,7 @@ const deleteComment = function(cGroupSquence, cb){
         var sql = 'UPDATE `BulletinBoard`.`Comment` SET `pComment` = NULL WHERE (`cGroupSquence` = ?)';
         var comment = [cGroupSquence];
 
-        conn.query(sql, comment, function (err, rows, fields) { 
+        conn.query(sql, comment, function (err, rows, fields) {
         
             if (err) {
                 return cb(err);

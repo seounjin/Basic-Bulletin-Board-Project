@@ -1,26 +1,28 @@
-import React,{ useEffect} from 'react';
+import React,{ useEffect } from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
 function LandingPage(props) {
+    
+    // window.sessionStorage.setItem('pageSize', 10);
+    // window.sessionStorage.setItem('currentPage', 1);
 
-    useEffect(() => {
-        axios.get('/api/hello')
-        .then(response => console.log(response.data))
-    }, [])
+    // useEffect(() => {
+    //     // axios.get('/api/hello')
+    //     // .then(response => console.log("response.data",response.data))
 
-    const onClickHandler = () => {
-        axios.get('/api/users/logout')
-            .then(response => {
-                if(response.data.success) {
-                    localStorage.clear();
-                    props.history.push("/login")
-                }
-                else {
-                    alert('로그아웃 실패')
-                }
-            })
-    }
+    //     axios.post('/api/board/getTotal')
+    //           .then(response => {
+    //               if (response.data.success) {
+    //                   console.log("totalPosttotalPost", typeof(response.data.total.totalPost))
+    //                 window.sessionStorage.setItem('totalPost', response.data.total.totalPost);
+    //               } else {
+    //                 window.sessionStorage.setItem('totalPost', 0);
+    //                 alert("서버로부터 정보를 얻어오지 못했습니다.")
+    //               }
+    //           })
+
+    // }, [])
 
     return (
         <div style={{
@@ -28,10 +30,6 @@ function LandingPage(props) {
             , width: '100%', height: '100vh'
         }}>
             <h2>시작 페이지</h2>
-
-            <button onClick={onClickHandler}>
-                로그아웃
-            </button>
 
         </div>
     )

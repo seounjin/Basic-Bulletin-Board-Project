@@ -17,7 +17,7 @@ router.get("/openpage", (req, res) => {
 //select문 두 개 쓰는 라우터
 router.post("/createPost", async (req, res) => {
 
-    console.log("createPost   글을 새로 만듭니다!!!!!!")
+    //console.log("createPost   글을 새로 만듭니다!!!!!!")
 
     const post = req.body;
     const conn = await pool.getConnection();
@@ -97,13 +97,13 @@ router.post("/deletePost", async (req, res) =>{
         await conn.beginTransaction();
         
         const del_1 = await conn.query('DELETE FROM `BulletinBoard`.`Comment` WHERE (`pNum` = ?)', [post.pNum]);
-        console.log("Comment삭제 출력: ", del_1);
+        //console.log("Comment삭제 출력: ", del_1);
         
         const del_2 = await conn.query('DELETE FROM `BulletinBoard`.`PostContents` WHERE (`pNum` = ?)', [post.pNum]);
-        console.log("PostContents삭제 출력: ", del_2);
+        //console.log("PostContents삭제 출력: ", del_2);
 
         const del_3 = await conn.query('DELETE FROM `BulletinBoard`.`PostInfo` WHERE (`postnum` = ?)', [post.pNum]);
-        console.log("PostInfo삭제 출력: ", del_3);
+        //console.log("PostInfo삭제 출력: ", del_3);
         
         await conn.commit();
 
@@ -126,13 +126,27 @@ router.post("/deletePost", async (req, res) =>{
 
 router.post("/modifyPost", async (req, res) =>{
 
-    console.log("modifyPost   글의 제목과 내용을 수정합니다.")
+    //console.log("modifyPost   글의 제목과 내용을 수정합니다.")
 
     const post = req.body;
     const conn = await pool.getConnection();
     
     try {
         await conn.beginTransaction();
+
+        const [sel_1] = await conn.query("SELECT count(*) AS cnt FROM BulletinBoard.PostContents where pNum = ? and pContent = ?", [post.pNum, post.pContent]);
+
+        //console.log("sel_1", sel_1);
+        //console.log("sel_1sel_1sel_1sel_1", sel_1[0].cnt);
+
+        if (sel_1[0].cnt) {
+
+            await conn.commit();
+
+            conn.release();
+    
+            return res.status(200).json( { success: true, isReal: true } );
+        }
 
         const upt_1 = await conn.query("UPDATE `BulletinBoard`.`PostContents` SET `pContent` = ? WHERE (`pNum` = ?)", [post.pContent, post.pNum]);
 
@@ -142,11 +156,11 @@ router.post("/modifyPost", async (req, res) =>{
 
         conn.release();
 
-        return res.status(200).json( {success: true} );
+        return res.status(200).json( { success: true, isReal: false } );
     
     } catch (err) {
 
-        console.log("modifyPost 에러가 발생했어요~~!!", err);
+        //console.log("modifyPost 에러가 발생했어요~~!!", err);
 
         conn.rollback();
 
@@ -156,12 +170,44 @@ router.post("/modifyPost", async (req, res) =>{
     }
 });
 
+router.post("/getTotal", async (req, res) => {
+
+    const conn = await pool.getConnection();
+    
+    try {
+        await conn.beginTransaction();
+
+        const [totalPost] = await conn.query("SELECT COUNT(*) AS cnt FROM BulletinBoard.PostInfo");
+
+        const total = {
+            totalPost : totalPost[0].cnt
+        }
+
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json( {success: true , total}  );
+    
+    } catch (err) {
+
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+
+});
+
 
 router.post("/getPage", async (req, res) => {
 
-    const currentPage = req.body.currentPage; // 클라이언트가 요청하는 페이지
+    //console.log("getPage", req.body)
 
-    const maxPost = req.body.pageSize; // 10개
+    const currentPage = parseInt(req.body.currentPage); // 클라이언트가 요청하는 페이지
+
+    const maxPost = parseInt(req.body.pageSize); // 10개
 
     //const maxPage = 10;
 
@@ -185,7 +231,7 @@ router.post("/getPage", async (req, res) => {
 
         //console.log("boardList", boardList)
 
-        console.log("boardList", boardList)
+        //console.log("boardList", boardList)
 
         const pageData = {
             //startPage : Math.floor((currentPage -1 /maxPage) * maxPage ) + 1,
@@ -201,7 +247,7 @@ router.post("/getPage", async (req, res) => {
     
     } catch (err) {
 
-        console.log("getPage 에러가 발생했어요~~!!", err);
+        //console.log("getPage 에러가 발생했어요~~!!", err);
 
         conn.rollback();
 
@@ -226,7 +272,6 @@ router.post("/getFavorite", async (req, res) => {
         await conn.beginTransaction();
         
         const [favorite] = await conn.query("SELECT * FROM BulletinBoard.Favorite where id = ? and postNum = ?", [userId, postNum]);
-        
         
         await conn.commit();
 
@@ -273,7 +318,6 @@ router.post("/favorite", async (req, res) => {
     
     
     } catch (err) {
-
 
         conn.rollback();
 

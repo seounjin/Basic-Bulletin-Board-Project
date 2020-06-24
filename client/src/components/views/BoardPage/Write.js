@@ -5,11 +5,12 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-function Write(props) {
+function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정인지 구분, [1] 글제목, [2] 글내용 ) 
 
-  console.log("111122222111111", props.location.state[0])
+  console.log("00000000000", props.location.state[0])
   console.log("11111111111111", props.location.state[1])
-  console.log("11111111111111", props.location.state[2])
+  console.log("2222222222222", props.location.state[2])
+  //console.log("3333333333333", props.location.state[3])
 
   const [Title, setTitle] = useState(props.location.state[1]);
   const [Content, setContent] = useState(props.location.state[2]);
@@ -52,6 +53,7 @@ function Write(props) {
                 if (response.data.success) {
                   console.log("postNum", response.data.postNum)
                   props.history.push(`/boardform/${response.data.postNum}`)
+                  window.sessionStorage.setItem('currentPage', 1);
                 } else {
                     alert('글 작성에 실패했습니다.')
                 }
@@ -68,10 +70,15 @@ function Write(props) {
         // https://stackoverrun.com/ko/q/12507405
         axios.post('/api/board/modifyPost', body)
               .then(response => {
-                  if (response.data.success) {
-                    props.history.push(`/boardform/${props.location.state[3]}`)
+                  if (response.data.success && !response.data.isReal) {
+                    props.history.push(`/boardform/${props.location.state[0]}`)
                   } else {
+                    if (response.data.isReal) {
+                      alert('기존 내용으로 게시글을 수정할 수 없습니다.')
+                      props.history.push(`/boardform/${props.location.state[0]}`)
+                    } else {
                       alert('글 수정에 실패했습니다.')
+                    }
                   }
               })
       }

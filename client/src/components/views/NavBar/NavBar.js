@@ -1,9 +1,8 @@
-import React, { useState }  from 'react'
+import React from 'react'
 import LeftMenu from './Sections/LeftMenu';
 import RightMenu from './Sections/RightMenu';
 import { Drawer } from 'antd';
 import './Sections/Navbar.css';
-
 
 function NavBar() {
 
