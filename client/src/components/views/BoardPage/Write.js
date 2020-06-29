@@ -7,9 +7,9 @@ import moment from 'moment';
 
 function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정인지 구분, [1] 글제목, [2] 글내용 ) 
 
-  console.log("00000000000", props.location.state[0])
-  console.log("11111111111111", props.location.state[1])
-  console.log("2222222222222", props.location.state[2])
+  // console.log("00000000000", props.location.state[0])
+  // console.log("11111111111111", props.location.state[1])
+  // console.log("2222222222222", props.location.state[2])
   //console.log("3333333333333", props.location.state[3])
 
   const [Title, setTitle] = useState(props.location.state[1]);

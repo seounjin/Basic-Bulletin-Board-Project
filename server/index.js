@@ -21,4 +21,6 @@ app.use('/api/board', require('./routes/board'));
 
 app.use('/api/comment', require('./routes/comment'));
 
+app.use('/api/report', require('./routes/report'));
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

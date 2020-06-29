@@ -8,6 +8,8 @@ function RightMenu(props) {
 
     const user = useSelector(state => state.user)
 
+    const { SubMenu } = Menu;
+
     const logoutHandler = () => {
         axios.get('/api/users/logout')
             .then(response => {
@@ -22,7 +24,29 @@ function RightMenu(props) {
             })
     }
 
+    if(user.userData && user.userData.isAdmin){
+        return (
+            <Menu mode={props.mode}>
+                    <SubMenu title="Admin">
+                        <Menu.ItemGroup title="신고 현황">
+                            <Menu.Item key="reportPost"> <a href="/reportPost"> 게시글 신고  </a> </Menu.Item>
+                            <Menu.Item key="reportComment"> <a href="/reportComment"> 댓글 신고  </a></Menu.Item>
+                        </Menu.ItemGroup>
+                    </SubMenu> 
+
+                <Menu.Item key="mypage">
+                        <a href="/mypage">Mypage</a>
+                    </Menu.Item>
+                <Menu.Item key="logout">
+                    <a onClick={logoutHandler}>Logout</a>
+                </Menu.Item>
+            </Menu>
+        )
+    }
+    
+
     if (user.userData && !user.userData.isAuth) {
+
         return (
             <Menu mode={props.mode}>
                 <Menu.Item key="signin">

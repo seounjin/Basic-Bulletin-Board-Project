@@ -7,9 +7,12 @@ import BoardPage from "./views/BoardPage/BoardPage.js";
 import WritePage from "./views/BoardPage/Write.js";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
+import ReportPost from "./views/AdminPage/ReportPost";
+import ReportComment from "./views/AdminPage/ReportComment";
 import BoardForm from "./views/BoardPage/BoardForm";
 
 import Auth from '../hoc/auth';
+
 
 //option 
 //null  => 아무나 출입이 가능
@@ -28,6 +31,8 @@ function App() {
           <Route exact path="/board/:pageNum" component={Auth(BoardPage, null)} />
           <Route exact path="/write" component={Auth(WritePage, true)} />
           <Route exact path="/boardform/:postNum" component={ Auth(BoardForm, null) } />
+          <Route exact path="/ReportPost" component={ Auth(ReportPost, null, true) } />
+          <Route exact path="/ReportComment" component={ Auth(ReportComment, true, true) } />
         </Switch>
       </div>
       <Footer />

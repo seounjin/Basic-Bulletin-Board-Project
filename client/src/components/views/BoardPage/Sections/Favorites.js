@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { Tooltip, Popconfirm } from 'antd';
+import { Tooltip, Popconfirm, Typography } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
+import Report from './Report';
 import axios from 'axios';
 
 
@@ -9,6 +10,8 @@ function Favorites(props) {
 
     const [Favorite,setFavorite] = useState(false);
     const [FavoriteCount, setFavoriteCount] = useState(0);
+
+    const { Text } = Typography;
 
     const favoriteClick = () => {
         // 게시판 번호, 접속중인 아이디
@@ -77,6 +80,7 @@ function Favorites(props) {
         <div>
             <br />
                 <p>
+                    
                     { Favorite ? <Tooltip title="이 글 좋아요 취소">
                                         <HeartFilled style={{color : "#ff4d4f"}} onClick={ favoriteClick } />  
                                 </Tooltip> :
@@ -84,7 +88,11 @@ function Favorites(props) {
                                         <HeartOutlined style={{color : "#ff4d4f"}} onClick={ favoriteClick } />
                                 </Tooltip>
                     }
-                &nbsp;좋아요 {props.favorite + FavoriteCount} &nbsp; <CommentOutlined /> 댓글 {props.CommentCnt}
+                    &nbsp;좋아요 {props.favorite + FavoriteCount} &nbsp; <CommentOutlined /> 댓글 {props.CommentCnt}
+                    
+                    {/* <Report ></Report>  */}
+                    { props.writer && localStorage.getItem('userId') != props.writer && <Report ></Report> } 
+                    
                 </p>
         </div>
     )
