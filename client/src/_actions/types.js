@@ -7,3 +7,5 @@ export const BOARDFORM_REQUEST = "boardform_request"
 
 export const COMMENT_REQUEST = "comment_requset"
 export const COMMENT_LATESTCOMMENT = "comment_latestcomment"
+
+export const MYPAGE_ACTIVITY = "mypage_request"

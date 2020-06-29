@@ -30,7 +30,7 @@
 
 .menu__container .ant-menu-item a,
 .menu__container .ant-menu-submenu-title a {
-  padding: 10px 15px;
+  padding: 10px 10px;
 }
 
 .menu__container .ant-menu-horizontal {

@@ -7,14 +7,19 @@ import { useSelector } from "react-redux";
 function RightMenu(props) {
 
     const user = useSelector(state => state.user)
+    //window.sessionStorage.setItem('totalActivityPost', 0);
+    //window.sessionStorage.setItem('totalActivityComment', 0);
+    //console.log("RightMenu", window.sessionStorage.totalActivityPost, window.sessionStorage.totalActivityComment)
 
     const logoutHandler = () => {
         axios.get('/api/users/logout')
             .then(response => {
                 if(response.data.success) {
-                    localStorage.clear();
+                    window.localStorage.clear();
+                    //window.sessionStorage.clear();
                     props.history.push("/login")
                     alert('로그아웃 성공')
+                    window.location.reload();
                 }
                 else {
                     alert('로그아웃 실패')
@@ -26,10 +31,10 @@ function RightMenu(props) {
         return (
             <Menu mode={props.mode}>
                 <Menu.Item key="signin">
-                    <a href="/login">Signin</a>
+                    <a href="/login">Sign in</a>
                 </Menu.Item>
                 <Menu.Item key="app">
-                    <a href="/register">Signup</a>
+                    <a href="/register">Sign up</a>
                 </Menu.Item>
             </Menu>    
         )
@@ -38,7 +43,7 @@ function RightMenu(props) {
         return (
             <Menu mode={props.mode}>
                 <Menu.Item key="mypage">
-                        <a href="/mypage">Mypage</a>
+                        <a href="/mypage">My page</a>
                     </Menu.Item>
                 <Menu.Item key="logout">
                     <a onClick={logoutHandler}>Logout</a>

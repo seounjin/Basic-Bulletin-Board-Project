@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_actions';
 import { withRouter } from 'react-router-dom'
+import moment from 'moment';
+
 function LoginPage(props) {
 
     const dispatch = useDispatch();
@@ -23,7 +25,8 @@ function LoginPage(props) {
 
         let body = {
             id: Id,
-            password: Password
+            password: Password,
+            loginDate: moment().format('YYYY-MM-DD HH:mm:ss')
         }
 
         dispatch(loginUser(body))

@@ -8,6 +8,10 @@ import WritePage from "./views/BoardPage/Write.js";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
 import BoardForm from "./views/BoardPage/BoardForm";
+import Mypage from "./views/Mypage/Mypage.js";
+import PwCheck from "./views/Mypage/PwCheck";
+import ChangePrivacy from "./views/Mypage/ChangePrivacy";
+import ActivityDetails from "./views/Mypage/ActivityDetails";
 
 import Auth from '../hoc/auth';
 
@@ -28,6 +32,10 @@ function App() {
           <Route exact path="/board/:pageNum" component={Auth(BoardPage, null)} />
           <Route exact path="/write" component={Auth(WritePage, true)} />
           <Route exact path="/boardform/:postNum" component={ Auth(BoardForm, null) } />
+          <Route exact path="/mypage" component={Auth(Mypage, true)} />
+          <Route exact path="/pwcheck" component={Auth(PwCheck, true)} />
+          <Route exact path="/changeprivacy" component={Auth(ChangePrivacy, true)} />
+          <Route exact path="/activitydetails/:pageNum" component={Auth(ActivityDetails, true)} />
         </Switch>
       </div>
       <Footer />

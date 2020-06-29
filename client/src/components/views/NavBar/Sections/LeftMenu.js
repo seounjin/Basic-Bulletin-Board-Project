@@ -14,7 +14,7 @@ function LeftMenu(props) {
         axios.post('/api/board/getTotal')
               .then(response => {
                   if (response.data.success) {
-                      console.log("totalPosttotalPost", typeof(response.data.total.totalPost))
+                      //console.log("totalPosttotalPost", typeof(response.data.total.totalPost))
                     window.sessionStorage.setItem('totalPost', response.data.total.totalPost);
                   } else {
                     window.sessionStorage.setItem('totalPost', 0);

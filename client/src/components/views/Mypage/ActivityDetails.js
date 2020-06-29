@@ -1,19 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import './board.css';
-import { withRouter, Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { requestBoardList } from '../../../_actions/board_actions';
 import { Button, Pagination } from 'antd';
+import { requestMypageList } from '../../../_actions/mypage_action';
 
+function ActivityDetails(props) {
 
-function BoardPage(props) {
-
-    const [List, setList] = useState([])
+    const [List, setList] = useState([]);
     const dispatch = useDispatch();
+
+    const [TypeName, setTypeName] = useState(() =>{
+
+        if (window.sessionStorage.totalActivityPost === window.sessionStorage.totalPost) {
+            console.log("게시물",window.sessionStorage.totalActivityPost, window.sessionStorage.totalPost);
+            return "게시물";
+        }
+        else {
+            console.log("게시물",window.sessionStorage.totalActivityPost, window.sessionStorage.totalPost);
+            console.log("게시물XXXX", window.sessionStorage.totalPost, window.sessionStorage.totalActivityComment);
+            return "댓글이 작성된 게시물";
+        }
+
+    });
 
     useEffect(() => {
 
-        requestBoard()
+        requestActivity()
         
     }, [])
 
@@ -22,7 +34,7 @@ function BoardPage(props) {
         window.sessionStorage.setItem('pageSize', pageSize);
         window.sessionStorage.setItem('currentPage', current);
 
-        requestBoard()
+        requestActivity()
         window.scrollTo(0,0);
     }
 
@@ -31,23 +43,25 @@ function BoardPage(props) {
 
         window.sessionStorage.setItem('currentPage', page);
 
-        requestBoard()
+        requestActivity()
         window.scrollTo(0,0);
     }
 
-    const requestBoard = () => {
+    const requestActivity = () => {
 
         let body = {
             currentPage : window.sessionStorage.currentPage,
-            pageSize : window.sessionStorage.pageSize
+            pageSize : window.sessionStorage.pageSize,
+            type : TypeName,
+            id : localStorage.getItem('userId')
         }
 
-        dispatch(requestBoardList(body))
+        dispatch(requestMypageList(body))
             .then(response =>{
             if (response.payload.success){
-                setList(response.payload.boardList);
+                setList(response.payload.activityList);
                 console.log('response.payload.pageData.totalPage', response.payload.pageData.totalPage)
-                window.sessionStorage.setItem('totalPost', response.payload.pageData.totalPage);
+                //window.sessionStorage.setItem('totalPost', response.payload.pageData.totalPage);
                 props.history.push(`${window.sessionStorage.currentPage}`)
             } else {
                 alert('게시판 정보를 가져오는데 실패했습니다.')
@@ -56,7 +70,7 @@ function BoardPage(props) {
         })
     }
 
-    const boardList = List.map((list, index) => {
+    const activityList = List.map((list, index) => { 
 
         return <tr key = { index }>
             <td style={{ width: '8%' }}>{ list.postnum }</td>
@@ -74,7 +88,7 @@ function BoardPage(props) {
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
 
-            <h2> VS 게시판 </h2>
+            <h2> {localStorage.getItem('userId')}님의 { TypeName } </h2>
 
             <hr />
 
@@ -90,41 +104,27 @@ function BoardPage(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    { boardList }
+                    { activityList }
                 </tbody>
             </table>
 
             <hr />
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                
-                <Button type="primary" htmlType="submit">
-                    <Link to={{
-                        pathname : `/write`,
-                        state : 
-                            [ 0,
-                            "",
-                            "",]    
-                    }}>글쓰기</Link>
-                </Button>
-
-            </div>
+            <br />
 
             <div>
                 <Pagination
                     showSizeChanger
                     onShowSizeChange={onShowSizeChange}
                     current={parseInt(window.sessionStorage.currentPage)}
-                    total={window.sessionStorage.totalPost}
+                    total={ window.sessionStorage.totalPost }
                     onChange = {pageSelect}
                     pageSizeOptions = {[10,15,20,30]}
                     pageSize = {parseInt(window.sessionStorage.pageSize)}
-                    />
+                />
             </div>
             
-
         </div>
     )
 }
 
-export default withRouter(BoardPage)
+export default withRouter(ActivityDetails)

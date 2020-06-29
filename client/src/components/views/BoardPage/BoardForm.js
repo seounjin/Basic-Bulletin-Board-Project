@@ -35,12 +35,12 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
         const queryObj = queryStirng.parse(search);
         const { comment_page } = queryObj;
         if (comment_page) {
-        return parseInt(comment_page)
+            return parseInt(comment_page)
         } else{
-        return 1
+            return 1
         }
         
-        });
+    });
 
     const body = {
         postNum : parseInt(props.match.params.postNum)
@@ -253,6 +253,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 {RegisterComment ? <a><Text strong onClick={registerComment}> 등록순 </Text></a> : <a><Text type="secondary" onClick={registerComment}> 등록순 </Text></a>}
                 {LatestComment ? <a><Text strong onClick={latestComment}> 최신순 </Text></a> : <a><Text type="secondary" onClick={latestComment}> 최신순 </Text></a>}
             </div>
+            <br/>
             {/* 코멘트 */} 
             <div>
                 <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} commentPage ={CommentPage}>  </Comments>
