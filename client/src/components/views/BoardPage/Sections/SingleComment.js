@@ -3,6 +3,7 @@ import { Comment, Avatar, Button, Input, Tooltip, Popconfirm, message } from 'an
 import { UserOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
+import Report from './Report';
 import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
@@ -102,9 +103,11 @@ function SingleComment(props) {
                 onCancel={cancel}
                 okText="Yes"
                 cancelText="No">삭제</Popconfirm>
+                
             ] : localStorage.getItem('userId') &&
             
-            [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>]
+            [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>, 
+            <span> <Report comment={true} pComment={props.comment.pComment} cGroupSquence={props.comment.cGroupSquence} toId={props.comment.cWriter} ></Report> </span> ]
 
         )
 
@@ -130,7 +133,6 @@ function SingleComment(props) {
                         setReplyComment("") // 코멘트 초기화
                         
                         body.cGroupSquence = response.data.cGroupSquence
-                        console.log("ㅇㅇㅇ", response.data.comment)
                         props.refreshComment(response.data.comment)// 코멘트 리프래쉬
 
                         setOpenReply(!OpenReply)

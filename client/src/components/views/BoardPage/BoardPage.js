@@ -61,7 +61,10 @@ function BoardPage(props) {
         return <tr key = { index }>
             <td style={{ width: '8%' }}>{ list.postnum }</td>
             <td style={{ width: '40%' }}><Link to={{
-                pathname : `/boardform/${list.postnum}` 
+                pathname : `/boardform/${list.postnum}`,
+                state : {
+                    writer : list.writer
+                } 
             }}>{ list.title }</Link></td>
             <td style={{ width: '20%' }}>{ list.writer }</td>
             <td style={{ width: '10%' }}>{ list.d }</td>

@@ -8,7 +8,8 @@ import { requestBoardForm } from '../../../_actions/board_actions';
 import { getComment, getLatestComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
 import Favorites from './Sections/Favorites';
-import queryStirng from 'query-string'
+import Report from './Sections/Report';
+import queryStirng from 'query-string';
 
 
 function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 번호 and 목록버튼 만들기!!!
@@ -23,14 +24,12 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [views, setViews] = useState(0);
     const [FavoriteCount, setFavoriteCount] = useState(0);
     const [CommentCnt, setCommentCnt] = useState(0);
-    const user = useSelector(state => state.user)
 
     const [LatestComment, setrLatestComment] = useState(false);
     const [RegisterComment, setRegisterComment] = useState(true);
 
-    console.log("props.match.params.postNum", props.match.params.postNum)
-
     const [CommentPage, setCommentPage] = useState(() =>{
+
         const { search } = props.location;
         const queryObj = queryStirng.parse(search);
         const { comment_page } = queryObj;
@@ -41,6 +40,8 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
         }
         
     });
+
+    const board = useSelector(state => state.board);
 
     const body = {
         postNum : parseInt(props.match.params.postNum)
@@ -53,6 +54,8 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 postNum : parseInt(props.match.params.postNum),
                 commentPage : CommentPage
             }
+
+            console.log("보드",board)
 
             // 게시판 내용 요청
             dispatch(requestBoardForm(body))
@@ -241,11 +244,15 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 }
             </div>
             <br/><br/>
-
+            
+            
             {/* 좋아요 */}                          
-            {localStorage.getItem('userId') ?  <Favorites favoriteData={ body } CommentCnt={CommentCnt} favorite={FavoriteCount} > </Favorites> 
+            {localStorage.getItem('userId') ? <Favorites favoriteData={ body } CommentCnt={CommentCnt} favorite={FavoriteCount} writer={Writer}> </Favorites>  
+                                                
                                             :  <p> <CommentOutlined /> 댓글 {CommentCnt} </p> }
             
+            {/* {Writer && localStorage.getItem('userId') !== Writer && "ㅎㅎㅎ"} */}
+
             <hr />
 
             {/* 등록순 최신순 */}
@@ -253,7 +260,9 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 {RegisterComment ? <a><Text strong onClick={registerComment}> 등록순 </Text></a> : <a><Text type="secondary" onClick={registerComment}> 등록순 </Text></a>}
                 {LatestComment ? <a><Text strong onClick={latestComment}> 최신순 </Text></a> : <a><Text type="secondary" onClick={latestComment}> 최신순 </Text></a>}
             </div>
+
             <br/>
+
             {/* 코멘트 */} 
             <div>
                 <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} commentPage ={CommentPage}>  </Comments>

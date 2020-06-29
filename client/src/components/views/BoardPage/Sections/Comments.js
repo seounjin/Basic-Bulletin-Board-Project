@@ -62,7 +62,7 @@ function Comments(props) {
             ))}
             
             {localStorage.getItem('userId') &&
-                <form style={{ display: 'flex' }}>
+                <form style={{ display: 'flex', marginTop: '1rem' }}>
                         <TextArea
                             style={{ width: '100%', borderRadius: '5px' }}
                             onChange={handleChange}

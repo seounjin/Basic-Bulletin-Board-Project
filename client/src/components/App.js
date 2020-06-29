@@ -7,6 +7,8 @@ import BoardPage from "./views/BoardPage/BoardPage.js";
 import WritePage from "./views/BoardPage/Write.js";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
+import ReportPost from "./views/AdminPage/ReportPost";
+import ReportComment from "./views/AdminPage/ReportComment";
 import BoardForm from "./views/BoardPage/BoardForm";
 import Mypage from "./views/Mypage/Mypage.js";
 import PwCheck from "./views/Mypage/PwCheck";
@@ -14,6 +16,7 @@ import ChangePrivacy from "./views/Mypage/ChangePrivacy";
 import ActivityDetails from "./views/Mypage/ActivityDetails";
 
 import Auth from '../hoc/auth';
+
 
 //option 
 //null  => 아무나 출입이 가능
@@ -36,6 +39,8 @@ function App() {
           <Route exact path="/pwcheck" component={Auth(PwCheck, true)} />
           <Route exact path="/changeprivacy" component={Auth(ChangePrivacy, true)} />
           <Route exact path="/activitydetails/:pageNum" component={Auth(ActivityDetails, true)} />
+          <Route exact path="/ReportPost" component={ Auth(ReportPost, null, true) } />
+          <Route exact path="/ReportComment" component={ Auth(ReportComment, true, true) } />
         </Switch>
       </div>
       <Footer />

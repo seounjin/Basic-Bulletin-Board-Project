@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-function Write(props) {
+function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정인지 구분, [1] 글제목, [2] 글내용 ) 
 
   const [Title, setTitle] = useState(props.location.state[1]);
   const [Content, setContent] = useState(props.location.state[2]);
