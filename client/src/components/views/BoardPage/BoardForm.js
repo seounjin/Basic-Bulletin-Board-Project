@@ -28,7 +28,6 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [LatestComment, setrLatestComment] = useState(false);
     const [RegisterComment, setRegisterComment] = useState(true);
 
-
     const [CommentPage, setCommentPage] = useState(() =>{
 
         const { search } = props.location;
@@ -43,7 +42,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
     });
 
-    const board = useSelector(state => state.board) 
+    const board = useSelector(state => state.board)
 
     const body = {
         postNum : parseInt(props.match.params.postNum)
