@@ -6,6 +6,7 @@ import '../BoardPage/board.css';
 
 function ReportComment(props) {
 
+    window.sessionStorage.setItem('currentDoc', '/reportComment/');
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>

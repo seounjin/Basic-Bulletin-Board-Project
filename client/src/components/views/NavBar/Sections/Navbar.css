@@ -45,7 +45,8 @@
 
 .menu__container .menu_rigth {
     float: right;
-    width: 290px;
+    /* width: 270px; */
+    margin-right: 20px;
     padding-top: 10px;
 }
 
