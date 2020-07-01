@@ -25,13 +25,15 @@ router.post("/getActionNum", async (req, res) => {
 
         const [lastLoginDate] = await conn.query("SELECT date_format(connStartDate, '%Y-%m-%d %H:%i') as lastDate FROM BulletinBoard.ConnectionRecord where connID = ? and connEndDate is not NULL order by connStartDate desc limit 1;", [userId]);
 
+        const [pcNum] = await conn.query("SELECT count(distinct pNum) as cn FROM BulletinBoard.Comment where cWriter = ?", [userId]);
+
         //console.log("데이터베이스 결과 출력", email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate)
 
         await conn.commit();
 
         conn.release();
 
-        return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate] } );            
+        return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate, pcNum[0].cn] } );           
     
     
     } catch (err) {
@@ -75,7 +77,7 @@ router.post("/modifyPrivacy", (req, res) => {
 
 router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize, type, id
 
-    console.log("클라이언트 데이터 출력",req.body);
+    //console.log("클라이언트 데이터 출력",req.body);
 
     const currentPage = parseInt(req.body.currentPage);
 
@@ -105,7 +107,7 @@ router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize
             
             //해당 아이디의 comment관련 post 수를 받는 쿼리.
             [totalPost] = await conn.query("SELECT count(*) as cnt FROM BulletinBoard.Comment where cWriter = ?", [req.body.id]);
-            //SELECT * FROM BulletinBoard.PostInfo where postnum = ANY(SELECT pNum FROM BulletinBoard.Comment where cWriter = 'bcde' group by pNum) order by date desc;
+
             [activityList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo where postnum = ANY(SELECT pNum FROM BulletinBoard.Comment where cWriter = ? group by pNum) order by date desc limit ?, ?", [req.body.id, (currentPage - 1) * maxPost, maxPost]);
         }
 
@@ -116,8 +118,6 @@ router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize
         await conn.commit();
 
         conn.release();
-
-        // console.log("activityList", activityList);
 
         // console.log("pageData", pageData);
 

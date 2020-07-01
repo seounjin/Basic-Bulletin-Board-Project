@@ -46,13 +46,13 @@ function PwCheck(props) {
     
     return (
         <div style={{ position: "absolute", top: '30%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <h2 style={{ marginLeft: 60 }}> 비밀번호 확인 </h2>
+            <h2 style={{ marginLeft: 50 }}> 비밀번호 확인 </h2>
             <br /><br />
-            <Form.Item style={{ marginLeft: 8 }} label="I D">
+            <Form.Item >
                 <Input defaultValue={localStorage.getItem('userId')} disabled={true} />
             </Form.Item>
-            <Form.Item label="P W">
-                <Input.Password value={Password} onChange={onPasswordHandler} maxLength={20} />
+            <Form.Item >
+                <Input.Password value={Password} placeholder="비밀번호 입력" onChange={onPasswordHandler} maxLength={20} />
             </Form.Item>
             <div>
                 <Button style={{ marginLeft: 120 }} >

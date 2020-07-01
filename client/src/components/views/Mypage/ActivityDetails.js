@@ -6,22 +6,30 @@ import { requestMypageList } from '../../../_actions/mypage_action';
 
 function ActivityDetails(props) {
 
+    console.log("props.history",props.history)
+
+    console.log('ggggggggggg', window.sessionStorage.totalPost, window.sessionStorage.totalActivityPost, window.sessionStorage.totalActivityComment)
+
+    console.log("props.location", props.location.state)
+
     const [List, setList] = useState([]);
     const dispatch = useDispatch();
 
-    const [TypeName, setTypeName] = useState(() =>{
+    const [TypeName, setTypeName] = useState("");
 
-        if (window.sessionStorage.totalActivityPost === window.sessionStorage.totalPost) {
-            console.log("게시물",window.sessionStorage.totalActivityPost, window.sessionStorage.totalPost);
-            return "게시물";
-        }
-        else {
-            console.log("게시물",window.sessionStorage.totalActivityPost, window.sessionStorage.totalPost);
-            console.log("게시물XXXX", window.sessionStorage.totalPost, window.sessionStorage.totalActivityComment);
-            return "댓글이 작성된 게시물";
-        }
+    // const [TypeName, setTypeName] = useState(() =>{
 
-    });
+    //     if (!props.location.state.con) {
+    //         if(props.location.state.con === 1) {
+    //             console.log("props.location", props.location.state)
+    //             return "게시물";
+    //         }
+    //         else {
+    //             return "댓글이 작성된 게시물";
+    //         }   
+    //     }
+
+    // });
 
     useEffect(() => {
 
@@ -60,9 +68,9 @@ function ActivityDetails(props) {
             .then(response =>{
             if (response.payload.success){
                 setList(response.payload.activityList);
-                console.log('response.payload.pageData.totalPage', response.payload.pageData.totalPage)
+                //console.log('response.payload.pageData.totalPage', response.payload.pageData.totalPage)
                 //window.sessionStorage.setItem('totalPost', response.payload.pageData.totalPage);
-                props.history.push(`${window.sessionStorage.currentPage}`)
+                //props.history.push(`${window.sessionStorage.currentPage}`)
             } else {
                 alert('게시판 정보를 가져오는데 실패했습니다.')
             }

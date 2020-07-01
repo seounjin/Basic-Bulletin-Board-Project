@@ -13,6 +13,9 @@ import queryStirng from 'query-string';
 
 function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 번호 and 목록버튼 만들기!!!
     
+    //console.log("props location", props.location.state[0])
+    console.log("props history", props.location.history)
+
     const { Title, Text } = Typography;
     const dispatch = useDispatch(); 
     const [Ptitle, setPtitle] = useState("");
@@ -212,13 +215,13 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 />}
 
                 <div
-                    style={{ marginLeft: localStorage.getItem('userId') === Writer ? '32rem' : '40rem'}}
+                    style={{ marginLeft: localStorage.getItem('userId') === Writer ? '40rem' : '40rem'}}
                 >
-                    <Button>
+                    {/* <Button>
                         <Link to={{
-                                pathname : `/board/${window.sessionStorage.currentPage}`
+                                pathname : window.sessionStorage.currentDoc+`${props.location.state[0]}`
                         }}>목 록</Link>
-                    </Button>
+                    </Button> */}
                 </div>
             </form>
 

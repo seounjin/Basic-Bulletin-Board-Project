@@ -7,6 +7,8 @@ import moment from 'moment';
 
 function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정인지 구분, [1] 글제목, [2] 글내용 ) 
 
+  console.log("props history", props.location.history)
+
   const [Title, setTitle] = useState(props.location.state[1]);
   const [Content, setContent] = useState(props.location.state[2]);
   const user = useSelector(state => state.user)
@@ -46,7 +48,7 @@ function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정
             .then(response => {
                 if (response.data.success) {
                   console.log("postNum", response.data.postNum)
-                  props.history.push(`/boardform/${response.data.postNum}`)
+                  props.history.replace(`/boardform/${response.data.postNum}`)
                   window.sessionStorage.setItem('currentPage', 1);
                 } else {
                     alert('글 작성에 실패했습니다.')
@@ -69,7 +71,7 @@ function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정
                   } else {
                     if (response.data.isReal) {
                       alert('기존 내용으로 게시글을 수정할 수 없습니다.')
-                      props.history.push(`/boardform/${props.location.state[0]}`)
+                      props.history.replace(`/boardform/${props.location.state[0]}`)
                     } else {
                       alert('글 수정에 실패했습니다.')
                     }

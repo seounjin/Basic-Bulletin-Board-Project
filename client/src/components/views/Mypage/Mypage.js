@@ -9,10 +9,11 @@ function Mypage(props) {
     const [Id, setId] = useState("");
     const [Email, setEmail] = useState("");
     const [ConnectDate, setConnectDate] = useState("첫 방문");
+    const [nComment, setnComment] = useState(0);
 
     useEffect(() => {
 
-        console.log("마이페이지 아이디 출력", localStorage.getItem('userId'))
+        //console.log("마이페이지 아이디 출력", localStorage.getItem('userId'))
 
         const body = {
             id : localStorage.getItem('userId')
@@ -25,8 +26,9 @@ function Mypage(props) {
                       setId(localStorage.getItem('userId'))
                       setEmail(response.data.info[0])
                       window.sessionStorage.setItem('totalActivityPost', response.data.info[1]);
-                      window.sessionStorage.setItem('totalActivityComment', response.data.info[2]);
+                      window.sessionStorage.setItem('totalActivityComment', response.data.info[4]);
                       setConnectDate(response.data.info[3])
+                      setnComment(response.data.info[2])
                   } else {
                     alert('정보를 가져올 수 없습니다. \n잠시후 다시 시도해주세요.')
                     props.history.push(``)
@@ -35,23 +37,23 @@ function Mypage(props) {
         
     }, [])
 
-    const goToMind = (type) => {
+    const goToMine = (type) => {
         //event.preventDefault();
-
-        console.log("타입", type);
         // window.sessionStorage.setItem('activityType', 0);
+
+        console.log("goToMind가 실행됩니다.")
 
         if (type === 0) {
             window.sessionStorage.setItem('totalPost', window.sessionStorage.totalActivityPost);
-            console.log("타입", type);
         }
         else {
             window.sessionStorage.setItem('totalPost', window.sessionStorage.totalActivityComment);
         }
 
-        window.sessionStorage.setItem('pageSize', 10);
-        window.sessionStorage.setItem('currentPage', 1);
-        props.history.push(`/activitydetails/1`)
+        window.sessionStorage.setItem('currentDoc', '/activitydetails/');
+        //window.sessionStorage.setItem('pageSize', 10);
+        //window.sessionStorage.setItem('currentPage', 1);
+        //props.history.push(`/activitydetails/1`)
     }
 
     return (
@@ -75,8 +77,8 @@ function Mypage(props) {
             <br/><br/>
             <Space direction="horizontal">
                 <Card title="활동 내역" style={{ width: 300, height: 200 }}>
-                    <p>작성한 게시물 수 : <Link onClick={ (e) => goToMind(0) }>{window.sessionStorage.totalActivityPost}</Link></p>
-                    <p>작성한 댓글 수 : <Link onClick={ (e) => goToMind(1) }>{window.sessionStorage.totalActivityComment}</Link></p>
+                    <p>작성한 게시물 수 : <Link to={{pathname : '/activitydetails/1', state : { con: "1"} }}  >{window.sessionStorage.totalActivityPost}</Link></p>
+                    <p>작성한 댓글 수 : <Link onClick={ (e) => goToMine(1) } >{nComment} </Link>  / {window.sessionStorage.totalActivityComment} posts </p>
                     <p>최근 접속 일자 : {ConnectDate}</p>
                 </Card>
                 <Card 
