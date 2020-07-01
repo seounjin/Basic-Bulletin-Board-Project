@@ -27,8 +27,8 @@ function Report(props) {
 
             const body = {
                 pNum: board.boardContent.postnum,
-                content: ModalContent,
-                pComment: props.pComment,
+                rContent: ModalContent,
+                content: props.pComment,
                 cGroupSquence: props.cGroupSquence,
                 fromId: localStorage.getItem('userId'),
                 toId: props.toId,
@@ -55,10 +55,11 @@ function Report(props) {
 
             const body = {
                 pNum: board.boardContent.postnum,
-                content: ModalContent,
+                rContent: ModalContent,
                 fromId: localStorage.getItem('userId'),
                 toId: board.boardContent.content[0].writer,
                 date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                pContent: board.boardContent.content[0].pContent
             }
 
             axios.post('/api/report/saveReport', body)

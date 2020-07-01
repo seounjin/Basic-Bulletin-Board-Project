@@ -9,9 +9,12 @@ import { withRouter } from 'react-router-dom'
 
 function Page(props) {
 
+    console.log("모야모야",   props.match.params.pageNum)
+
     const [List, setList] = useState([]);
     const [Total, setTotal] = useState(0);
-    const [CurrentPage, setCurrentPage] = useState(() =>{
+
+    const getPageNum = () => {
 
         const { search } = props.location;
         const queryObj = queryStirng.parse(search);
@@ -23,17 +26,31 @@ function Page(props) {
                 return 1
             }
 
-    });
+    }
+
 
     useEffect(() => {
 
-        const body = {
-            currentPage: CurrentPage
+        let body = {};
+
+
+        if (props.state === 'myReport'){
+            body = {
+                id: localStorage.getItem('userId'),
+                currentPage: getPageNum()
+            }
+
+        } else {
+
+            body = {
+                currentPage: getPageNum()
+            }
         }
 
         axios.post(props.getRouter, body)
             .then(response => {
                 if(response.data.success){
+
                     setList(response.data.data);
                     setTotal(response.data.Count.count);
                 } else {
@@ -42,13 +59,14 @@ function Page(props) {
             })
 
 
-    },[])
+    },[getPageNum(), props.getRouter])
     
     const deleteClick = (data) => {
         
         // data
         // comment: cGroupSquence
         // Post: pNum
+        
         const body = {
             data: parseInt(data)
         }
@@ -61,10 +79,12 @@ function Page(props) {
                             setList(List.filter(list => list.cGroupSquence !== data));
                         case 'reportPost':
                             setList(List.filter(list => list.pNum !== data));
+                        case 'myReport':
+                            setList(List.filter(list => list.rNum !== data));
                     }
-                    alert('삭제 성공');
+                    alert('성공');
                 } else {
-                    alert('삭제 실패');
+                    alert('실패');
                 }
             })
 
@@ -73,6 +93,7 @@ function Page(props) {
 
     const pageSelect = (page) => {
 
+        console.log("ppp",page)
         const body = {
             currentPage: page
         };
@@ -83,7 +104,6 @@ function Page(props) {
                 if(response.data.success){
                     setList(response.data.data);
                     setTotal(response.data.Count.count);
-                    setCurrentPage(page);
                     props.history.push(`${props.state}?page=${page}`);
 
                 } else {
@@ -101,7 +121,7 @@ function Page(props) {
 
             <div>
                 <Pagination
-                    current={CurrentPage}
+                    current={getPageNum()}
                     total={Total}
                     onChange={pageSelect}
                 />

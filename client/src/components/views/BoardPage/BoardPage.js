@@ -1,54 +1,99 @@
 import React, { useEffect, useState } from 'react'
 import './board.css';
 import { withRouter, Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { requestBoardList } from '../../../_actions/board_actions';
 import { Button, Pagination } from 'antd';
+import queryStirng from 'query-string'
 
 
 function BoardPage(props) {
 
     const [List, setList] = useState([])
     const dispatch = useDispatch();
+    const [Total, setTotal] = useState(0)
+
+    const getPageSize = () => {
+        const { search } = props.location;
+        const queryObj = queryStirng.parse(search);
+        const { list_num } = queryObj;
+ 
+        if (list_num) {
+            return parseInt(list_num)
+        } else{
+            return 10
+        }
+    }
 
     useEffect(() => {
-
+        
         requestBoard()
         
-    }, [])
+    }, [props.match.params.pageNum,getPageSize()])
 
     const onShowSizeChange = (current, pageSize) => {
+        console.log("onShowSizeChange", current, pageSize);
 
-        window.sessionStorage.setItem('pageSize', pageSize);
-        window.sessionStorage.setItem('currentPage', current);
-
-        requestBoard()
-        window.scrollTo(0,0);
-    }
-
-    //페이지네이션
-    const pageSelect = (page) => {
-
-        window.sessionStorage.setItem('currentPage', page);
-
-        requestBoard()
-        window.scrollTo(0,0);
-    }
-
-    const requestBoard = () => {
-
-        let body = {
-            currentPage : window.sessionStorage.currentPage,
-            pageSize : window.sessionStorage.pageSize
+        const body = {
+            currentPage : current,
+            pageSize : pageSize
         }
 
         dispatch(requestBoardList(body))
             .then(response =>{
             if (response.payload.success){
                 setList(response.payload.boardList);
-                console.log('response.payload.pageData.totalPage', response.payload.pageData.totalPage)
-                window.sessionStorage.setItem('totalPost', response.payload.pageData.totalPage);
-                props.history.push(`${window.sessionStorage.currentPage}`)
+                setTotal(response.payload.pageData.totalPage)
+                props.history.push(`${current}?list_num=${pageSize}`)
+            } else {
+                alert('게시판 정보를 가져오는데 실패했습니다.')
+            }
+
+        })
+
+    }
+
+    const pageSelect = (page) => {
+
+        console.log("page", page);
+        const body = {
+            currentPage : page,
+            pageSize : getPageSize()
+        }
+
+        dispatch(requestBoardList(body))
+            .then(response =>{
+            if (response.payload.success){
+                setList(response.payload.boardList);
+                setTotal(response.payload.pageData.totalPage)
+
+                if (getPageSize() === 10){
+                    props.history.push(`${page}`)
+                }
+                else {
+                    props.history.push(`${page}?list_num=${getPageSize()}`)
+                }
+            } else {
+                alert('게시판 정보를 가져오는데 실패했습니다.')
+            }
+
+        })
+    }
+
+
+    const requestBoard = () => {
+
+        let body = {
+            currentPage : props.match.params.pageNum,
+            pageSize : getPageSize()
+        }
+
+        dispatch(requestBoardList(body))
+            .then(response =>{
+            if (response.payload.success){
+                setList(response.payload.boardList);
+
+                setTotal(response.payload.pageData.totalPage)
             } else {
                 alert('게시판 정보를 가져오는데 실패했습니다.')
             }
@@ -59,17 +104,16 @@ function BoardPage(props) {
     const boardList = List.map((list, index) => {
 
         return <tr key = { index }>
-            <td style={{ width: '8%' }}>{ list.postnum }</td>
-            <td style={{ width: '40%' }}><Link to={{
+            <td>{ list.postnum }</td>
+            <td><Link to={{
                 pathname : `/boardform/${list.postnum}`,
-                state : {
-                    writer : list.writer
-                } 
+                state : 
+                    [props.match.params.pageNum]    
             }}>{ list.title }</Link></td>
-            <td style={{ width: '20%' }}>{ list.writer }</td>
-            <td style={{ width: '10%' }}>{ list.d }</td>
-            <td style={{ width: '10%' }}>{ list.views }</td>
-            <td style={{ width: '10%' }}>{ list.favorite }</td>
+            <td>{ list.writer }</td>
+            <td>{ list.d }</td>
+            <td>{ list.views }</td>
+            <td>{ list.favorite }</td>
         </tr>
 
     })
@@ -107,7 +151,8 @@ function BoardPage(props) {
                         state : 
                             [ 0,
                             "",
-                            "",]    
+                            "",
+                            0]    
                     }}>글쓰기</Link>
                 </Button>
 
@@ -117,11 +162,12 @@ function BoardPage(props) {
                 <Pagination
                     showSizeChanger
                     onShowSizeChange={onShowSizeChange}
-                    current={parseInt(window.sessionStorage.currentPage)}
-                    total={window.sessionStorage.totalPost}
+
+                    current={parseInt(props.match.params.pageNum)}
+                    total={Total}
                     onChange = {pageSelect}
                     pageSizeOptions = {[10,15,20,30]}
-                    pageSize = {parseInt(window.sessionStorage.pageSize)}
+                    pageSize = {getPageSize()}
                     />
             </div>
             
