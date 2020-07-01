@@ -4,6 +4,9 @@ const { auth } = require("../middleware/auth");
 const { userLogin, modifyPrivacy } = require('../models/User');
 const pool = require('../config/pool');
 const { Page } = require("../pagination/page"); 
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 
 router.post("/getActionNum", async (req, res) => {
@@ -243,4 +246,83 @@ router.post("/cancelmyReportComment", async (req, res) => {
 
 });
 
-module.exports = router;
+router.post("/imageUpload2", async (req, res) => {
+
+    const image = req;
+
+    console.log("image", image)
+
+    return res.status(400)
+    
+    //const conn = await pool.getConnection();
+
+    // try {
+
+    //     await conn.beginTransaction();
+
+    //     await conn.query("DELETE FROM `BulletinBoard`.`ReportComment` WHERE (`rNum` = ?)",[rNum]);
+
+    //     await conn.commit();
+
+    //     conn.release();
+
+    //     return res.status(200).json( { success: true } );
+    
+    // } catch (err) {
+        
+    //     conn.rollback();
+
+    //     conn.release();
+
+    //     return res.status(400).json( { success: false, err } );
+    // }
+
+});
+
+// fs.readdir('uploads', (error) => {
+//     // uploads 폴더 없으면 생성
+//     if (error) {
+//         fs.mkdirSync('uploads');
+//     }
+// })
+
+// const upload = multer({
+//     storage: multer.diskStorage({
+//         destination(req, file, cb) {
+//             cb(null, 'uploads/');
+//         },
+//         filename(req, file, cb) {
+//             const ext = path.extname(file.originalname);
+//             cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+//         },
+//     }),
+//     limits: { fileSize: 5 * 1024 * 1024 },
+// })
+// // 이미지 업로드를 위한 API
+// // upload의 single 메서드는 하나의 이미지를 업로드할 때 사용
+// router.post('/imageUpload', upload.single('img'), (req, res) => {
+//     console.log(req.body.img);
+//     res.json({ url : `/img/${req.body.img}`});
+// })
+
+//app.use(express.static("public"));
+
+// const storage = multer.diskStorage({
+//     destination: "./public/img/",
+//     filename: function(req, file, cb) {
+//       cb(null, "imgfile" + Date.now() + path.extname(file.originalname));
+//     }
+// });
+
+// const upload = multer({
+//     storage: storage,
+//     limits: { fileSize: 1000000 }
+// });
+
+// app.post("/uplimageUpload", upload.single("img"), function(req, res, next) {
+//     res.send({
+//       fileName: req.file.filename
+//     });
+// });
+
+// module.exports = router;

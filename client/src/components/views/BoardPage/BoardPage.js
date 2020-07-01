@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './board.css';
 import { withRouter, Link } from 'react-router-dom'
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { requestBoardList } from '../../../_actions/board_actions';
 import { Button, Pagination } from 'antd';
 import queryStirng from 'query-string'
