@@ -3,12 +3,14 @@ const router = express.Router();
 const { auth } = require("../middleware/auth");
 const { userLogin, modifyPrivacy } = require('../models/User');
 const pool = require('../config/pool');
+const { Page } = require("../pagination/page"); 
+
 
 router.post("/getActionNum", async (req, res) => {
 
     const userId = req.body.id;
 
-    //console.log("클라이언트 데이터 출력",req.body)
+    console.log("클라이언트 데이터 출력",req.body)
 
     const conn = await pool.getConnection();
 
@@ -36,7 +38,7 @@ router.post("/getActionNum", async (req, res) => {
     
     } catch (err) {
 
-        //console.log("에러출력", err);
+        console.log("에러출력", err);
 
         conn.rollback();
 
@@ -130,6 +132,113 @@ router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize
         conn.release();
 
         return res.json( { success: false, err } );
+    }
+
+});
+
+
+router.post("/getMyReportComment", async(req, res) => {
+        
+    // pNum,currentPage,maxComment, countSql, dataSql
+    const fromId = req.body.id;
+
+    const currentPage = req.body.currentPage;
+
+    const maxComment = 10;
+
+    const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportComment WHERE fromId=?";
+
+    //pNum,content,from,to,date
+    const dataSql = "SELECT rNum, pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content cGroupSquence FROM BulletinBoard.ReportComment WHERE fromId=? order by date, date limit ?, ?";
+
+    const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
+    
+    if (json.success){
+        return res.status(200).json(json);
+    } else {
+        return res.status(400).json(json);
+    }
+
+});
+
+router.post("/getMyReportPost", async(req, res) => {
+    
+    // pNum,currentPage,maxComment, countSql, dataSql
+    const fromId = req.body.id;
+
+    const currentPage = req.body.currentPage;
+
+    const maxComment = 10;
+
+    const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportPost WHERE fromId=?";
+
+    //pNum,content,from,to,date
+    const dataSql = "SELECT rNum, pNum, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content FROM BulletinBoard.ReportPost WHERE fromId=? order by date, date limit ?, ?";
+
+    const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
+    
+    if (json.success){
+        return res.status(200).json(json);
+    } else {
+        return res.status(400).json(json);
+    }
+
+});
+
+router.post("/cancelmyReportPost", async (req, res) => {
+
+    const rNum = req.body.data;
+    
+    const conn = await pool.getConnection();
+
+    try {
+
+        await conn.beginTransaction();
+
+        await conn.query("DELETE FROM `BulletinBoard`.`ReportPost` WHERE (`rNum` = ?)",[rNum]);
+
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json( { success: true } );
+    
+    } catch (err) {
+        
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+
+});
+
+router.post("/cancelmyReportComment", async (req, res) => {
+
+    const rNum = req.body.data;
+    
+    const conn = await pool.getConnection();
+
+    try {
+
+        await conn.beginTransaction();
+
+        await conn.query("DELETE FROM `BulletinBoard`.`ReportComment` WHERE (`rNum` = ?)",[rNum]);
+
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json( { success: true } );
+    
+    } catch (err) {
+        
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
     }
 
 });

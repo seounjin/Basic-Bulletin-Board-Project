@@ -22,6 +22,7 @@ function BoardPage(props) {
         const { search } = props.location;
         const queryObj = queryStirng.parse(search);
         const { list_num } = queryObj;
+ 
         if (list_num) {
             return parseInt(list_num)
         } else{
@@ -30,6 +31,7 @@ function BoardPage(props) {
     }
 
     useEffect(() => {
+        
         requestBoard()
     }, [props.match.params.pageNum,getPageSize()])
 
@@ -37,9 +39,9 @@ function BoardPage(props) {
         console.log("onShowSizeChange", current, pageSize);
 
         const body = {
-        currentPage : current,
-        pageSize : pageSize
-    }
+            currentPage : current,
+            pageSize : pageSize
+        }
 
         dispatch(requestBoardList(body))
             .then(response =>{
@@ -56,18 +58,17 @@ function BoardPage(props) {
     }
 
     const pageSelect = (page) => {
-
-    console.log("page", page);
-    const body = {
-        currentPage : page,
-        pageSize : getPageSize()
-    }
+        console.log("page", page);
+        const body = {
+            currentPage : page,
+            pageSize : getPageSize()
+        }
 
         dispatch(requestBoardList(body))
-        .then(response =>{
+            .then(response =>{
             if (response.payload.success){
-            setList(response.payload.boardList);
-            setTotal(response.payload.pageData.totalPage)
+                setList(response.payload.boardList);
+                setTotal(response.payload.pageData.totalPage)
 
                 if (getPageSize() === 10){
                     props.history.push(`${page}`)

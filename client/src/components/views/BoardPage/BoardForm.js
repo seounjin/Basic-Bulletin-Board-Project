@@ -8,7 +8,6 @@ import { requestBoardForm } from '../../../_actions/board_actions';
 import { getComment, getLatestComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
 import Favorites from './Sections/Favorites';
-import Report from './Sections/Report';
 import queryStirng from 'query-string';
 
 
@@ -31,7 +30,8 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [LatestComment, setrLatestComment] = useState(false);
     const [RegisterComment, setRegisterComment] = useState(true);
 
-    const [CommentPage, setCommentPage] = useState(() =>{
+
+    const getCommentPage = () => {
 
         const { search } = props.location;
         const queryObj = queryStirng.parse(search);
@@ -41,9 +41,8 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
         } else{
             return 1
         }
-        
-    });
 
+    }
     const board = useSelector(state => state.board);
 
     const body = {
@@ -55,7 +54,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
             const commentBody = {
                 postNum : parseInt(props.match.params.postNum),
-                commentPage : CommentPage
+                commentPage : getCommentPage()
             }
 
             console.log("보드",board)
@@ -83,14 +82,13 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 setCommentLists(response.payload.comment);
                 setCommentCnt(response.payload.commentCnt.totalComment);
                 
-                //setCommentPage(CommentPage);
             } else {
                 alert('댓글을 가져오는데 실패했습니다.');
             }
         })
 
 
-    },[])
+    },[getCommentPage()])
 
 
     const updateComment = (newComment) => {
@@ -115,11 +113,10 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
     const commentPageSelect = (commentPage) => {
 
-        setCommentPage(commentPage);
 
         const commentBody = {
             postNum : parseInt(props.match.params.postNum),
-            commentPage : commentPage
+            commentPage : getCommentPage()
         }
 
         if (RegisterComment){
@@ -159,7 +156,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
             const commentBody = {
                 postNum : parseInt(props.match.params.postNum),
-                commentPage : CommentPage
+                commentPage : getCommentPage()
             }
 
             dispatch(getComment(commentBody))
@@ -179,7 +176,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
             const commentBody = {
                 postNum : parseInt(props.match.params.postNum),
-                commentPage : CommentPage
+                commentPage : getCommentPage()
             }
 
             
@@ -268,13 +265,13 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
             {/* 코멘트 */} 
             <div>
-                <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} commentPage ={CommentPage}>  </Comments>
+                <Comments CommentLists={CommentLists} refreshComment={updateComment} deleteFuction = {deleteComment} modifyFunction = {modifyComment} commentPage ={getCommentPage()}>  </Comments>
             </div>
 
             {/* Pagination */}
             <div style={{ textAlign: 'center' , marginTop: '2rem' }}>
                 <Pagination
-                    current={CommentPage}
+                    current={getCommentPage()}
                     total={CommentCnt}
                     onChange = {commentPageSelect}
                 />

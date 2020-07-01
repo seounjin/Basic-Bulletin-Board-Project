@@ -85,7 +85,7 @@ function Mypage(props) {
                     title="신 고 내 역" 
                     style={{ width: 300, height: 200, marginLeft: 30 }}>
                         <br/>
-                        <p><Link to={{pathname : `/board/1` }}>신고 내역 확인</Link></p>
+                        <p><Link to={{pathname : `/MyReport` }}>신고 내역 확인</Link></p>
                 </Card>
             </Space>
         </div>

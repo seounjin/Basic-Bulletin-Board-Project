@@ -11,7 +11,7 @@ router.post("/saveReport", async (req, res) => {
 
     const pNum = req.body.pNum;
 
-    const content = req.body.content;
+    const rContent = req.body.rContent;
 
     const fromId = req.body.fromId;
 
@@ -19,7 +19,9 @@ router.post("/saveReport", async (req, res) => {
 
     const date = req.body.date;
 
-    const data = [pNum, content, fromId, toId, date];
+    const content = req.body.pContent;
+
+    const data = [pNum, rContent, fromId, toId, date, content];
 
     const conn = await pool.getConnection();
     //  // 신고 횟수 카운트
@@ -40,7 +42,7 @@ router.post("/saveReport", async (req, res) => {
             return res.status(200).json( {success: true, report: true} );
         }
 
-        await conn.query("INSERT INTO `BulletinBoard`.`ReportPost` (`pNum`, `content`, `fromId`, `toId`, `date`) VALUES (?, ?, ?, ?, ?)", data);
+        await conn.query("INSERT INTO `BulletinBoard`.`ReportPost` (`pNum`, `rContent`, `fromId`, `toId`, `date`, `pContent`) VALUES (?, ?, ?, ?, ?, ?)", data);
         
         await conn.commit();
 
@@ -129,9 +131,9 @@ router.post("/saveReportComment", async (req, res) => {
 
     const pNum = req.body.pNum;
 
-    const pComment = req.body.pComment;
-
     const content = req.body.content;
+
+    const rContent = req.body.rContent;
 
     const fromId = req.body.fromId;
 
@@ -141,7 +143,7 @@ router.post("/saveReportComment", async (req, res) => {
 
     const cGroupSquence = req.body.cGroupSquence
 
-    const data = [pNum, pComment, content, fromId, toId, date, cGroupSquence];
+    const data = [pNum, content, rContent, fromId, toId, date, cGroupSquence];
 
     const conn = await pool.getConnection();
 
@@ -161,7 +163,7 @@ router.post("/saveReportComment", async (req, res) => {
             return res.status(200).json( {success: true, report: true} );
         }
 
-        await conn.query("INSERT INTO `BulletinBoard`.`ReportComment` (`pNum`, `pComment`, `content`, `fromId`, `toId`, `date`, `cGroupSquence`) VALUES (?, ?, ?, ?, ?, ?, ?)", data);
+        await conn.query("INSERT INTO `BulletinBoard`.`ReportComment` (`pNum`, `content`, `rContent`, `fromId`, `toId`, `date`, `cGroupSquence`) VALUES (?, ?, ?, ?, ?, ?, ?)", data);
         
         await conn.commit();
 
