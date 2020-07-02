@@ -11,7 +11,6 @@ function ImageUpload() {
 
     const getBase64 = (img, callback)  => {
 
-        console.log("getBase64");
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
@@ -43,13 +42,20 @@ function ImageUpload() {
         }
         if (info.file.status === 'done') {
           // Get this url from response in real world.
-            getBase64(info.file.originFileObj, (imageUrl) =>{
+            getBase64(info.file.originFileObj, async (imageUrl) =>{
+                //서버에 이미지 보내기.
+                // body = {
+                //     image : imageUrl
+                // }
 
-                console.log("dfdsfsdfsdfsd",imageUrl)
+                let output = document.getElementById('data')
+                output = imageUrl
+                console.log("dfdsfsdfsdfsd",info.file.originFileObj)
+
                 setImage(imageUrl)
                 setLoading(false)
                 const formData = new FormData();
-                formData.append('file', info.file.originFileObj);
+                await formData.append('img', info.file.originFileObj);
                 axios.post('/api/mypage/imageUpload', formData)
                     .then(response => {
                         if (response.data.url) {
