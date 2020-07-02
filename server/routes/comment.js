@@ -105,7 +105,7 @@ router.post("/saveComment2", async (req, res) => {
         
         await conn.query('UPDATE `BulletinBoard`.`Comment` SET `gNum` = ? WHERE (`cGroupSquence` = ?)', [cGroupsquence.insertId, cGroupsquence.insertId]);
 
-        const [comment] = await conn.query("SELECT pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment WHERE pNum = ? order by gNum, date limit ?, ?", 
+        const [comment] = await conn.query("SELECT avatar, pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment, BulletinBoard.User WHERE pNum = ? and cWriter = id order by gNum, date limit ?, ?", 
                                            [pNum, (currentPage - 1) * maxComment, maxComment]);
 
         await conn.commit();
@@ -147,7 +147,7 @@ router.post("/saveComment3", async (req, res) => {
         
         const [cGroupsquence] = await conn.query("INSERT INTO `BulletinBoard`.`Comment` (`pNum`, `cWriter`, `pComment`, `gNum`, `date`, `gDepth`, `cID`) VALUES (?, ?, ?, ?, ?, ?, ?)", commentData);
         
-        const [comment] = await conn.query("SELECT pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment WHERE pNum = ? order by gNum, date limit ?, ?", 
+        const [comment] = await conn.query("SELECT avatar, pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment, BulletinBoard.User WHERE pNum = ? and cWriter = id order by gNum, date limit ?, ?", 
                                                 [pNum, (currentPage - 1) * maxComment, maxComment]);
         await conn.commit();
 
@@ -213,7 +213,7 @@ router.post("/getCommentPage", async (req, res) => {
 
         const [totalComment] = await conn.query("SELECT COUNT(pNum) AS cnt FROM BulletinBoard.Comment WHERE pNum=?",[pNum]);
 
-        const [comment] = await conn.query("SELECT pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment WHERE pNum = ? order by gNum, date limit ?, ?", 
+        const [comment] = await conn.query("SELECT avatar, pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment, BulletinBoard.User WHERE pNum = ? and cWriter = id order by gNum, date limit ?, ?", 
                                                 [pNum, (currentPage - 1) * maxComment, maxComment]);
 
         const commentCnt = {
@@ -252,7 +252,7 @@ router.post("/getLatestComment", async (req, res) => {
 
         const [totalComment] = await conn.query("SELECT COUNT(pNum) AS cnt FROM BulletinBoard.Comment WHERE pNum=?",[pNum]);
 
-        const [comment] = await conn.query("SELECT pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment where pNum = ? order by gNum desc, date limit ?, ?", 
+        const [comment] = await conn.query("SELECT avatar, pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment, BulletinBoard.User where pNum = ? and cWriter = id order by gNum desc, date limit ?, ?", 
                                                 [pNum, (currentPage - 1) * maxComment, maxComment]);
 
         const commentCnt = {

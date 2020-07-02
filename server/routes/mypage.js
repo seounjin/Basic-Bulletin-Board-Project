@@ -29,13 +29,17 @@ router.post("/getActionNum", async (req, res) => {
 
         const [pcNum] = await conn.query("SELECT count(distinct pNum) as cn FROM BulletinBoard.Comment where cWriter = ?", [userId]);
 
+        const [avatar] = await conn.query("SELECT avatar FROM BulletinBoard.User WHERE id=?", [userId]);
+
         //console.log("데이터베이스 결과 출력", email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate)
 
         await conn.commit();
 
         conn.release();
 
-        return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate, pcNum[0].cn] } );           
+        console.log("avatar", avatar)
+        
+        return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate, pcNum[0].cn , avatar[0].avatar]} );           
     
     
     } catch (err) {
@@ -249,69 +253,8 @@ router.post("/cancelmyReportComment", async (req, res) => {
 
 });
 
-router.post("/imageUpload2", async (req, res) => {
-
-    const image = req;
-
-    console.log("image", image)
-
-    return res.status(400)
-    
-    //const conn = await pool.getConnection();
-
-    // try {
-
-    //     await conn.beginTransaction();
-
-    //     await conn.query("DELETE FROM `BulletinBoard`.`ReportComment` WHERE (`rNum` = ?)",[rNum]);
-
-    //     await conn.commit();
-
-    //     conn.release();
-
-    //     return res.status(200).json( { success: true } );
-    
-    // } catch (err) {
-        
-    //     conn.rollback();
-
-    //     conn.release();
-
-    //     return res.status(400).json( { success: false, err } );
-    // }
-
-});
-
-// fs.readdir('uploads', (error) => {
-//     // uploads 폴더 없으면 생성
-//     if (error) {
-//         fs.mkdirSync('uploads');
-//     }
-// })
-
-// const upload = multer({
-//     storage: multer.diskStorage({
-//         destination(req, file, cb) {
-//             cb(null, 'uploads/');
-//         },
-//         filename(req, file, cb) {
-//             console.log("파일",file)
-//             const ext = path.extname(file.originalname);
-//             cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
-//         },
-//     }),
-//     limits: { fileSize: 5 * 1024 * 1024 },
-// })
-// // 이미지 업로드를 위한 API
-// // upload의 single 메서드는 하나의 이미지를 업로드할 때 사용
-// router.post('/imageUpload', upload.single('img'), (req, res) => {
-//     console.log("데이터",req.body.img);
-//     res.json({ url : `/img/${req.body.img}`});
-// })
-
-
 const storage = multer.diskStorage({
-    destination: 'uploads/',
+    destination: './public/img/',
     filename: function(req, file, cb) {
         console.log("storage  req", req)
         console.log("storage file", file)
@@ -324,14 +267,35 @@ const upload = multer({
     limits: { fileSize: 1000000 }
 });
 
-router.post("/imageUpload", upload.single('img'), function(req, res, next) {
+router.post("/imageUpload", upload.single('img'), async function(req, res, next) {
 
-    console.log("이미지",req.file)
-    if (req.body) {
-        return res.status(200).json( { success: true } );
-    }
-    else {
-        return res.status(400).json( { success: false } );
+    const userId = req.body.id;
+    
+    const avatar = req.file.filename;
+
+    console.log("이미지",req.file.filename)
+
+    const conn = await pool.getConnection();
+
+    try {
+
+        await conn.beginTransaction();
+
+        await conn.query("UPDATE `BulletinBoard`.`User` SET `avatar` = ? WHERE (`id` = ?)",[avatar, userId]);
+
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json( { success: true, file: avatar } );
+    
+    } catch (err) {
+        
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
     }
 });
 
