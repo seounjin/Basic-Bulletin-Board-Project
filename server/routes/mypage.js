@@ -5,17 +5,14 @@ const { userLogin, modifyPrivacy } = require('../models/User');
 const pool = require('../config/pool');
 const { Page } = require("../pagination/page"); 
 const multer = require('multer');
-const fs = require('fs');
 const path = require('path');
-const moment = require('moment');
-const upload = require('../fileupload');
 
 
 router.post("/getActionNum", async (req, res) => {
 
     const userId = req.body.id;
 
-    console.log("클라이언트 데이터 출력",req.body)
+    //console.log("클라이언트 데이터 출력",req.body)
 
     const conn = await pool.getConnection();
 
@@ -82,11 +79,11 @@ router.post("/modifyPrivacy", (req, res) => {
 
 router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize, type, id
 
-    //console.log("클라이언트 데이터 출력",req.body);
+    console.log("클라이언트 데이터 출력",req.body);
 
     const currentPage = parseInt(req.body.currentPage);
 
-    const maxPost = parseInt(req.body.pageSize);
+    const maxPost = req.body.pageSize;
 
     let type = false;
     if ( req.body.type === '게시물') {
@@ -111,14 +108,18 @@ router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize
         else { // comment 관련 post를 원하는 경우.
             
             //해당 아이디의 comment관련 post 수를 받는 쿼리.
-            [totalPost] = await conn.query("SELECT count(*) as cnt FROM BulletinBoard.Comment where cWriter = ?", [req.body.id]);
-
+            [totalPost] = await conn.query("SELECT count(distinct pNum) as cnt FROM BulletinBoard.Comment where cWriter = ?", [req.body.id]);
+            //SELECT count(distinct pNum) as cn FROM BulletinBoard.Comment where cWriter = ?
             [activityList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo where postnum = ANY(SELECT pNum FROM BulletinBoard.Comment where cWriter = ? group by pNum) order by date desc limit ?, ?", [req.body.id, (currentPage - 1) * maxPost, maxPost]);
         }
 
         const pageData = {
             totalPage : totalPost[0].cnt
         }
+
+        console.log("totalPost", pageData);
+
+        console.log("activityList", activityList);
 
         await conn.commit();
 
@@ -312,6 +313,8 @@ router.post("/imageUpload2", async (req, res) => {
 const storage = multer.diskStorage({
     destination: 'uploads/',
     filename: function(req, file, cb) {
+        console.log("storage  req", req)
+        console.log("storage file", file)
       cb(null, "imgfile" + Date.now() + path.extname(file.originalname));
     }
 });
@@ -323,10 +326,13 @@ const upload = multer({
 
 router.post("/imageUpload", upload.single('img'), function(req, res, next) {
 
-    console.log("이미지",req.body)
-    res.send({
-      fileName: req.body.img
-    });
+    console.log("이미지",req.file)
+    if (req.body) {
+        return res.status(200).json( { success: true } );
+    }
+    else {
+        return res.status(400).json( { success: false } );
+    }
 });
 
 module.exports = router;

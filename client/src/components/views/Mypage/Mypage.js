@@ -37,25 +37,6 @@ function Mypage(props) {
         
     }, [])
 
-    const goToMine = (type) => {
-        //event.preventDefault();
-        // window.sessionStorage.setItem('activityType', 0);
-
-        console.log("goToMind가 실행됩니다.")
-
-        if (type === 0) {
-            window.sessionStorage.setItem('totalPost', window.sessionStorage.totalActivityPost);
-        }
-        else {
-            window.sessionStorage.setItem('totalPost', window.sessionStorage.totalActivityComment);
-        }
-
-        window.sessionStorage.setItem('currentDoc', '/activitydetails/');
-        //window.sessionStorage.setItem('pageSize', 10);
-        //window.sessionStorage.setItem('currentPage', 1);
-        //props.history.push(`/activitydetails/1`)
-    }
-
     return (
         // <div style={{ width: '50%', margin: '4rem auto' }}>
         <div style={{ position: "absolute", top: '42%', left: '50%', transform: 'translate(-50%, -50%)' }}>
@@ -77,8 +58,8 @@ function Mypage(props) {
             <br/><br/>
             <Space direction="horizontal">
                 <Card title="활동 내역" style={{ width: 300, height: 200 }}>
-                    <p>작성한 게시물 수 : <Link to={{pathname : '/activitydetails/1', state : { con: "1"} }}  >{window.sessionStorage.totalActivityPost}</Link></p>
-                    <p>작성한 댓글 수 : <Link onClick={ (e) => goToMine(1) } >{nComment} </Link>  / {window.sessionStorage.totalActivityComment} posts </p>
+                    <p>작성한 게시물 수 : <Link to={{pathname : '/activitydetails/1', state : { con: "0"} }}  >{window.sessionStorage.totalActivityPost}</Link></p>
+                    <p>작성한 댓글 수 : <Link to={{pathname : '/activitydetails/1', state : { con: "1"} }} >{nComment} </Link>  / {window.sessionStorage.totalActivityComment} posts </p>
                     <p>최근 접속 일자 : {ConnectDate}</p>
                 </Card>
                 <Card 

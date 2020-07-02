@@ -34,7 +34,7 @@ function ImageUpload() {
 
     const handleChange = (info) => {
 
-        console.log("handleChange");
+        console.log("handleChange", info);
 
         if (info.file.status === 'uploading') {
             setLoading(true);
@@ -43,23 +43,15 @@ function ImageUpload() {
         if (info.file.status === 'done') {
           // Get this url from response in real world.
             getBase64(info.file.originFileObj, async (imageUrl) =>{
-                //서버에 이미지 보내기.
-                // body = {
-                //     image : imageUrl
-                // }
-
-                let output = document.getElementById('data')
-                output = imageUrl
-                console.log("dfdsfsdfsdfsd",info.file.originFileObj)
-
+                console.log("imageUrl", imageUrl)
+                console.log("info.file.originFileObj", info.file.originFileObj)
                 setImage(imageUrl)
                 setLoading(false)
                 const formData = new FormData();
                 await formData.append('img', info.file.originFileObj);
                 axios.post('/api/mypage/imageUpload', formData)
                     .then(response => {
-                        if (response.data.url) {
-                            console.log("dfdsfsdfsdfsd",response.data.url)
+                        if (response.data.success) {
                             alert("이미지 업로드 성공");
                         } 
                         else {

@@ -9,14 +9,9 @@ import queryStirng from 'query-string'
 
 function BoardPage(props) {
 
-    window.sessionStorage.setItem('currentDoc', '/board/');
-    // console.log("props.match.params.pageNum", props.match.params.pageNum)
-    // console.log("props.match.params.pageSize", props.match.params.pageSize)
-    //console.log("props.history", props.history)
-
     const [List, setList] = useState([])
     const dispatch = useDispatch();
-    const [Total, setTotal] = useState(0)
+    const [Total, setTotal] = useState(0);
 
     const getPageSize = () => {
         const { search } = props.location;
@@ -91,14 +86,14 @@ function BoardPage(props) {
             pageSize : getPageSize()
         }
 
-    dispatch(requestBoardList(body))
-        .then(response =>{
-            if (response.payload.success){
-                setList(response.payload.boardList);
-                setTotal(response.payload.pageData.totalPage)
-            } else {
-                alert('게시판 정보를 가져오는데 실패했습니다.')
-            }
+        dispatch(requestBoardList(body))
+            .then(response =>{
+                if (response.payload.success){
+                    setList(response.payload.boardList);
+                    setTotal(response.payload.pageData.totalPage)
+                } else {
+                    alert('게시판 정보를 가져오는데 실패했습니다.')
+                }
 
         })
     }

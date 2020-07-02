@@ -215,7 +215,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 />}
 
                 <div
-                    style={{ marginLeft: localStorage.getItem('userId') === Writer ? '40rem' : '40rem'}}
+                    style={{ marginLeft: localStorage.getItem('userId') === Writer ? '40rem' : '40rem'}}/*32*/
                 >
                     {/* <Button>
                         <Link to={{

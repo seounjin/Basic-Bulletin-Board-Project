@@ -4,8 +4,8 @@ import axios from 'axios';
 
 function LeftMenu(props) {
 
-    window.sessionStorage.setItem('pageSize', 10);
-    window.sessionStorage.setItem('currentPage', 1);
+    // window.sessionStorage.setItem('pageSize', 10);
+    // window.sessionStorage.setItem('currentPage', 1);
 
     useEffect(() => {
         // axios.get('/api/hello')
@@ -21,7 +21,6 @@ function LeftMenu(props) {
                     alert("서버로부터 정보를 얻어오지 못했습니다.")
                   }
               })
-
     }, [])
 
     return (
