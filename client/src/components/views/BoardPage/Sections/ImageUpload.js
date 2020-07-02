@@ -11,7 +11,6 @@ function ImageUpload() {
 
     const getBase64 = (img, callback)  => {
 
-        console.log("getBase64");
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
@@ -48,11 +47,15 @@ function ImageUpload() {
                 // body = {
                 //     image : imageUrl
                 // }
-                console.log("dfdsfsdfsdfsd",imageUrl)
+
+                let output = document.getElementById('data')
+                output = imageUrl
+                console.log("dfdsfsdfsdfsd",info.file.originFileObj)
+
                 setImage(imageUrl)
                 setLoading(false)
                 const formData = new FormData();
-                await formData.append('img', imageUrl);
+                await formData.append('img', info.file.originFileObj);
                 //console.log("dfdsfsdfsdfsd",img)
                 axios.post('/api/mypage/imageUpload', formData)
                     .then(response => {
