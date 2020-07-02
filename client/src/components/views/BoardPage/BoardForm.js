@@ -15,6 +15,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     
     //console.log("props location", props.location.state[0])
     console.log("props history", props.location.history)
+    const BASE_URL = "http://localhost:5000";
 
     const { Title, Text } = Typography;
     const dispatch = useDispatch(); 
@@ -26,6 +27,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [views, setViews] = useState(0);
     const [FavoriteCount, setFavoriteCount] = useState(0);
     const [CommentCnt, setCommentCnt] = useState(0);
+    const [Image, setImage] = useState("");
 
     const [LatestComment, setrLatestComment] = useState(false);
     const [RegisterComment, setRegisterComment] = useState(true);
@@ -70,6 +72,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 setDate(response.payload.content[0].date );
                 setViews(response.payload.content[0].views + 1);
                 setFavoriteCount(response.payload.content[0].favorite);
+                setImage(response.payload.content[0].avatar);
             } else {
                 alert('게시판 내용을 가져오는데 실패했습니다.');
             }
@@ -228,7 +231,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             {/* 이미지,아이디,날짜,조회수 */}
              <List.Item>
                 <List.Item.Meta 
-                    avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>}  />}
+                    avatar={<Avatar shape="square" size="large" src = {`${BASE_URL}/img/${Image}`} icon={ Image == null && <UserOutlined/>}   />}
                     title={ Writer }
                     description={ date + " 조회 " + views }
                 />

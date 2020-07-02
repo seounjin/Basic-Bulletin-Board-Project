@@ -1,13 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { withRouter, Link } from 'react-router-dom'
 import axios from 'axios';
 
-function ImageUpload() {
+function ImageUpload(props) {
 
-    const [img, setImage] = useState(null);
+    console.log("이미지", props.image)
+    const [Img, setImage] = useState(props.image);
+
+
+
+
     const [Loading, setLoading] = useState(false);
+
+    const BASE_URL = "http://localhost:5000";
 
     const getBase64 = (img, callback)  => {
 
@@ -48,19 +55,18 @@ function ImageUpload() {
                 //     image : imageUrl
                 // }
 
-                let output = document.getElementById('data')
-                output = imageUrl
-                console.log("dfdsfsdfsdfsd",info.file.originFileObj)
-
-                setImage(imageUrl)
-                setLoading(false)
+                //setImage(imageUrl)
+                //setLoading(false)
                 const formData = new FormData();
+                await formData.append('id', localStorage.getItem('userId'));
                 await formData.append('img', info.file.originFileObj);
                 //console.log("dfdsfsdfsdfsd",img)
                 axios.post('/api/mypage/imageUpload', formData)
                     .then(response => {
-                        if (response.data.url) {
-                            console.log("dfdsfsdfsdfsd",response.data.url)
+                        if (response.data.success) {
+                            console.log("dfdsfsdfsdfsd",response.data)
+                            setImage(response.data.file)
+                            setLoading(false)
                             alert("이미지 업로드 성공");
                         } 
                         else {
@@ -89,7 +95,17 @@ function ImageUpload() {
                 beforeUpload={beforeUpload}
                 onChange={handleChange}
             >
-                {img ? <img src={img} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+
+                {/* {props.image  && <img src={`${BASE_URL}/img/${props.image}`} alt="avatar" style={{ width: '100%' }}/> } */}
+
+                {Img ? <img src={`${BASE_URL}/img/${Img}`} alt="avatar" style={{ width: '100%' }}/> : 
+                props.image ? <img src={`${BASE_URL}/img/${props.image}`} alt="avatar" style={{ width: '100%' }}/> :uploadButton }
+
+                {/* {props.image && <img src={`${BASE_URL}/img/${props.image}`} alt="avatar" style={{ width: '100%' }}/>} */}
+
+                {/* {img ? <img src={`${BASE_URL}/img/${img}`} alt="avatar" style={{ width: '100%' }}/> : uploadButton} */}
+
+                {/* {img ? <img src={img} alt="avatar" style={{ width: '100%' }} /> : uploadButton} */}
             </Upload>
         </div>
     )

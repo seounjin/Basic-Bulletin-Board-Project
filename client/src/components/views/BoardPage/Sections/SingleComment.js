@@ -11,6 +11,7 @@ const { TextArea } = Input;
 
 
 function SingleComment(props) {
+    const BASE_URL = "http://localhost:5000";
 
     const [OpenReply, setOpenReply] = useState(false)
     const [replyComment, setReplyComment] = useState("")
@@ -131,7 +132,6 @@ function SingleComment(props) {
                 .then(response => {
                     if(response.data.success){
                         setReplyComment("") // 코멘트 초기화
-                        
                         body.cGroupSquence = response.data.cGroupSquence
                         props.refreshComment(response.data.comment)// 코멘트 리프래쉬
 
@@ -156,7 +156,7 @@ function SingleComment(props) {
                     { props.comment.pComment ? <Comment
                         actions={actions}
                         author={<a> { props.comment.cWriter } </a>}
-                        avatar={<Avatar shape="square" size="large" icon={<UserOutlined/>} /> }
+                        avatar={<Avatar shape="square" size="large" src = {`${BASE_URL}/img/${props.comment.avatar}`} icon={ props.comment.avatar == null && <UserOutlined/>} /> }
                         content={
                             <span>
                                 { props.comment.gDepth >= 2 &&

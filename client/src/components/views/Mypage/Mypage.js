@@ -11,6 +11,8 @@ function Mypage(props) {
     const [ConnectDate, setConnectDate] = useState("첫 방문");
     const [nComment, setnComment] = useState(0);
 
+    const [Img , setImg] = useState("");
+    
     useEffect(() => {
 
         //console.log("마이페이지 아이디 출력", localStorage.getItem('userId'))
@@ -27,8 +29,10 @@ function Mypage(props) {
                       setEmail(response.data.info[0])
                       window.sessionStorage.setItem('totalActivityPost', response.data.info[1]);
                       window.sessionStorage.setItem('totalActivityComment', response.data.info[4]);
-                      setConnectDate(response.data.info[3])
-                      setnComment(response.data.info[2])
+                      setConnectDate(response.data.info[3]);
+                      setnComment(response.data.info[2]);
+                      setImg(response.data.info[5]);
+
                   } else {
                     alert('정보를 가져올 수 없습니다. \n잠시후 다시 시도해주세요.')
                     props.history.push(``)
@@ -64,7 +68,8 @@ function Mypage(props) {
                 <Card title="기본 정보" style={{ width: 638, height: 200 }}>
                     <div>
                         <div style={{ width: '200px', height: '150', float: 'left' }}>
-                            <ImageUpload/>
+                            <ImageUpload image={Img}/>
+                           
                         </div>
                         <div style={{ width: '200px', height: '150', float: 'left', marginLeft: 135 }}>
                             <p>I D : {Id}</p>

@@ -63,7 +63,7 @@ router.post("/postnum", async (req, res) => {
     try {
         await conn.beginTransaction();
         
-        const [content] = await conn.query("SELECT title, writer, pContent,views, date_format(date, '%y.%m.%d. %h:%i') as date, favorite FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum", [postNum]);
+        const [content] = await conn.query("SELECT title, writer, pContent,views, date_format(date, '%y.%m.%d. %h:%i') as date, favorite, avatar FROM BulletinBoard.PostInfo, BulletinBoard.PostContents, BulletinBoard.User WHERE postnum = ? and pNum = postnum and writer = id", [postNum]);
         
         await conn.query('UPDATE `BulletinBoard`.`PostInfo` SET views = views + 1 WHERE (`postNum` = ?)', [postNum]);
 
