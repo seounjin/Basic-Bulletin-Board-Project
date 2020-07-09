@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { List, Avatar, Typography, Pagination, Button } from 'antd';
-import { withRouter, Link } from 'react-router-dom';
+import { List, Avatar, Typography, Pagination } from 'antd';
+import { withRouter } from 'react-router-dom';
 import { UserOutlined, CommentOutlined } from '@ant-design/icons';
 import Comments from './Sections/Comments';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { requestBoardForm } from '../../../_actions/board_actions';
 import { getComment, getLatestComment } from '../../../_actions/comment_actions';
 import FormDeleteAndModify from './Sections/FormDeleteAndModify';
@@ -12,9 +12,7 @@ import queryStirng from 'query-string';
 
 
 function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 번호 and 목록버튼 만들기!!!
-    
-    //console.log("props location", props.location.state[0])
-    console.log("props history", props.location.history)
+
     const BASE_URL = "http://localhost:5000";
 
     const { Title, Text } = Typography;
@@ -32,7 +30,6 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     const [LatestComment, setrLatestComment] = useState(false);
     const [RegisterComment, setRegisterComment] = useState(true);
 
-
     const getCommentPage = () => {
 
         const { search } = props.location;
@@ -45,24 +42,45 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
         }
 
     }
-    const board = useSelector(state => state.board);
+
+    const [CurrentPage,setCurrentPage] = useState(getCommentPage());
+
 
     const body = {
         postNum : parseInt(props.match.params.postNum)
-    }
+    };
     
-   
+    const requestComment = (commentBody) => {
+
+        if (RegisterComment){
+               dispatch(getComment(commentBody))
+               .then(response =>{
+               if (response.payload.success){
+                   setCommentLists(response.payload.comment);
+                   setCommentCnt(response.payload.commentCnt.totalComment);
+               } else {
+                   alert('댓글을 가져오는데 실패했습니다.');
+               }
+           })
+       } else {
+           dispatch(getLatestComment(commentBody))
+           .then(response =>{
+               if (response.payload.success){
+                   setCommentLists(response.payload.comment);
+                   setCommentCnt(response.payload.commentCnt.totalComment);
+                   console.log("모지",response.payload.comment)
+                   
+               } else {
+                   alert('댓글을 가져오는데 실패했습니다.');
+               }
+           })
+       }
+    }
+
+
     useEffect(() => {
 
-            const commentBody = {
-                postNum : parseInt(props.match.params.postNum),
-                commentPage : getCommentPage()
-            }
-
-            console.log("보드",board)
-
-            // 게시판 내용 요청
-            dispatch(requestBoardForm(body))
+        dispatch(requestBoardForm(body))
             .then(response =>{
             if (response.payload.success){
                 console.log("response.payload.content", response.payload.content)
@@ -77,22 +95,21 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                 alert('게시판 내용을 가져오는데 실패했습니다.');
             }
         })
-        
-        // 코멘트 요청
-        dispatch(getComment(commentBody))
-            .then(response =>{
-            if (response.payload.success){
-                setCommentLists(response.payload.comment);
-                setCommentCnt(response.payload.commentCnt.totalComment);
-                
-            } else {
-                alert('댓글을 가져오는데 실패했습니다.');
-            }
-        })
 
+    },[])
+
+    useEffect(() => {
+
+        const commentBody = {
+            postNum : parseInt(props.match.params.postNum),
+            commentPage : getCommentPage()
+        };
+
+        requestComment(commentBody);
+        
+        setCurrentPage(getCommentPage());
 
     },[getCommentPage()])
-
 
     const updateComment = (newComment) => {
         setCommentCnt(CommentCnt + 1);
@@ -116,38 +133,16 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
     const commentPageSelect = (commentPage) => {
 
-
         const commentBody = {
             postNum : parseInt(props.match.params.postNum),
-            commentPage : getCommentPage()
-        }
+            commentPage : commentPage
+        };
 
-        if (RegisterComment){
-             // 코멘트 요청
-                dispatch(getComment(commentBody))
-                .then(response =>{
-                if (response.payload.success){
-                    setCommentLists(response.payload.comment);
-                    setCommentCnt(response.payload.commentCnt.totalComment);
-                    props.history.push(`${body.postNum}?comment_page=${commentPage}`);
-                } else {
-                    alert('댓글을 가져오는데 실패했습니다.');
-                }
-            })
-        } else {
-            dispatch(getLatestComment(commentBody))
-            .then(response =>{
-                if (response.payload.success){
-                    setCommentLists(response.payload.comment);
-                    setCommentCnt(response.payload.commentCnt.totalComment);
+        requestComment(commentBody);
 
-                } else {
-                    alert('댓글을 가져오는데 실패했습니다.');
-                }
-            })
+        props.history.push(`${body.postNum}?comment_page=${commentPage}`);
 
-        }
-       
+        setCurrentPage(commentPage);
 
     }   
 
@@ -164,15 +159,16 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
             dispatch(getComment(commentBody))
             .then(response =>{
-            if (response.payload.success){
-                setCommentLists(response.payload.comment);
-                setCommentCnt(response.payload.commentCnt.totalComment);
-                        } else {
-                alert('댓글을 가져오는데 실패했습니다.');
-            }
+                if (response.payload.success){
+                    setCommentLists(response.payload.comment);
+                    setCommentCnt(response.payload.commentCnt.totalComment);
 
-    })
-        }
+                } else {
+                    alert('댓글을 가져오는데 실패했습니다.');
+                }
+
+            })
+    }
         
     const latestComment = (event) =>{
             event.preventDefault();
@@ -183,7 +179,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             }
 
             
-            console.log("최신순")
+            console.log("최신순");
             setRegisterComment(false);
             setrLatestComment(true);
 
@@ -199,7 +195,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             })
 
 
-        }
+    }
 
     return (
         <div style={{
@@ -274,7 +270,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             {/* Pagination */}
             <div style={{ textAlign: 'center' , marginTop: '2rem' }}>
                 <Pagination
-                    current={getCommentPage()}
+                    current={CurrentPage}
                     total={CommentCnt}
                     onChange = {commentPageSelect}
                 />

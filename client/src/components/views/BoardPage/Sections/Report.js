@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { Typography, Modal, Input } from 'antd';
 import { useSelector } from 'react-redux';
 import moment from 'moment';

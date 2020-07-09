@@ -1,5 +1,5 @@
-import React, { useState, useEffect }  from 'react';
-import { Comment, Avatar, Button, Input, Tooltip, Popconfirm, message } from 'antd';
+import React, { useState }  from 'react';
+import { Comment, Avatar, Button, Input, Popconfirm, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
@@ -128,7 +128,7 @@ function SingleComment(props) {
                 commentPage : props.commentPage
             }
     
-            axios.post('/api/comment/saveComment3', body)
+            axios.post('/api/comment/saveChildComment', body)
                 .then(response => {
                     if(response.data.success){
                         setReplyComment("") // 코멘트 초기화
