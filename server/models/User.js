@@ -103,7 +103,7 @@ const userLogin = function(data, cb) {
 
 const generateToken = function(data, cb) {
 
-  var token =  jwt.sign(data.id, 'secret')
+  var token =  jwt.sign(data.id, 'secret' )
   var tokenExp = "1111"
 
   getConnection((conn) => {
@@ -113,7 +113,7 @@ const generateToken = function(data, cb) {
     conn.query(sql, user, function (err, rows, fields) {
   
       if (err) {
-          //console.log(err);
+          console.log(err);
           conn.release();
           return cb(err);
       }
