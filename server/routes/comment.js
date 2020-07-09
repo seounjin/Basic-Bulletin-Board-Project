@@ -1,34 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { saveComment, getComment, deleteComment, modifyComment } = require("../models/Comment");
+const { deleteComment, modifyComment } = require("../models/Comment");
 const pool = require('../config/pool');
 
 
-
-router.post("/saveComment",(req, res) =>{
-    
-    saveComment(req.body, (cGroupSquence, err) => {
-        
-        if (err) return res.json({ success: false, err });
-
-        return res.status(200).json({ success: true, cGroupSquence });
-    });
-
-
-});
-
-
-router.post("/getComment",(req, res) =>{
-
-    getComment(req.body.postNum, (comment, err) => {
-
-        if (err) return res.json({ success: false, err });
-
-        return res.status(200).json({ success: true, comment });
-    });
-});
-
-router.post("/deleteComment",(req, res) =>{
+router.post("/deleteComment",(req, res) => {
 
     console.log("req.body",req.body)
 
@@ -38,10 +14,9 @@ router.post("/deleteComment",(req, res) =>{
         return res.status(200).json({ success: true });
     });
 
-
 });
 
-router.post("/modifyComment",(req, res) =>{
+router.post("/modifyComment",(req, res) => { 
 
     console.log("aa", req.body)
     modifyComment(req.body, (err) => {
@@ -50,41 +25,9 @@ router.post("/modifyComment",(req, res) =>{
         return res.status(200).json({ success: true });
     });
 
-
 });
 
-router.post("/deleteComment2", async (req, res) =>{
-
-    const cGroupSquence = req.body.cGroupSquence;
-    const conn = await pool.getConnection();
-    var e = false;
-
-    try {
-        await conn.beginTransaction();
-
-        await conn.query('UPDATE `BulletinBoard`.`Comment` SET `pComment` = NULL WHERE (`cGroupSquence` = ?)', [cGroupSquence]);
-
-        await conn.commit();
-
-    } catch {
-
-        e = true;
-        conn.rollback();
-
-    } finally {
-
-        conn.release();
-
-        if (err) return res.json({ success: false, err });
-
-        return res.status(200).json({ success: true });
-    }
-});
-
-
-
-// 루트 코멘트
-router.post("/saveComment2", async (req, res) => {
+router.post("/saveRootComment", async (req, res) => {
 
 
     const commentData = [req.body.pNum, req.body.cWriter, req.body.pComment, req.body.date, req.body.gDepth ] 
@@ -117,7 +60,6 @@ router.post("/saveComment2", async (req, res) => {
     
     } catch (err) {
 
-        console.log("에에러",err)
         conn.rollback();
 
         conn.release();
@@ -128,8 +70,8 @@ router.post("/saveComment2", async (req, res) => {
 });
 
 
-// 대댓글
-router.post("/saveComment3", async (req, res) => {
+
+router.post("/saveChildComment", async (req, res) => {
 
 
     const commentData = [req.body.pNum, req.body.cWriter, req.body.pComment, req.body.gNum, req.body.date, req.body.gDepth, req.body.cID] 
@@ -167,37 +109,7 @@ router.post("/saveComment3", async (req, res) => {
 
 });
 
-router.post("/getComment2", async (req, res) => {
 
-    const pNum = req.body.postNum;
-
-    const conn = await pool.getConnection();
-
-    
-    try {
-        await conn.beginTransaction();
-        
-        const [comment] = await conn.query("SELECT pNum, cWriter, pComment, gNum, date_format(date, '%y.%m.%d. %h:%i:%s') as date, cGroupSquence,gDepth, cID FROM BulletinBoard.Comment WHERE pNum = ? order by gNum, date", [pNum]);
-        
-        await conn.commit();
-
-        conn.release();
-
-        return res.status(200).json( { success: true, comment } );            
-    
-    
-    } catch (err) {
-
-        conn.rollback();
-
-        conn.release();
-
-        return res.status(400).json( { success: false, err } );
-    }
-
-});
-
-// 댓글 페이지네이션
 router.post("/getCommentPage", async (req, res) => {
     
     const pNum = req.body.postNum;
@@ -227,6 +139,8 @@ router.post("/getCommentPage", async (req, res) => {
         return res.status(200).json( {success: true , comment, commentCnt } );
     
     } catch (err) {
+
+        console.log("에러",err);
 
         conn.rollback();
 
@@ -267,7 +181,8 @@ router.post("/getLatestComment", async (req, res) => {
     
     } catch (err) {
 
-        console.log("에에러", err)
+        console.log("에러",err);
+
         conn.rollback();
 
         conn.release();

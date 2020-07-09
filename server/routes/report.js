@@ -74,7 +74,7 @@ router.post("/getReportPost", async(req, res) => {
     const countSql = "SELECT COUNT(*) as cnt FROM BulletinBoard.ReportPost";
 
     //pNum,content,from,to,date
-    const dataSql = "SELECT pNum, content, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date FROM BulletinBoard.ReportPost order by date, date limit ?, ?";
+    const dataSql = "SELECT pNum, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date FROM BulletinBoard.ReportPost order by date, date limit ?, ?";
 
     const json = await Page(null, currentPage,maxComment, countSql, dataSql);
     
@@ -195,7 +195,7 @@ router.post("/getReportComment", async(req, res) => {
 
     //pNum,content,from,to,date
 
-    const dataSql = "SELECT pNum, pComment, content, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, cGroupSquence FROM BulletinBoard.ReportComment order by date, date limit ?, ?";
+    const dataSql = "SELECT pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, cGroupSquence FROM BulletinBoard.ReportComment order by date, date limit ?, ?";
 
     const json = await Page(null, currentPage,maxComment, countSql, dataSql);
     

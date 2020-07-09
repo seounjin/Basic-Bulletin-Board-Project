@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { Tooltip, Popconfirm, Typography } from 'antd';
+import { Tooltip, Typography } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
 import Report from './Report';
 import axios from 'axios';

@@ -1,7 +1,6 @@
 import React, { useState,  } from 'react';
 import { Button, Input } from 'antd';
 import SingleComment from './SingleComment';
-import ReplyComment from './ReplyComment';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
@@ -32,7 +31,7 @@ function Comments(props) {
             commentPage: props.commentPage
         }
 
-        axios.post('/api/comment/saveComment2', body)
+        axios.post('/api/comment/saveRootComment', body)
             .then(response => {
                 if(response.data.success){
                     setComment("") // 코멘트 초기화
