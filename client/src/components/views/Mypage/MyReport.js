@@ -35,7 +35,7 @@ function MyReport(props) {
     return (
         
         <div style={{ width: '85%', margin: '3rem auto' }}>
-            <div style={{ textAlign: 'right'}}>
+            <div style={{ textAlign: 'right', transform: 'translate( -1%, 120%)'}}>
               <Dropdown overlay={menu}>
                 
                   <a style={{fontSize: '19px'}} className="ant-dropdown-link" onClick={e => e.preventDefault()} >

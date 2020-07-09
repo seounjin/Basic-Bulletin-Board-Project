@@ -166,7 +166,7 @@ function ActivityDetails(props) {
             <hr />
             <br />
 
-            <div>
+            <div style={{textAlign: 'center', transform: 'translate( 0%, 70%)'}}>
                 <Pagination
                     showSizeChanger
                     onShowSizeChange={onShowSizeChange}

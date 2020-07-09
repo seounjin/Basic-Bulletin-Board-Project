@@ -71,6 +71,7 @@ function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정
                   } else {
                     if (response.data.isReal) {
                       alert('기존 내용으로 게시글을 수정할 수 없습니다.')
+                      props.history.goBack();
                       props.history.replace(`/boardform/${props.location.state[0]}`)
                     } else {
                       alert('글 수정에 실패했습니다.')
@@ -81,44 +82,44 @@ function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정
     };
 
     return (
-      <div style={{ alignItems: 'center', width: '60%', margin: '5rem auto' }}>
+      <div style={{ position: "absolute", width: '60%', top: '40%', left: '57%', transform: 'translate(-50%, -50%)' }}>
 
-            <h2> 글쓰기 </h2>
-            <br></br>
+          <h2> 글쓰기 </h2>
+          <br></br>
 
-            <Form {...layout} name="write" label="글쓰기" >
-            
-            <Form.Item
-              label="제 목"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input value={Title} onChange={onTitleHandler} />
-            </Form.Item>
+        <div>
+          <Form {...layout} name="write" label="글쓰기" >
+              
+              <Form.Item
+                label="제 목"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input value={Title} onChange={onTitleHandler} />
+              </Form.Item>
 
-            <Form.Item
-              label="내 용"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input.TextArea value={Content} onChange={onContentHandler} rows={10} />
-            </Form.Item>
+              <Form.Item
+                label="내 용"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input.TextArea value={Content} onChange={onContentHandler} rows={10} />
+              </Form.Item>
 
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 16 }}>
-              <Button onClick={createPost} type="primary" htmlType="submit">
-                제출
-              </Button>
-            </Form.Item>
-
-          </Form>
-
+              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 16 }}>
+                <Button style={{ width: '80px' ,transform: 'translate(-45%, -30%)'}} onClick={createPost} type="primary" htmlType="submit">
+                  제출
+                </Button>
+              </Form.Item>
+            </Form>
         </div>
+      </div>
     )
 }
 

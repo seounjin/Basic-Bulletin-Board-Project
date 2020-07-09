@@ -116,11 +116,11 @@ function ChangePrivacy(props) {
                 >
                     <Input.Password placeholder="비밀번호 확인" onChange={onConfirmPasswordHandler} />
                 </Form.Item>
-                <div>
+                <div style={{transform: 'translate( -25%, 20%)'}}>
                     <Button style={{ marginLeft: 120 }} >
                         <Link to={{pathname : `/mypage` }}>취 소</Link>
                     </Button>
-                    <Button style={{ marginLeft: 5 }} onClick={modifyPrivacy} >
+                    <Button style={{ marginLeft: 10 }} onClick={modifyPrivacy} >
                         변 경
                     </Button>
                 </div>

@@ -115,11 +115,11 @@ function Page(props) {
     
 
     return (
-        <div>
+        <div >
             
             <PageList pageList={List} deleteClick={deleteClick} state={props.state} ></PageList>
 
-            <div>
+            <div style={{textAlign: 'center', transform: 'translate( 0%, 70%)'}}>
                 <Pagination
                     current={getPageNum()}
                     total={Total}
