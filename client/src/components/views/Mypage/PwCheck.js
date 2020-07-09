@@ -54,11 +54,11 @@ function PwCheck(props) {
             <Form.Item >
                 <Input.Password value={Password} placeholder="비밀번호 입력" onChange={onPasswordHandler} maxLength={20} />
             </Form.Item>
-            <div>
+            <div style={{transform: 'translate( -25%, 20%)'}}>
                 <Button style={{ marginLeft: 120 }} >
                     <Link to={{pathname : `/mypage` }}>이 전</Link>
                 </Button>
-                <Button type="submit" onClick={passwordCheck} style={{ marginLeft: 5 }} >
+                <Button type="submit" onClick={passwordCheck} style={{ marginLeft: 10 }} >
                     다 음
                 </Button>
             </div>

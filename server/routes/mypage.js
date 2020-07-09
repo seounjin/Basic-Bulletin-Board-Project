@@ -172,6 +172,8 @@ router.post("/getMyReportComment", async(req, res) => {
 });
 
 router.post("/getMyReportPost", async(req, res) => {
+
+    console.log("getMyReportPost", req.body)
     
     // pNum,currentPage,maxComment, countSql, dataSql
     const fromId = req.body.id;
