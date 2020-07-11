@@ -18,7 +18,6 @@ function RightMenu(props) {
             .then(response => {
                 if(response.data.success) {
                     window.localStorage.clear();
-                    //window.sessionStorage.clear();
                     props.history.push("/login")
                     alert('로그아웃 성공')
                     window.location.reload();

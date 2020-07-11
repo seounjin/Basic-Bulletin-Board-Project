@@ -33,8 +33,7 @@ function Mypage(props) {
                       setImg(response.data.info[5]);
                       if (response.data.info[3]) {
                         setConnectDate(response.data.info[3]);
-                      }
-
+                    }
                   } else {
                     alert('정보를 가져올 수 없습니다. \n잠시후 다시 시도해주세요.')
                     props.history.push(``)

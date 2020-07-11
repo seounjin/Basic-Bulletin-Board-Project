@@ -35,7 +35,8 @@ function BoardPage(props) {
 
     useEffect(() => {
         
-        requestBoard()
+        requestBoard();
+        
     }, [props.match.params.pageNum,getPageSize()])
 
     const onShowSizeChange = (current, pageSize) => {
