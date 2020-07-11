@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BOARD_REQUEST, BOARDFORM_REQUEST } from './types';
+import { BOARD_REQUEST, BOARDFORM_REQUEST, KEYWORD_REQUEST } from './types';
 
 export function requestBoardList(currentPage) {
 
@@ -8,6 +8,17 @@ export function requestBoardList(currentPage) {
 
     return {
         type: BOARD_REQUEST,
+        payload: request
+    }
+}
+
+export function requestKeywordList(body) {
+
+    const request = axios.post('/api/board/getKeywordPage', body)
+        .then(response => response.data)
+
+    return {
+        type: KEYWORD_REQUEST,
         payload: request
     }
 }

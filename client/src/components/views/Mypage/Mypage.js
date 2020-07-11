@@ -24,14 +24,16 @@ function Mypage(props) {
         axios.post('/api/mypage/getActionNum', body)
               .then(response => {
                   if (response.data.success) {
-                    //   console.log("data", response.data.info)
+                      console.log("data", response.data.info)
                       setId(localStorage.getItem('userId'))
                       setEmail(response.data.info[0])
                       window.sessionStorage.setItem('totalActivityPost', response.data.info[1]);
                       window.sessionStorage.setItem('totalActivityComment', response.data.info[4]);
-                      setConnectDate(response.data.info[3]);
                       setnComment(response.data.info[2]);
                       setImg(response.data.info[5]);
+                      if (response.data.info[3]) {
+                        setConnectDate(response.data.info[3]);
+                      }
 
                   } else {
                     alert('정보를 가져올 수 없습니다. \n잠시후 다시 시도해주세요.')

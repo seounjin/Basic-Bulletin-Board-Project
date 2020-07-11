@@ -200,6 +200,59 @@ router.post("/getTotal", async (req, res) => {
 
 });
 
+router.post("/getKeywordPage", async (req, res) => {
+
+    //console.log("getPage", req.body)
+
+    // const keyWord = "\"%" + req.body.keyword + "%\"";
+    const keyWord = "%" + req.body.keyword + "%";
+
+    // console.log("keyWord", keyWord)
+
+    //return res.status(400).json( { success: false } );
+
+    const currentPage = parseInt(req.body.currentPage); // 클라이언트가 요청하는 페이지
+
+    const maxPost = parseInt(req.body.pageSize); // 10개
+
+    const conn = await pool.getConnection();
+    
+    try {
+        await conn.beginTransaction();
+
+        const [totalPost] = await conn.query("SELECT COUNT(*) AS cnt FROM BulletinBoard.PostInfo WHERE title LIKE ?", [keyWord]);
+
+        //console.log("totalPost", totalPost[0].cnt)
+
+        //const totalPage = Math.ceil(totalPost / maxPost)
+
+        const [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo WHERE title LIKE ? order by date desc limit ?, ?", [keyWord, (currentPage - 1) * maxPost, maxPost]);
+
+        const pageData = {
+            totalPage : totalPost[0].cnt
+        }
+
+        await conn.commit();
+
+        conn.release();
+
+        console.log("결과1", pageData)
+        console.log("결과2", boardList)
+
+        return res.status(200).json( {success: true , boardList, pageData}  );
+    
+    } catch (err) {
+
+        console.log("getPage 에러가 발생했어요~~!!", err);
+
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+});
+
 
 router.post("/getPage", async (req, res) => {
 
