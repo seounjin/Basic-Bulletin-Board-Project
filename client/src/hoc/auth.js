@@ -17,9 +17,19 @@ export default function(SpecificComponent, option, adminRoute = null) {
             dispatch(auth()).then(response => {
                 console.log(response)
 
+                // if(response.payload.exp){
+                //     alert('로그인 만료되었습니다')
+                //     props.history.push('/login')
+                // } window.sessionStorage.clear();
+
                 //로그인 하지 않은 상태
                 if(!response.payload.isAuth) {
-
+                    
+                    if(response.payload.exp){
+                        window.sessionStorage.clear();
+                        alert('로그인 만료되었습니다');
+                    }
+                    
                     if(option) {
                         props.history.push('/login')
                     }

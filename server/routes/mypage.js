@@ -37,8 +37,10 @@ router.post("/getActionNum", async (req, res) => {
 
         conn.release();
 
-        console.log("avatar", avatar)
-        
+        if(lastLoginDate.length === 0) {
+            return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, 0, pcNum[0].cn , avatar[0].avatar]} );
+        }
+            
         return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate, pcNum[0].cn , avatar[0].avatar]} );           
     
     

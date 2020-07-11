@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const getConnection = require('./db');
 const jwt = require('jsonwebtoken');
+const moment = require("moment");
 
 
 // db 회원정보 저장
@@ -103,13 +104,14 @@ const userLogin = function(data, cb) {
 
 const generateToken = function(data, cb) {
 
-  var token =  jwt.sign(data.id, 'secret' )
-  var tokenExp = "1111"
-
+  var token =  jwt.sign(data.id, 'secret' );
+  var tokenExp  = moment().add(2, 'hours').valueOf();
+  
+  
   getConnection((conn) => {
 
     var sql = "UPDATE `User` SET `token` = ?, `tokenExp` = ? WHERE (`id` = ?)"
-    var user = [token, tokenExp, data.id]
+    var user = [token, tokenExp, data.id];
     conn.query(sql, user, function (err, rows, fields) {
   
       if (err) {
@@ -158,6 +160,7 @@ const findByToken = function(token, cb) {
 }
 
 const userLogout = function(userId, cb) {
+
   getConnection((conn) => {
     var sql = "UPDATE `User` SET `token` = NULL, `tokenExp` = NULL WHERE (`id` = ?)" ;
     var user = [userId];
@@ -238,4 +241,27 @@ const modifyPrivacy = function(data, cb) {// body ==> id, password, email
   } )
 }
 
-module.exports = { userRegister, userLogin, generateToken, findByToken, userLogout, recordUserLoginDate, getLoginTime, setLogoutTime, modifyPrivacy }
+const tokenTime = function(data, cb) {
+  
+  getConnection((conn) => {
+
+    var sql = "SELECT tokenExp FROM BulletinBoard.User WHERE id=?";
+    var user = [data.id];
+    conn.query(sql, user, function (err, rows, fields) {
+    conn.release();
+
+        if (err) {
+          
+          return cb(err);
+        }
+        else {
+          return cb(null, rows[0].tokenExp);
+        }
+
+    });
+  });
+
+}
+
+
+module.exports = { userRegister, userLogin, generateToken, findByToken, userLogout, recordUserLoginDate, getLoginTime, setLogoutTime, modifyPrivacy, tokenTime }

@@ -16,50 +16,6 @@ router.post("/register", (req, res) => {
     });
 });
 
-// router.post("/login2", async (req, res) => { //body = {id, password, loginDate}
-
-//     const ld = req.body.loginDate;
-//     const conn = await pool.getConnection();
-
-//     try {
-//         await conn.beginTransaction();
-
-//         const [rows] = await conn.query('SELECT password, id FROM BulletinBoard.User where id=?', [req.body.id]);
-//         console.log("rows 출력:     ", rows);
-
-//         bcrypt.compare(req.body.password, rows[0].password, function(err, isMatch){
-//             if(isMatch) {
-//                 break;
-//             }
-//             else {
-
-//                 conn.rollback();
-
-//                 conn.release();
-
-//                 if (err) return res.status(400).json( { loginSuccess: false } );
-//             }
-//         })
-
-//         await conn.query('INSERT INTO `BulletinBoard`.`ConnectionRecord` (`connID`, `connDate`) VALUES (?, ?)', [req.body.id, req.body.loginDate]);
-
-//         await conn.commit();
-
-//         conn.release();
-
-//         return res.status(200).json( { loginSuccess: true } );
-
-//     } catch (err) {
-//         //console.log("에러가 발생했어요~~!!", err);
-//         conn.rollback();
-
-//         conn.release();
-
-//         if (err) return res.status(400).json( { loginSuccess: false } );
-//     }
-
-// });
-
 router.post("/login", (req, res) => {
 
     userLogin(req.body, (err, isMatch) => {
@@ -120,6 +76,7 @@ router.get("/logout", auth, (req, res)=> {
         //얻은time으로 로그아웃 time 넣기
     });
 });
+
 
 
 router.get("/auth", auth, (req, res) => {

@@ -1,4 +1,4 @@
-import React, { useState,  } from 'react';
+import React, { useState } from 'react';
 import { Button, Input } from 'antd';
 import SingleComment from './SingleComment';
 import { useSelector } from 'react-redux';
@@ -61,7 +61,7 @@ function Comments(props) {
             ))}
             
             {localStorage.getItem('userId') &&
-                <form style={{ display: 'flex', marginTop: '1rem' }}>
+                <form style={{ display: 'flex'}}>
                         <TextArea
                             style={{ width: '100%', borderRadius: '5px' }}
                             onChange={handleChange}
