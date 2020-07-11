@@ -13,12 +13,9 @@ function BoardPage(props) {
     const dispatch = useDispatch();
     const [Total, setTotal] = useState(0);
     const [KeyWord, setKeyWord] = useState("");
-    const { Search } = Input;
 
     const onKeyWordHandler = (event) => {
-        alert(event.currentTarget.value)
         setKeyWord(event.currentTarget.value)
-        alert("stateKeyword", KeyWord)
     }
 
     const getPageSize = () => { // 한 페이지 당 게시물 개수.
@@ -33,56 +30,64 @@ function BoardPage(props) {
         }
     }
 
-    useEffect(() => {
-        
-        requestBoard();
-        
-    }, [props.match.params.pageNum,getPageSize()])
-
-    const onShowSizeChange = (current, pageSize) => {
-        console.log("onShowSizeChange", current, pageSize);
-
-        const body = {
-            currentPage : current,
-            pageSize : pageSize
-        }
-
-        dispatch(requestBoardList(body))
-            .then(response =>{
-            if (response.payload.success){
-                setList(response.payload.boardList);
-                setTotal(response.payload.pageData.totalPage)
-                props.history.push(`${current}?list_num=${pageSize}`)
-                window.scrollTo(0, 0)
-            } else {
-                alert('게시판 정보를 가져오는데 실패했습니다.')
-            }
-
-        })
-
-    }
-
     const getKeyword = () => {
 
         const { search } = props.location;
         const queryObj = queryStirng.parse(search);
         const { keyword } = queryObj;
 
-        alert("keyword!!", keyword)
         if (keyword) {
             return keyword
         } else{
-            return null
+            return ""
         }
     }
 
-    const pageSelect = (page) => {
+    useEffect(() => {
 
-        alert("stateKeyword", KeyWord)
+        //alert(getKeyword())
+        setKeyWord(getKeyword())
+        
+        if (!getKeyword()) {
+            requestBoard();
+            setKeyWord("");
+        } else {
+            const body = {
+                keyword : getKeyword(),
+                currentPage : props.match.params.pageNum, // 문자열.
+                pageSize : getPageSize()
+            }
 
-        const body = {
-            currentPage : page,
-            pageSize : getPageSize()
+            dispatch(requestBoardList(body))
+            .then(response =>{
+                if (response.payload.success){
+                    setList(response.payload.boardList);
+                    setTotal(response.payload.pageData.totalPage);
+                    setKeyWord(response.payload.pageData.keyWord);
+                    window.scrollTo(0, 0);
+                } else {
+                    alert('게시판 정보를 가져오는데 실패했습니다.');
+                }
+            })
+        }        
+    }, [props.match.params.pageNum, getPageSize(), getKeyword()])
+
+    const onShowSizeChange = (current, pageSize) => {
+
+        let body = null;
+
+        if(!getKeyword()) {
+            body = {
+                currentPage : current,
+                pageSize : pageSize
+            }
+        }
+        else {
+            body = {
+                keyword : getKeyword(),
+                currentPage : current,
+                pageSize : pageSize
+            }
         }
 
         dispatch(requestBoardList(body))
@@ -90,66 +95,63 @@ function BoardPage(props) {
             if (response.payload.success){
                 setList(response.payload.boardList);
                 setTotal(response.payload.pageData.totalPage)
+                
+                if (!getKeyword) {
+                    props.history.push(`${current}?list_num=${pageSize}`)
+                } else {
+                    props.history.push(`${current}?list_num=${pageSize}&keyword=${getKeyword()}`)
+                    setKeyWord(response.payload.pageData.keyWord);
+                }
                 window.scrollTo(0, 0)
-
-                if (getPageSize() === 10){
-                    props.history.push(`${page}`)
-                }
-                else {
-                    props.history.push(`${page}?list_num=${getPageSize()}`)
-                }
             } else {
                 alert('게시판 정보를 가져오는데 실패했습니다.')
             }
-
         })
+    }
 
-        // if (getKeyword()) {
+    const pageSelect = (page) => {
 
-        //     //alert("!!키워드", keyword)
-        //     const body = {
-        //         currentPage : page,
-        //         pageSize : getPageSize()
-        //     }
-    
-        //     dispatch(requestBoardList(body))
-        //         .then(response =>{
-        //         if (response.payload.success){
-        //             setList(response.payload.boardList);
-        //             setTotal(response.payload.pageData.totalPage)
-        //             window.scrollTo(0, 0)
-    
-        //             if (getPageSize() === 10){
-        //                 props.history.push(`${page}`)
-        //             }
-        //             else {
-        //                 props.history.push(`${page}?list_num=${getPageSize()}`)
-        //             }
-        //         } else {
-        //             alert('게시판 정보를 가져오는데 실패했습니다.')
-        //         }
-    
-        //     })
-        // } else {
-        //     // alert("키워드", keyword)
-        //     const body = {
-        //         keyword : getKeyword(),
-        //         currentPage : page, // 문자열.
-        //         pageSize : getPageSize()
-        //     }
-    
-        //     dispatch(requestKeywordList(body))
-        //         .then(response =>{
-        //             if (response.payload.success){
-        //                 setList(response.payload.boardList);
-        //                 setTotal(response.payload.pageData.totalPage)
-        //                 window.scrollTo(0, 0)
-        //                 props.history.push(`${page}?list_num=${getPageSize()}&keyword=${getKeyword()}`)
-        //             } else {
-        //                 alert('게시판 정보를 가져오는데 실패했습니다.')
-        //             }
-        //     })
-        // }
+        let body = null;
+
+        if (!getKeyword()) {
+            body = {
+                currentPage : page,
+                pageSize : getPageSize()
+            }
+        } else {
+            body = {
+                keyword : getKeyword(),
+                currentPage : page, // 문자열.
+                pageSize : getPageSize()
+            }
+        }
+
+        dispatch(requestBoardList(body))
+        .then(response =>{
+            if (response.payload.success){
+                setList(response.payload.boardList);
+                setTotal(response.payload.pageData.totalPage);
+                window.scrollTo(0, 0);
+
+                if (!getKeyword()) {
+
+                    if (getPageSize() === 10){
+                        props.history.push(`${page}`);
+                    }
+                    else {
+                        props.history.push(`${page}?list_num=${getPageSize()}`);
+                    }
+                } 
+                else {
+                    //alert(KeyWord)
+                    props.history.push(`${page}?list_num=${getPageSize()}&keyword=${getKeyword()}`)
+                    setKeyWord(response.payload.pageData.keyWord);
+                }
+
+            } else {
+                alert('게시판 정보를 가져오는데 실패했습니다.');
+            }
+        })
     }
 
 
@@ -188,12 +190,13 @@ function BoardPage(props) {
             pageSize : getPageSize()
         }
 
-        dispatch(requestKeywordList(body))
+        dispatch(requestBoardList(body))
             .then(response =>{
                 if (response.payload.success){
                     setList(response.payload.boardList);
                     setTotal(response.payload.pageData.totalPage)
                     props.history.push(`1?list_num=${getPageSize()}&keyword=${value}`)
+                    setKeyWord(response.payload.pageData.keyWord);
                     window.scrollTo(0, 0)
                 } else {
                     alert('게시판 정보를 가져오는데 실패했습니다.')

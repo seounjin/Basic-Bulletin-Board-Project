@@ -200,7 +200,7 @@ router.post("/getTotal", async (req, res) => {
 
 });
 
-router.post("/getKeywordPage", async (req, res) => {
+router.post("/getKeywordPage2", async (req, res) => {
 
     //console.log("getPage", req.body)
 
@@ -236,14 +236,11 @@ router.post("/getKeywordPage", async (req, res) => {
 
         conn.release();
 
-        console.log("결과1", pageData)
-        console.log("결과2", boardList)
-
         return res.status(200).json( {success: true , boardList, pageData}  );
     
     } catch (err) {
 
-        console.log("getPage 에러가 발생했어요~~!!", err);
+        //console.log("getPage 에러가 발생했어요~~!!", err);
 
         conn.rollback();
 
@@ -258,35 +255,46 @@ router.post("/getPage", async (req, res) => {
 
     //console.log("getPage", req.body)
 
+    let keyWord = null;
+    //추가
+    if (req.body.keyword) {
+        keyWord = "%" + req.body.keyword + "%";
+    }
+
     const currentPage = parseInt(req.body.currentPage); // 클라이언트가 요청하는 페이지
 
     const maxPost = parseInt(req.body.pageSize); // 10개
 
-    //const maxPage = 10;
-
-    // startPage = Math.floor((currentPage -1 /maxPage) * maxPage ) + 1;
-
-    //const endPage = startPage + maxPage - 1;
-
+    //추가
+    let totalPost = null;
+    let boardList = null;
+    let pageData = null;
 
     const conn = await pool.getConnection();
     
     try {
         await conn.beginTransaction();
 
-        const [totalPost] = await conn.query("SELECT COUNT(*) AS cnt FROM BulletinBoard.PostInfo");
+        if (!keyWord) { //키워드 검색이 아닌 경우.
 
-        //console.log("totalPost", totalPost[0].cnt)
+            [totalPost] = await conn.query("SELECT COUNT(*) AS cnt FROM BulletinBoard.PostInfo");
 
-        //const totalPage = Math.ceil(totalPost / maxPost)
+            [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo order by date desc limit ?, ?", [(currentPage - 1) * maxPost, maxPost]);
 
-        const [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo order by date desc limit ?, ?", [(currentPage - 1) * maxPost, maxPost]);
+            pageData = {
+                totalPage : totalPost[0].cnt
+            }
 
-        //console.log("boardList", boardList)
-        const pageData = {
-            //startPage : Math.floor((currentPage -1 /maxPage) * maxPage ) + 1,
-            //endPage : startPage + maxPage - 1,
-            totalPage : totalPost[0].cnt
+        } else {
+
+            [totalPost] = await conn.query("SELECT COUNT(*) AS cnt FROM BulletinBoard.PostInfo WHERE title LIKE ?", [keyWord]);
+
+            [boardList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo WHERE title LIKE ? order by date desc limit ?, ?", [keyWord, (currentPage - 1) * maxPost, maxPost]);
+            
+            pageData = {
+                totalPage : totalPost[0].cnt,
+                keyWord : req.body.keyword
+            }
         }
 
         await conn.commit();
@@ -297,7 +305,7 @@ router.post("/getPage", async (req, res) => {
     
     } catch (err) {
 
-        //console.log("getPage 에러가 발생했어요~~!!", err);
+        console.log("getPage 에러가 발생했어요~~!!", err);
 
         conn.rollback();
 

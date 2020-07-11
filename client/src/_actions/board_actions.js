@@ -12,16 +12,16 @@ export function requestBoardList(currentPage) {
     }
 }
 
-export function requestKeywordList(body) {
+// export function requestKeywordList(body) {
 
-    const request = axios.post('/api/board/getKeywordPage', body)
-        .then(response => response.data)
+//     const request = axios.post('/api/board/getKeywordPage', body)
+//         .then(response => response.data)
 
-    return {
-        type: KEYWORD_REQUEST,
-        payload: request
-    }
-}
+//     return {
+//         type: KEYWORD_REQUEST,
+//         payload: request
+//     }
+// }
 
 export function requestBoardForm(postNum) {
     
