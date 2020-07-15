@@ -7,3 +7,7 @@
 - 개발도구: Visual Studio Code, WorkBench
 - 프로젝트기간: 20. 04 ~ 20. 06
 - 프로젝트인원: 2명
+
+| 회원가입, 로그인, 로그아웃 |
+|:----------------------------------------:|
+|<img src="https://user-images.githubusercontent.com/44724951/87519458-97bb3080-c6bc-11ea-9d79-49520e55c11d.gif" width=1000 />|
