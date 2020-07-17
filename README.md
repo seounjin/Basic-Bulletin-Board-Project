@@ -5,7 +5,7 @@
 - 사용스택: JavaScript, React, Redux, MySql, Ant Design
 - 개발환경: NodeJS - Express FrameWork, Ubuntu
 - 개발도구: Visual Studio Code, WorkBench
-- 프로젝트기간: 20. 04 ~ 20. 06
+- 프로젝트기간: 20. 05 ~ 20. 06
 - 프로젝트인원: 2명
 
 + ### 회원가입, 로그인, 로그아웃
