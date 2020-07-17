@@ -13,27 +13,27 @@
 
 | 회원가입, 로그인, 로그아웃 |
 |:----------------------------------------:|
-|<img src="https://user-images.githubusercontent.com/44724951/87519458-97bb3080-c6bc-11ea-9d79-49520e55c11d.gif" width=700 height=500  />|
+|<img src="https://user-images.githubusercontent.com/44724951/87519458-97bb3080-c6bc-11ea-9d79-49520e55c11d.gif" width=1000  />|
 
 | 게시글 페이지네이션, 검색 |
 |:----------------------------------------:|
-|<img src="https://user-images.githubusercontent.com/44724951/87519700-f08ac900-c6bc-11ea-86a5-133a79d7997e.gif" width=700 height=500 >|
+|<img src="https://user-images.githubusercontent.com/44724951/87519700-f08ac900-c6bc-11ea-86a5-133a79d7997e.gif" width=1000 >|
 
 | 게시글 작성, 수정, 삭제 |
 |:----------------------------------------:|
-|<img src="https://user-images.githubusercontent.com/44724951/87519713-f385b980-c6bc-11ea-830b-169c6910fddd.gif" width=700 height=500  />|
+|<img src="https://user-images.githubusercontent.com/44724951/87519713-f385b980-c6bc-11ea-830b-169c6910fddd.gif" width=1000  />|
 
 | 게시글 및 게시글 댓글 |
 |:----------------------------------------:|
-|<img src="https://user-images.githubusercontent.com/44724951/87519686-e9fc5180-c6bc-11ea-948e-d3d0213ed59f.gif" width=700 height=500  />|
+|<img src="https://user-images.githubusercontent.com/44724951/87519686-e9fc5180-c6bc-11ea-948e-d3d0213ed59f.gif" width=1000  />|
 
 | 마이페이지 |
 |:----------------------------------------:|
-|<img src="https://user-images.githubusercontent.com/44724951/87519705-f1bbf600-c6bc-11ea-85f2-869e846ffa3b.gif" width=700 height=500  />|
+|<img src="https://user-images.githubusercontent.com/44724951/87519705-f1bbf600-c6bc-11ea-85f2-869e846ffa3b.gif" width=1000  />|
 
 | 관리자페이지 |
 |:----------------------------------------:|
-|<img src="https://user-images.githubusercontent.com/44724951/87519710-f2ed2300-c6bc-11ea-8ed4-43f9fa45e6fd.gif" width=700 height=500  />
+|<img src="https://user-images.githubusercontent.com/44724951/87519710-f2ed2300-c6bc-11ea-8ed4-43f9fa45e6fd.gif" width=1000  />
 
 참고사항
 -------------
