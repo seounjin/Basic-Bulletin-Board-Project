@@ -75,3 +75,9 @@
     관리자 권한이 있는 사용자에 의해 신고된 게시글 및 댓글을 수정, 삭제할 수 있는 페이지        
     
 <p align="center"><img src="https://user-images.githubusercontent.com/44724951/87519710-f2ed2300-c6bc-11ea-8ed4-43f9fa45e6fd.gif" width=700 height=500  /></p>
+
+참고사항
+-------------
+https://github.com/jaewonhimnae/boilerplate-mern-stack   
+
+
