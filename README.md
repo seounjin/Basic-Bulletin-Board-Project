@@ -25,7 +25,7 @@
 	로그아웃을 요청한 사용자를 JWT를 통하여 인증하여 유효성을 확인한 후
 	로그아웃 절차가 진행됨.
 
-<p align="center"><img src="https://user-images.githubusercontent.com/44724951/87519458-97bb3080-c6bc-11ea-9d79-49520e55c11d.gif" width=800 /></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/44724951/87519458-97bb3080-c6bc-11ea-9d79-49520e55c11d.gif" width=800 height=500 /></p>
 		
 		
 + ### 게시글 페이지네이션, 검색, 작성, 수정, 삭제
@@ -33,7 +33,7 @@
 	사용자의 선택에 따라 정해진 페이지를 서버에 요청하여 해당 부분을 보임.
 	한 페이지에서 사용자가 지정한 수(기본 10개)의 게시글 목록을 해당 페이지 내에서 최신 순서로 보임.    
 
-<p align="center"><img src="https://user-images.githubusercontent.com/44724951/87519700-f08ac900-c6bc-11ea-86a5-133a79d7997e.gif" width=700></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/44724951/87519700-f08ac900-c6bc-11ea-86a5-133a79d7997e.gif" width=700 height=500></p>
 
 
 
@@ -43,7 +43,7 @@
 	게시글의 제목과 내용을 서버에 저장하고자 요청하면 게시글의 번호를 부여받고
 	게시글 목록에 보이게 됨.    
 
-<p align="center"><img src="https://user-images.githubusercontent.com/44724951/87519713-f385b980-c6bc-11ea-830b-169c6910fddd.gif" width=600 /></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/44724951/87519713-f385b980-c6bc-11ea-830b-169c6910fddd.gif" width=600 height=500 /></p>
 	
 	
 + ### 게시글 및 게시글 댓글
