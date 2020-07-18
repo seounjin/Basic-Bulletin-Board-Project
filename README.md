@@ -82,7 +82,7 @@
 
 <br/>
 
-참고사항
+참고
 -------------
 https://github.com/jaewonhimnae/boilerplate-mern-stack   
 
