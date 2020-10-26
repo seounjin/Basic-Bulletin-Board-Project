@@ -18,6 +18,7 @@ function FormDeleteAndModify(props) {
             .then(response => {
                 if (response.data.success) {
                     props.history.push(`/board/${window.sessionStorage.currentPage}`)
+                    alert('해당 게시글이 삭제되었습니다.')
                 } else {
                     alert('글 삭제에 실패했습니다.')
                 }

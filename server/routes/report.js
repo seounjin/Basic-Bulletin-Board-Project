@@ -42,7 +42,7 @@ router.post("/saveReport", async (req, res) => {
             return res.status(200).json( {success: true, report: true} );
         }
 
-        await conn.query("INSERT INTO `BulletinBoard`.`ReportPost` (`pNum`, `rContent`, `fromId`, `toId`, `date`, `pContent`) VALUES (?, ?, ?, ?, ?, ?)", data);
+        await conn.query("INSERT INTO `BulletinBoard`.`ReportPost` (`pNum`, `rContent`, `fromId`, `toId`, `date`, `content`) VALUES (?, ?, ?, ?, ?, ?)", data);
         
         await conn.commit();
 

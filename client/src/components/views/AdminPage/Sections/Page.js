@@ -8,9 +8,6 @@ import { withRouter } from 'react-router-dom'
 
 
 function Page(props) {
-
-    console.log("모야모야",   props.match.params.pageNum)
-
     const [List, setList] = useState([]);
     const [Total, setTotal] = useState(0);
 
@@ -77,12 +74,17 @@ function Page(props) {
                     switch(props.state) {
                         case 'reportComment':
                             setList(List.filter(list => list.cGroupSquence !== data));
+                            alert("삭제되었습니다.")
+                            break;
                         case 'reportPost':
                             setList(List.filter(list => list.pNum !== data));
+                            alert("삭제되었습니다.")
+                            break;
                         case 'myReport':
                             setList(List.filter(list => list.rNum !== data));
+                            alert("취소되었습니다.")
+                            break;
                     }
-                    alert('성공');
                 } else {
                     alert('실패');
                 }

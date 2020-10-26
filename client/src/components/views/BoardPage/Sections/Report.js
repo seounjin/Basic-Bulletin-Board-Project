@@ -94,7 +94,7 @@ function Report(props) {
     
     return (
         <React.Fragment>
-            { props.comment ? <a style={{ fontSize: '12px'}} onClick={reportClick} ><Text type="secondary"> 신고 </Text></a> :
+            { props.comment ? <a style={{ fontSize: '12px' }} onClick={reportClick} ><Text type="secondary"> 신고 </Text></a> :
             
              <a style={{ marginLeft: '32rem'}}onClick={reportClick} ><Text strong> 신고 </Text></a> }
             

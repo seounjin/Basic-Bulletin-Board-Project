@@ -96,7 +96,7 @@ function BoardPage(props) {
                 setList(response.payload.boardList);
                 setTotal(response.payload.pageData.totalPage)
                 
-                if (!getKeyword) {
+                if (!getKeyword()) {
                     props.history.push(`${current}?list_num=${pageSize}`)
                 } else {
                     props.history.push(`${current}?list_num=${pageSize}&keyword=${getKeyword()}`)
@@ -224,13 +224,15 @@ function BoardPage(props) {
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
 
-            <h2> 게시판 </h2>
-            <div style={{ float: 'right', transform: 'translate( 0%, -135%)' }}>
-                <Input style={{ width: '196px'}} placeholder="검색어를 입력해주세요" value={KeyWord} onChange={onKeyWordHandler} />
-                <Button style={{ width: '60px', marginLeft: 5 }} onClick={() => searchKeyword(KeyWord)} type="primary" htmlType="submit">검 색</Button>
-            </div>
+            <div style={{ transform: 'translate( 0%, 53%)' }}>
+                <h2> 게시판 </h2>
+                <div style={{ transform: 'translate( 0%, -140%)', float: 'right' }}>
+                    <Input style={{ width: '196px'}} placeholder="검색어를 입력해주세요" value={KeyWord} onChange={onKeyWordHandler} />
+                    <Button style={{ width: '60px', marginLeft: 5 }} onClick={() => searchKeyword(KeyWord)} type="primary" htmlType="submit">검 색</Button>
+                </div>
 
-            <hr />
+                <hr />
+            </div>
 
             <table>
                 <thead>
@@ -248,10 +250,10 @@ function BoardPage(props) {
                 </tbody>
             </table>
 
-            <br />
+            {/* <br /> */}
             <hr />
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', transform: 'translate( 0%, 25%)' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', transform: 'translate( 0%, 15%)' }}>
                 <Button type="primary" htmlType="submit">
                     <Link to={{
                     pathname : `/write`,

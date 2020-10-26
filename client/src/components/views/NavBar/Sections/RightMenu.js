@@ -19,7 +19,7 @@ function RightMenu(props) {
                 if(response.data.success) {
                     window.localStorage.clear();
                     props.history.push("/login")
-                    alert('로그아웃 성공')
+                    alert('안녕히가세요~!')
                     window.location.reload();
                 }
                 else {

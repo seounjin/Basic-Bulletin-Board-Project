@@ -34,8 +34,9 @@ function LoginPage(props) {
                 if (response.payload.loginSuccess) {
                     props.history.push('/')
                     window.localStorage.setItem('userId', response.payload.userId);
+                    alert('환영합니다.')
                 } else {
-                    alert('Error~')
+                    alert('아이디와 비밀번호를 확인해주세요.')
                 }
             })
     }
