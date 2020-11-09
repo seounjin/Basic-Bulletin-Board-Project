@@ -179,7 +179,8 @@ const userLogout = function(userId, cb) {
 }
 
 const getLoginTime = function(userId, cb) {
-  console.log("getLoginTime", userId);
+  //console.log("getLoginTime", userId);
+  //userId += 222
   getConnection((conn) => {
     var sql = "SELECT date_format(connStartDate, '%Y-%m-%d %H:%i:%s') as dt FROM BulletinBoard.ConnectionRecord where connID = ? and connEndDate is NULL" ;
     var user = [userId];

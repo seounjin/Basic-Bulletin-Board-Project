@@ -1,0 +1,790 @@
+swagger : "2.0"
+info :
+    title: Basic-Bulletin-Board-Project
+    description: 기본 게시판 프로젝트 - 서버 RestAPI 문서
+
+paths:
+    /api/board/getPage:
+        post:
+            tags:
+                - board
+            summary: "게시글 요청"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/board/getPage/request"
+            responses: 
+                "200":
+                    description: "요청 성공"
+                    schema:
+                        $ref: "#/board/getPage/response_200"
+                "400":
+                    description: "요청 실패"
+                    schema:
+                        $ref: "#/board/getPage/response_400"
+    # 유저 회원 가입
+    /api/user/register:
+        post:
+            tags:
+                - user
+            summary: "회원 가입"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/user/register/request"
+            responses: 
+                "200":
+                    description: "가입 성공"
+                    schema:
+                        $ref: "#/user/register/response_200"
+                "400":
+                    description: "가입 실패"
+                    schema:
+                        $ref: "#/user/register/response_400"
+    # 로그인
+    /api/user/login:
+        post:
+            tags:
+                - user
+            summary: "로그인"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/user/login/request"
+            responses: 
+                "200":
+                    description: "로그인 성공"
+                    # description: "사용자에 부여한 권한의 참 값과 토큰을 전달"
+                    schema:
+                        $ref: "#/user/login/response_200"
+                "400":
+                    description: "로그인 실패"
+                    schema:
+                        $ref: "#/user/login/response_400"
+    # 로그 아웃
+    /api/user/logout: 
+        get:
+            tags:
+                - user
+            summary: "로그아웃"
+            responses: 
+                "200":
+                    description: "로그아웃 성공"
+                    schema:
+                        $ref: "#/user/logout/response_200"
+                "400":
+                    description: "로그아웃 실패"
+                    schema:
+                        $ref: "#/user/logout/response_400"
+    
+    # 마이페이지 정보 전달
+    /api/mypage/getActionNum:
+        post:
+            tags:
+                - mypage
+            summary: "마이페이지 정보"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/getActionNum/request"
+            responses: 
+                "200":
+                    description: "정보 전달 성공"
+                    schema:
+                        $ref: "#/mypage/getActionNum/response_200"
+                "400":
+                    description: "정보 전달 실패"
+                    schema:
+                        $ref: "#/mypage/getActionNum/response_400"
+    
+    #마이페이지 비번 확인
+    /api/mypage/confirmPassword:
+        post:
+            tags:
+                - mypage
+            summary: "비밀번호 확인"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/confirmPassword/request"
+            responses: 
+                "200":
+                    description: "비밀번호 맞음"
+                    schema:
+                        $ref: "#/mypage/confirmPassword/response_200"
+                "400":
+                    description: "비밀번호 틀림"
+                    schema:
+                        $ref: "#/mypage/confirmPassword/response_400"
+    # 개인정보 변경
+    /api/mypage/modifyPrivacy:
+        post:
+            tags:
+                - mypage
+            summary: "개인정보 변경"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/modifyPrivacy/request"
+            responses: 
+                "200":
+                    description: "변경 성공"
+                    schema:
+                        $ref: "#/mypage/modifyPrivacy/response_200"
+                "400":
+                    description: "변경 실패"
+                    schema:
+                        $ref: "#/mypage/modifyPrivacy/response_400"
+    
+    # 작성 게시물 요청
+    /api/mypage/getActivity:
+        post:
+            tags:
+                - mypage
+            summary: "유저 작성 게시물 요청"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/getActivity/request"
+            responses: 
+                "200":
+                    description: "성공"
+                    schema:
+                        $ref: "#/mypage/getActivity/response_200"
+                "400":
+                    description: "실패"
+                    schema:
+                        $ref: "#/mypage/getActivity/response_400"
+    
+    # 사용자 신고 댓글 내역
+    /api/mypage/getMyReportComment:
+        post:
+            tags:
+                - mypage
+            summary: "사용자 신고 댓글 내역 요청"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/getMyReportComment/request"
+            responses: 
+                "200":
+                    description: "요청 성공"
+                    schema:
+                        $ref: "#/mypage/getMyReportComment/response_200"
+                "400":
+                    description: "요청 실패"
+                    schema:
+                        $ref: "#/mypage/getMyReportComment/response_400"
+
+    # 사용자 신고 게시글 내역
+    /api/mypage/getMyReportPost:
+        post:
+            tags:
+                - mypage
+            summary: "사용자 신고 게시글 내역 요청"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/getMyReportPost/request"
+            responses: 
+                "200":
+                    description: "요청 성공"
+                    schema:
+                        $ref: "#/mypage/getMyReportPost/response_200"
+                "400":
+                    description: "요청 실패"
+                    schema:
+                        $ref: "#/mypage/getMyReportPost/response_400"
+
+    # 사용자 신고 게시글 취소 요청
+    /api/mypage/cancelmyReportPost:
+        post:
+            tags:
+                - mypage
+            summary: "사용자 신고 게시글 취소 요청"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/cancelmyReportPost/request"
+            responses: 
+                "200":
+                    description: "요청 성공"
+                    schema:
+                        $ref: "#/mypage/cancelmyReportPost/response_200"
+                "400":
+                    description: "요청 실패"
+                    schema:
+                        $ref: "#/mypage/cancelmyReportPost/response_400"
+
+    # 사용자 신고 댓글 취소 요청
+    /api/mypage/cancelmyReportComment:
+        post:
+            tags:
+                - mypage
+            summary: "사용자 신고 댓글 취소 요청"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: ""
+                  required: true
+                  schema:
+                    $ref: "#/mypage/cancelmyReportComment/request"
+            responses: 
+                "200":
+                    description: "요청 성공"
+                    schema:
+                        $ref: "#/mypage/cancelmyReportComment/response_200"
+                "400":
+                    description: "요청 실패"
+                    schema:
+                        $ref: "#/mypage/cancelmyReportComment/response_400"
+    
+    #사용자 아바타 이미지 업로드
+    /api/mypage/imageUpload:
+        post:
+            tags:
+                - mypage
+            summary: "사용자 아바타 이미지 업로드"
+            parameters:
+                - in: "formData"
+                  name: "formData"
+                  description: ""
+                  required: true
+            responses: 
+                "200":
+                    description: "요청 성공"
+                    schema:
+                        $ref: "#/mypage/imageUpload/response_200"
+                "400":
+                    description: "요청 실패"
+                    schema:
+                        $ref: "#/mypage/imageUpload/response_400"
+
+definitions:
+    activityList:
+        type: "object"
+        properties:
+            postnum:
+                type: "integer"
+                example: 180
+            title:
+                type: "string"
+                example: "게시글 78"
+            writer:
+                type: "string"
+                example: "user01"
+            date:
+                type: "string"
+                example: "20.11.10"
+            views:
+                type: "integer"
+                example: 256
+            favorite:
+                type: "integer"
+                example: 10
+    postTextRow:
+        type: "object"
+        properties:
+            rNum:
+                type: "integer"
+                example: 6
+            pNum:
+                type: "integer"
+                example: 190
+            rContent:
+                type: "string"
+                example: "신고 사유"
+            fromId:
+                ype: "string"
+                example: "admin03"
+            toId:
+                type: "string"
+                example: "user03"
+            date:
+                type: "string"
+                example: "20.11.10. 15:47:31"
+            content:
+                type: "string"
+                example: "게시글 내용"
+
+    commentTextRow:
+        type: "object"
+        properties:
+            rNum:
+                type: "integer"
+                example: 4
+            pNum:
+                type: "integer"
+                example: 195
+            content:
+                type: "string"
+                example: "해당 댓글 내용"
+            fromId:
+                ype: "string"
+                example: "신고자 아이디"
+            toId:
+                type: "string"
+                example: "user03"
+            date:
+                type: "string"
+                example: "20.11.10. 15:47:31"
+            cGroupSquence: # 여기 좀 이상함...
+                type: "string"
+                example: "신고 내용"
+
+    boardTextRow:
+        type: "object"
+        properties:
+            postnum:
+                type: "integer"
+                example: 183
+            title:
+                type: "string"
+                example: "게시글의 제목"
+            writer:
+                type: "string"
+                example: "user01"
+            date:
+                ype: "string"
+                example: "20.11.10"
+            views:
+                type: "integer"
+                example: 255
+            favorite:
+                type: "integer"
+                example: 120
+
+
+board:
+    # 게시글 요청
+    getPage:
+        request:
+            type: "object"
+            required:
+                - "keyword"
+                - "currentPage"
+                - "pageSize"
+            properties:
+                keyword:
+                    type: "string"
+                    example: "게시글 검색 내용"
+                currentPage:
+                    type: "string"
+                    example: "1"
+                pageSize:
+                    type: "integer"
+                    example: "10"
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                boardList:
+                    type: "array"
+                    items:
+                        $ref: "#/definitions/boardTextRow"
+                pageData:
+                    type: "object"
+                    properties:
+                        totalPage:
+                            type: "integer"
+                            example: 77
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+
+mypage:
+    # 마이페이지 정보 전달
+    getActionNum:
+        request:
+            type: "object"
+            required:
+                - "id"
+            properties:
+                id:
+                    type: "string"
+                    example: "user01"
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                info:
+                    type: "array"
+                    items:
+                        oneOf:
+                            - type: "string"
+                            - type: "integer"
+                            - type: "integer"
+                            - type: "string"
+                            - type: "integer"
+                            - type: "string"
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "string"
+                    example: "false"
+
+    # 마이페이지 비번 확인
+    confirmPassword:
+        request:
+            type: "object"
+            required:
+                - "id"
+                - "password"
+            properties:
+                id:
+                    type: "string"
+                    example: "user01"
+                password:
+                    type: "string"
+                    example: "123123"
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+    # 개인정보 변경
+    modifyPrivacy:
+        request:
+            type: "object"
+            required:
+                - "id"
+                - "password"
+                - "email"
+            properties:
+                id:
+                    type: "string"
+                    example: "user01"
+                password:
+                    type: "string"
+                    example: "123123"
+                email:
+                    type: "string"
+                    example: "user01@naver.com"
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+    # 작성 게시물 요청
+    getActivity:
+        request:
+            type: "object"
+            required:
+                - "currentPage"
+                - "pageSize"
+                - "type"
+                - "id"
+            properties:
+                currentPage:
+                    type: "string"
+                    example: "1"
+                pageSize:
+                    type: "integer"
+                    example: 1
+                type:
+                    type: "string"
+                    example: "게시물"
+                id:
+                    type: "string"
+                    example: "user01"
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                activityList:
+                    type: "array"
+                    items:
+                        $ref: "#/definitions/activityList"
+
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+
+    # 사용자 신고 댓글 요청
+    getMyReportComment:
+        request:
+            type: "object"
+            required:
+                - "id"
+                - "currentPage"
+            properties:
+                currentPage:
+                    type: "string"
+                    example: 1
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                data:
+                    type: "array"
+                    items:
+                        $ref: "#/definitions/commentTextRow"
+                Count:
+                    type: "object"
+                    properties:
+                        count:
+                            type: "integer"
+                            example: 1
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+
+    # 사용자 신고 게시글 요청
+    getMyReportPost:
+        request:
+            type: "object"
+            required:
+                - "id"
+                - "currentPage"
+            properties:
+                id:
+                    type: "string"
+                    example: "user01"
+                currentPage:
+                    type: "integer"
+                    example: 1
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                data:
+                    type: "array"
+                    items:
+                        $ref: "#/definitions/postTextRow"
+                Count:
+                    type: "object"
+                    properties:
+                        count:
+                            type: "integer"
+                            example: 1
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+
+    # 사용자 신고 게시글 취소 요청
+    cancelmyReportPost:
+        request:
+            type: "object"
+            required:
+                - "data"
+            properties:
+                data:
+                    type: "integer"
+                    example: 9
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+    
+    # 사용자 신고 댓글 취소 요청
+    cancelmyReportComment:
+        request:
+            type: "object"
+            required:
+                - "data"
+            properties:
+                data:
+                    type: "integer"
+                    example: 5
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+    # 사용자 아바타 업로드
+    imageUpload:
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                file:
+                    type: "string"
+                    example: "imgfile1604855922449.png"
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+
+user:
+    # 회원가입
+    register:
+        request:
+            type: "object"
+            required:
+                - "id"
+                - "password"
+                - "email"
+            properties:
+                id:
+                    type: "string"
+                    example: "user01"
+                password:
+                    type: "string"
+                    example: "123123"
+                email:
+                    type: "string"
+                    example: "user01@naver.com"
+        response_200:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+    # 로그인
+    login:
+        request:
+            type: "object"
+            required:
+                - "id"
+                - "password"
+                - "loginDate"
+            properties:
+                id:
+                    type: "string"
+                    example: "user01"
+                password:
+                    type: "string"
+                    example: "123123"
+                loginDate:
+                    type: "string"
+                    example: "2020-11-10 18:13:39.0000000"
+        response_200:
+            description: ""
+            properties:
+                loginSuccess:
+                    type: "boolean"
+                    example: true
+                userId:
+                    type: "string"
+                    example: "User01"
+        response_400:
+            type: "object"
+            properties:
+                loginSuccess:
+                    type: "boolean"
+                    example: false
+    # 로그아웃
+    logout:
+        response_200:
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "string"
+                    example: false

@@ -32,6 +32,7 @@ function LoginPage(props) {
         dispatch(loginUser(body))
             .then(response => {
                 if (response.payload.loginSuccess) {
+                    console.log("응답\n\n",response)
                     props.history.push('/')
                     window.localStorage.setItem('userId', response.payload.userId);
                     alert('환영합니다.')

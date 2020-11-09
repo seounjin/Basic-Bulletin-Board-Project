@@ -89,7 +89,7 @@ router.post("/modifyPrivacy", (req, res) => {
 
 router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize, type, id
 
-    console.log("클라이언트 데이터 출력",req.body);
+    // console.log("클라이언트 데이터 출력",req.body);
 
     const currentPage = parseInt(req.body.currentPage);
 
@@ -165,7 +165,7 @@ router.post("/getMyReportComment", async(req, res) => {
     const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportComment WHERE fromId=?";
 
     //pNum,content,from,to,date
-    const dataSql = "SELECT rNum, pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content cGroupSquence FROM BulletinBoard.ReportComment WHERE fromId=? order by date, date limit ?, ?";
+    const dataSql = "SELECT rNum, pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content, cGroupSquence FROM BulletinBoard.ReportComment WHERE fromId=? order by date, date limit ?, ?";
 
     const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
     
@@ -181,7 +181,6 @@ router.post("/getMyReportPost", async(req, res) => {
 
     console.log("getMyReportPost", req.body)
     
-    // pNum,currentPage,maxComment, countSql, dataSql
     const fromId = req.body.id;
 
     const currentPage = req.body.currentPage;
@@ -196,6 +195,7 @@ router.post("/getMyReportPost", async(req, res) => {
     const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
     
     if (json.success){
+        console.log("json", json)
         return res.status(200).json(json);
     } else {
         return res.status(400).json(json);
@@ -276,6 +276,8 @@ const upload = multer({
 });
 
 router.post("/imageUpload", upload.single('img'), async function(req, res, next) {
+
+    console.log("imagefdfsdf\n\n", req.file)
 
     const userId = req.body.id;
     

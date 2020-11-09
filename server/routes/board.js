@@ -21,7 +21,6 @@ router.post("/createPost", async (req, res) => {
 
     const post = req.body;
     const conn = await pool.getConnection();
-    var e = false;
 
     try {
         await conn.beginTransaction();
@@ -253,8 +252,6 @@ router.post("/getKeywordPage2", async (req, res) => {
 
 router.post("/getPage", async (req, res) => {
 
-    //console.log("getPage", req.body)
-
     let keyWord = null;
     //추가
     if (req.body.keyword) {
@@ -300,6 +297,10 @@ router.post("/getPage", async (req, res) => {
         await conn.commit();
 
         conn.release();
+
+        console.log(boardList, "\n\n")
+
+        console.log(pageData, "\n\n")
 
         return res.status(200).json( {success: true , boardList, pageData}  );
     

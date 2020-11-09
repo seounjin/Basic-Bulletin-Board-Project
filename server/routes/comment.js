@@ -6,10 +6,11 @@ const pool = require('../config/pool');
 
 router.post("/deleteComment",(req, res) => {
 
+    //console.log("req.body",req)
     console.log("req.body",req.body)
 
     deleteComment(req.body.cGroupSquence, (err) => {
-        if (err) return res.json({ success: false, err });
+        if (err) return res.status(400).json({ success: false, err });
 
         return res.status(200).json({ success: true });
     });

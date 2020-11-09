@@ -23,6 +23,7 @@ function RightMenu(props) {
                     window.location.reload();
                 }
                 else {
+                    //console.log("에러\n\n", response)
                     alert('로그아웃 실패')
                 }
             })
