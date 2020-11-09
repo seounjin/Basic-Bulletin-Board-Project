@@ -825,7 +825,7 @@ board:
             boardList:
                 type: "array"
                 items:
-                    $ref: "#/definitions/boardTextRow"
+                    $ref: "#/arrays/boardTextRow"
             pageData:
                 type: "object"
                 properties:
@@ -853,13 +853,13 @@ board:
         type: "string"
         example: "글 내용"
       views:
-        type: "int"
+        type: "integer"
         example: 10
       date:
         type: "string"
         example: "2020-07-07 12:00:00"
       favorite:
-            type: "int"
+            type: "integer"
             example: "10"
       avatar:
         type: "string"
@@ -873,7 +873,7 @@ board:
           type: "string"
           example: "bsj"
         postNum:
-          tpye: "int"
+          tpye: "integer"
           example: 1
 
     response_200:
@@ -889,7 +889,7 @@ board:
           type: "string"
           example: "bsj"
         postNum:
-          tpye: "int"
+          tpye: "integer"
           example: 1
 
     response_200:
@@ -906,7 +906,7 @@ board:
           type: "string"
           example: "bsj"
         postNum:
-          tpye: "int"
+          tpye: "integer"
           example: 1
 
     response_200:
@@ -926,7 +926,7 @@ board:
           type: "boolean"
           example: true
         total:
-          tpye: "int"
+          tpye: "integer"
           example: 100
 
 
@@ -934,7 +934,7 @@ board:
     request:
       properties:
         pNum:
-          type: "int"
+          type: "integer"
           example: 1
         title:
           tpye: "string"
@@ -969,7 +969,7 @@ board:
     request:
       properties:
         pNum:
-          type: "int"
+          type: "integer"
           example: 1
 
     response_200:
@@ -984,7 +984,7 @@ board:
     request:
       properties:
         postNum:
-          type: "int"
+          type: "integer"
           example: 1
 
     response_200:
@@ -999,7 +999,7 @@ board:
               $ref: '#/board/TextRow'
             
           postNum:
-            type: int
+            type: integer
             example: 1
   
   createPost:          
@@ -1025,7 +1025,7 @@ board:
             type: "boolean"
             example: true
           postNum:
-            type: int
+            type: integer
             example: 1
 
   response_400:
@@ -1045,7 +1045,7 @@ report:
     type: "object"
     properties:
       pNum:
-        type: "int"
+        type: "integer"
         example: 1
       rContent:
         type: "string"
@@ -1084,7 +1084,7 @@ report:
       type: "object"
       properties:
         currentPage:
-          type: "int"
+          type: "integer"
           example: 1
 
     response_200:
@@ -1098,7 +1098,7 @@ report:
           items:
             $ref: '#/report/TextRow'
         count:
-          type: "int"
+          type: "integer"
           example: 10
   
 
@@ -1107,7 +1107,7 @@ report:
       type: "object"
       properties:
         pNum:
-          type: "int"
+          type: "integer"
           example: 1
         content:
           type: "string"
@@ -1151,7 +1151,7 @@ report:
       type: "object"
       properties:
         pNum:
-          type: "int"
+          type: "integer"
           example: 1
 
     response_200:
@@ -1167,7 +1167,7 @@ report:
       type: "object"
       properties:
         currentPage:
-          type: "int"
+          type: "integer"
           example: 1
 
     response_200:
@@ -1181,7 +1181,7 @@ report:
           items:
             $ref: '#/report/TextRow'
         count:
-          type: "int"
+          type: "integer"
           example: 10
 
           
@@ -1190,7 +1190,7 @@ report:
       type: "object"
       properties:
         pNum:
-          type: "int"
+          type: "integer"
           example: 1
         rContent:
           type: "string"
@@ -1274,7 +1274,7 @@ comment:
         type: "object"
         properties:
           pNum:
-            type: "int"
+            type: "integer"
             example: 1
           cWriter:
             type: "string"
@@ -1283,13 +1283,13 @@ comment:
             type: "string"
             example: "댓글 내용"
           gDepth:
-            type: "int"
+            type: "integer"
             example: 0
           date:
             type: "string"
             example: "2020-07-07 12:00:00"
           commentPage:
-            type: "int"
+            type: "integer"
             example: 1
 
       response_200:
@@ -1309,7 +1309,7 @@ comment:
           type: "object"
           properties:
             pNum:
-              type: "int"
+              type: "integer"
               example: 1
             cWriter:
               type: "string"
@@ -1318,10 +1318,10 @@ comment:
               type: "string"
               example: "댓글 내용"
             gNum:
-              type: "int"
+              type: "integer"
               example: 1
             gDepth:
-              type: "int"
+              type: "integer"
               example: 0
             date:
               type: "string"
@@ -1330,7 +1330,7 @@ comment:
               tpye: "string"
               example: "bsj"
             commentPage:
-              type: "int"
+              type: "integer"
               example: 1
 
         response_200:
@@ -1350,10 +1350,10 @@ comment:
           type: "object"
           properties:
             postNum:
-              type: "int"
+              type: "integer"
               example: 1
             commentPage:
-              type: "int"
+              type: "integer"
               example: "1"
 
         response_200:
@@ -1365,7 +1365,7 @@ comment:
             comment:
               type: "object"
             commentCnt:
-              type: "int"
+              type: "integer"
               example: 10
 
   getLatestComment:
@@ -1373,10 +1373,10 @@ comment:
           type: "object"
           properties:
             postNum:
-              type: "int"
+              type: "integer"
               example: 1
             commentPage:
-              type: "int"
+              type: "integer"
               example: "1"
 
         response_200:
@@ -1388,7 +1388,7 @@ comment:
             comment:
               type: "object"
             commentCnt:
-              type: "int"
+              type: "integer"
               example: 10
 
   deleteComment:
@@ -1406,7 +1406,7 @@ comment:
           type: "boolean"
           example: true
 
-definitions:
+arrays:
     activityList:
         type: "object"
         properties:
@@ -1474,7 +1474,7 @@ definitions:
             date:
                 type: "string"
                 example: "20.11.10. 15:47:31"
-            cGroupSquence: # 여기 좀 이상함...
+            cGroupSquence:
                 type: "string"
                 example: "신고 내용"
 
@@ -1625,7 +1625,7 @@ mypage:
                 activityList:
                     type: "array"
                     items:
-                        $ref: "#/definitions/activityList"
+                        $ref: "#/arrays/activityList"
 
         response_400:
             type: "object"
@@ -1656,7 +1656,7 @@ mypage:
                 data:
                     type: "array"
                     items:
-                        $ref: "#/definitions/commentTextRow"
+                        $ref: "#/arrays/commentTextRow"
                 Count:
                     type: "object"
                     properties:
@@ -1695,7 +1695,7 @@ mypage:
                 data:
                     type: "array"
                     items:
-                        $ref: "#/definitions/postTextRow"
+                        $ref: "#/arrays/postTextRow"
                 Count:
                     type: "object"
                     properties:
