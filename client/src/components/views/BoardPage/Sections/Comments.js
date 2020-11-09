@@ -37,7 +37,6 @@ function Comments(props) {
                     setComment("") // 코멘트 초기화
 
                     body.cGroupSquence = response.data.cGroupSquence
-                                        
                     props.refreshComment(response.data.comment)// 코멘트 리프래쉬
                 } else {
                     alert('댓글 저장에 실패 하셨습니다')

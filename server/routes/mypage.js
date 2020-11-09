@@ -89,8 +89,6 @@ router.post("/modifyPrivacy", (req, res) => {
 
 router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize, type, id
 
-    console.log("클라이언트 데이터 출력",req.body);
-
     const currentPage = parseInt(req.body.currentPage);
 
     const maxPost = req.body.pageSize;
@@ -168,7 +166,6 @@ router.post("/getMyReportComment", async(req, res) => {
     const dataSql = "SELECT rNum, pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content, cGroupSquence FROM BulletinBoard.ReportComment WHERE fromId=? order by date, date limit ?, ?";
 
     const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
-    
 
     if (json.success){
         return res.status(200).json(json);
@@ -181,6 +178,9 @@ router.post("/getMyReportComment", async(req, res) => {
 router.post("/getMyReportPost", async(req, res) => {
     
     // pNum,currentPage,maxComment, countSql, dataSql
+
+    console.log("getMyReportPost", req.body)
+    
     const fromId = req.body.id;
 
     const currentPage = req.body.currentPage;
@@ -193,7 +193,6 @@ router.post("/getMyReportPost", async(req, res) => {
     const dataSql = "SELECT rNum, pNum, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content FROM BulletinBoard.ReportPost WHERE fromId=? order by date, date limit ?, ?";
 
     const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
-    
 
     if (json.success){
         return res.status(200).json(json);

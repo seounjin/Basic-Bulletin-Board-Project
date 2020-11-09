@@ -70,8 +70,7 @@ router.post("/requestBoardForm", async (req, res) => {
         await conn.commit();
 
         conn.release();
-
-        console.log("cccc",content);
+        //console.log("cccc",content);
         return res.status(200).json( {success: true, content, postnum:postNum });
     
     } catch (err) {
@@ -181,7 +180,7 @@ router.post("/getTotal", async (req, res) => { // 수정해야함
 
         const [totalPost] = await conn.query("SELECT COUNT(*) AS cnt FROM BulletinBoard.PostInfo");
 
-        const total = { //수정할 부분
+        const total = {
             totalPost : totalPost[0].cnt
         }
 
@@ -257,7 +256,7 @@ router.post("/getPage", async (req, res) => {
 
     //console.log("getPage", req.body)
 
-    console.log("qqqqqqqq",req.body);
+    //console.log("qqqqqqqq",req.body);
 
     //검색 키워드
     let keyWord = null;
@@ -306,7 +305,7 @@ router.post("/getPage", async (req, res) => {
 
         conn.release();
 
-        return res.status(200).json( {success: true , boardList, pageData}  ); 
+        return res.status(200).json( {success: true , boardList, pageData}  );
     
     } catch (err) {
 

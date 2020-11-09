@@ -24,7 +24,6 @@ export function requestBoardList(currentPage) {
 // }
 
 export function requestBoardForm(postNum) {
-    
     const request = axios.post('/api/board/requestBoardForm', postNum)
         .then(response => response.data)
 

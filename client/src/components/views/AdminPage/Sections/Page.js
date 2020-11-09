@@ -47,7 +47,6 @@ function Page(props) {
         axios.post(props.getRouter, body)
             .then(response => {
                 if(response.data.success){
-
                     setList(response.data.data);
                     setTotal(response.data.count);
                 } else {

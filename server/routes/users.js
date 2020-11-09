@@ -10,7 +10,7 @@ router.post("/register", (req, res) => {
 
     userRegister(req.body, (err) => {
 
-        if (err) return res.json({ success: false, err });
+        if (err) return res.status(400).json({ success: false, err });
 
         return res.status(200).json({ success: true });
     });
@@ -43,7 +43,7 @@ router.post("/login", (req, res) => {
                     .json({
                         loginSuccess: true, userId: req.body.id
                     });
-            })//
+            })
         })
     });
 });
@@ -67,8 +67,9 @@ router.get("/logout", auth, (req, res)=> {
             }
 
             setLogoutTime(data, (err) => {
-                if(err) 
+                if(err) {
                     return res.json({ success: false, err });
+                }
                 else
                     return res.status(200).send({ success: true })
             })

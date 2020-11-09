@@ -197,7 +197,7 @@ router.post("/getReportComment", async(req, res) => {
     const dataSql = "SELECT pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, cGroupSquence FROM BulletinBoard.ReportComment order by date, date limit ?, ?";
 
     const json = await Page(null, currentPage,maxComment, countSql, dataSql);
-        
+    
     if (json.success){
         return res.status(200).json(json);
     } else {
