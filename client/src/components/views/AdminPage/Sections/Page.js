@@ -38,13 +38,16 @@ function Page(props) {
             }
 
         } else {
-
             body = {
                 currentPage: getPageNum()
             }
         }
 
-        axios.post(props.getRouter, body)
+        console.log("확인", props.state);
+        console.log("바아디",body)
+
+        // axios.post(props.getRouter, body)
+        axios.get(props.state === 'myReport' ? props.getRouter + `?id=${localStorage.getItem('userId')}&page=${getPageNum()}`: props.getRouter + `/${getPageNum()}`)
             .then(response => {
                 if(response.data.success){
                     setList(response.data.data);
@@ -67,7 +70,8 @@ function Page(props) {
             data: parseInt(data)
         }
 
-        axios.post(props.deleteRouter, body)  
+        // axios.post(props.deleteRouter, body)
+        axios.delete(props.deleteRouter + `/${parseInt(data)}`)  
             .then(response => {
                 if(response.data.success){
                     switch(props.state) {
@@ -99,8 +103,7 @@ function Page(props) {
             currentPage: page
         };
 
-        console.log("페이지",page)
-        axios.post(props.getRouter, body)
+        axios.get(props.getRouter + `/${page}`)
             .then(response => {
                 if(response.data.success){
                     setList(response.data.data);

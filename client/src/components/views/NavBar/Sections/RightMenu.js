@@ -14,13 +14,13 @@ function RightMenu(props) {
     const { SubMenu } = Menu;
 
     const logoutHandler = () => {
-        axios.get('/api/users/logout')
+        axios.get('/api/user/logout')
             .then(response => {
                 if(response.data.success) {
                     window.localStorage.clear();
                     props.history.push("/login")
                     alert('안녕히가세요~!')
-                    window.location.reload();
+                    // window.location.reload();
                 }
                 else {
                     alert('로그아웃 실패')

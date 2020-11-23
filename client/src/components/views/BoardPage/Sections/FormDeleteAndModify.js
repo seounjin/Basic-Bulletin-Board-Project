@@ -14,7 +14,8 @@ function FormDeleteAndModify(props) {
           pNum : props.num
       }
 
-      axios.post('/api/board/deletePost', body)
+      // 게시글 삭제 요청
+      axios.delete(`/api/board/post/1/${props.num}`)
             .then(response => {
                 if (response.data.success) {
                     props.history.push(`/board/${window.sessionStorage.currentPage}`)

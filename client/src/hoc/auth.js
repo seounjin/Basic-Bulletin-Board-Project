@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react';
 import { useDispatch } from 'react-redux'
 import { auth } from '../_actions/user_actions';
+import axios from 'axios';
+
 
 export default function(SpecificComponent, option, adminRoute = null) {
 
@@ -15,20 +17,12 @@ export default function(SpecificComponent, option, adminRoute = null) {
         useEffect(() => {
 
             dispatch(auth()).then(response => {
-                console.log(response)
-
-                // if(response.payload.exp){
-                //     alert('로그인 만료되었습니다')
-                //     props.history.push('/login')
-                // } window.sessionStorage.clear();
+                console.log("auth", response);
+                
+                
 
                 //로그인 하지 않은 상태
                 if(!response.payload.isAuth) {
-                    
-                    if(response.payload.exp){
-                        window.sessionStorage.clear();
-                        alert('로그인 만료되었습니다');
-                    }
                     
                     if(option) {
                         props.history.push('/login')
@@ -36,6 +30,19 @@ export default function(SpecificComponent, option, adminRoute = null) {
 
                 }
                 else { //로그인 상태
+                    
+                    if(response.payload.exp){
+                        // 토큰 요청
+                        axios.get('/api/user/tokenRequest')
+                            .then(response => {
+                            if (response.data.success) {
+                                console.log("토큰 재발급 성공");
+                            } else{
+                                console.log("토큰 재발급 실패");
+                            }
+                        });
+                    }
+                    
                     //관리자가 아닌데 관리자 페이지에 들어가질 경우.
                     if(adminRoute && !response.payload.isAdmin) {
                         props.history.push('/')

@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require("../middleware/auth");
 const { userLogin, modifyPrivacy } = require('../models/User');
 const pool = require('../config/pool');
 const { Page } = require("../pagination/page"); 
 const multer = require('multer');
 const path = require('path');
+const url = require('url');
+const fs = require('fs');
+const crypto = require("crypto");
 
 
-router.post("/getActionNum", async (req, res) => {
+router.post("/profile", async (req, res) => {
 
     const userId = req.body.id;
 
@@ -61,22 +63,68 @@ router.post("/getActionNum", async (req, res) => {
 
 });
 
-router.post("/confirmPassword", (req, res) => {
+router.post("/check", async(req, res) => {
 
-    userLogin(req.body, (err, isMatch) => {
+    const userId = req.body.id;
+    const password = req.body.password;
 
-        if (err) return res.json({ success: false });
+    const conn = await pool.getConnection();
 
-        if (!isMatch) {
-            return res.json({ success: false });
-        } else {
-            return res.status(200).json({ success: true }); 
+
+    try {
+
+        await conn.beginTransaction();
+
+        const [result] = await conn.query("SELECT password, id FROM BulletinBoard.User where id=?",[userId]);
+
+        // 해당 ID가 없을 경우
+        if (result.length === 0){
+
+            return res.json({ loginSuccess: false });
         }
-    })
+
+        const privateKey = await fs.promises.readFile('./keys/private.pem', 'utf8');
+
+        const dbPassword = crypto.privateDecrypt(privateKey, Buffer.from(result[0].password, "base64")).toString('utf8');
+
+        const userPassword = crypto.privateDecrypt(privateKey, Buffer.from(password, "base64")).toString('utf8');
+
+        // 사용자가 보낸 password 복호한것과 데이터베이스에있는 password 복호화해서 비교
+        if (dbPassword !== userPassword){
+            return res.json({ success: false });
+        } 
+        
+        await conn.commit();
+
+        conn.release();
+
+        return res.status(200).json({ success: true }); 
+
+    } catch (err) {
+        
+        console.log("에러",err);
+
+        conn.rollback();
+
+        conn.release();
+
+        return res.status(400).json( { success: false, err } );
+    }
+
+    // userLogin(req.body, (err, isMatch) => {
+
+    //     if (err) return res.json({ success: false });
+
+    //     if (!isMatch) {
+    //         return res.json({ success: false });
+    //     } else {
+    //         return res.status(200).json({ success: true }); 
+    //     }
+    // })
 
 });
 
-router.post("/modifyPrivacy", (req, res) => {
+router.post("/change", (req, res) => {
 
     modifyPrivacy(req.body, (err) => {
 
@@ -87,7 +135,7 @@ router.post("/modifyPrivacy", (req, res) => {
 
 });
 
-router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize, type, id
+router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, type, id
 
     const currentPage = parseInt(req.body.currentPage);
 
@@ -151,12 +199,12 @@ router.post("/getActivity", async (req, res) => {// body : currentPage, pageSize
 });
 
 
-router.post("/getMyReportComment", async(req, res) => {
+router.get("/report/2", async(req, res) => {
         
-    // pNum,currentPage,maxComment, countSql, dataSql
-    const fromId = req.body.id;
+    const queryData = url.parse(req.url, true).query;
+    const fromId = queryData.id;
+    const currentPage = queryData.page
 
-    const currentPage = req.body.currentPage;
 
     const maxComment = 10;
 
@@ -175,16 +223,12 @@ router.post("/getMyReportComment", async(req, res) => {
 
 });
 
-router.post("/getMyReportPost", async(req, res) => {
+router.get("/report/1", async(req, res) => {
     
-    // pNum,currentPage,maxComment, countSql, dataSql
-
-    console.log("getMyReportPost", req.body)
+    const queryData = url.parse(req.url, true).query;
+    const fromId = queryData.id;
+    const currentPage = queryData.page
     
-    const fromId = req.body.id;
-
-    const currentPage = req.body.currentPage;
-
     const maxComment = 10;
 
     const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportPost WHERE fromId=?";
@@ -202,9 +246,9 @@ router.post("/getMyReportPost", async(req, res) => {
 
 });
 
-router.post("/cancelmyReportPost", async (req, res) => {
+router.delete("/report/3/:number", async (req, res) => {
 
-    const rNum = req.body.data;
+    const rNum = req.params.number;
     
     const conn = await pool.getConnection();
 
@@ -231,9 +275,9 @@ router.post("/cancelmyReportPost", async (req, res) => {
 
 });
 
-router.post("/cancelmyReportComment", async (req, res) => {
+router.delete("/report/4/:number", async (req, res) => {
 
-    const rNum = req.body.data;
+    const rNum = req.params.number;
     
     const conn = await pool.getConnection();
 
@@ -274,7 +318,7 @@ const upload = multer({
     limits: { fileSize: 1000000 }
 });
 
-router.post("/imageUpload", upload.single('img'), async function(req, res, next) {
+router.post("/avatar", upload.single('img'), async function(req, res, next) {
 
     const userId = req.body.id;
     

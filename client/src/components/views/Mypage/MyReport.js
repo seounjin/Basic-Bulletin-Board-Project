@@ -6,14 +6,18 @@ import Page from '../AdminPage/Sections/Page';
 
 function MyReport(props) {
 
-    const [Report, setReport] = useState("MyReportPost");
+    const [Report, setReport] = useState(1);
+    const [Cancel, setCancel] = useState(3);
+
 
     const handleMenuClick = (event) => {
 
         if (event.key === '1'){
-            setReport("MyReportPost");
+            setReport(1);
+            setCancel(3);
         } else if (event.key === '2') {
-            setReport("MyReportComment");
+            setReport(2);
+            setCancel(4);
         }
     }
 
@@ -39,12 +43,13 @@ function MyReport(props) {
               <Dropdown overlay={menu}>
                 
                   <a style={{fontSize: '19px'}} className="ant-dropdown-link" onClick={e => e.preventDefault()} >
-                    { Report == 'MyReportPost' ? "게시물" : "댓글" } <DownOutlined />
+                    { Report === 1 ? "게시물" : "댓글" } <DownOutlined />
                   </a>
               </Dropdown>  
             </div>
             
-            <Page getRouter={'/api/mypage/get' + Report} deleteRouter={'/api/mypage/cancel' + Report} state={'myReport'} ></Page>
+
+            <Page getRouter={'/api/mypage/report/' + Report} deleteRouter={'/api/mypage/report/' + Cancel} state={'myReport'} ></Page>
 
         </div>
     )

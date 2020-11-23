@@ -4,11 +4,11 @@ const { deleteComment, modifyComment } = require("../models/Comment");
 const pool = require('../config/pool');
 
 
-router.post("/deleteComment",(req, res) => {
+router.delete("/1/:cNum",(req, res) => {
+    
+    const cGroupSquence = req.params.cNum;
 
-    console.log("req.body",req.body)
-
-    deleteComment(req.body.cGroupSquence, (err) => {
+    deleteComment(cGroupSquence, (err) => {
         if (err) return res.status(400).json({ success: false, err });
 
         return res.status(200).json({ success: true });
@@ -16,7 +16,8 @@ router.post("/deleteComment",(req, res) => {
 
 });
 
-router.post("/modifyComment",(req, res) => { 
+// 댓글 수정
+router.post("/change",(req, res) => { 
 
     console.log("aa", req.body)
     modifyComment(req.body, (err) => {
@@ -27,7 +28,8 @@ router.post("/modifyComment",(req, res) => {
 
 });
 
-router.post("/saveRootComment", async (req, res) => {
+// 부모 댓글 저장
+router.post("/parent", async (req, res) => {
 
     const commentData = [req.body.pNum, req.body.cWriter, req.body.pComment, req.body.date, req.body.gDepth ] 
 
@@ -69,8 +71,8 @@ router.post("/saveRootComment", async (req, res) => {
 });
 
 
-
-router.post("/saveChildComment", async (req, res) => {
+// 자식 댓글 저장
+router.post("/child", async (req, res) => {
 
 
     const commentData = [req.body.pNum, req.body.cWriter, req.body.pComment, req.body.gNum, req.body.date, req.body.gDepth, req.body.cID] 
@@ -108,8 +110,8 @@ router.post("/saveChildComment", async (req, res) => {
 
 });
 
-
-router.post("/getCommentPage", async (req, res) => {
+// 등록순으로 댓글 요청
+router.post("/sequence/1", async (req, res) => {
     
     const pNum = req.body.postNum;
 
@@ -150,7 +152,8 @@ router.post("/getCommentPage", async (req, res) => {
 
 });
 
-router.post("/getLatestComment", async (req, res) => {
+// 최신순으로 댓글 요청
+router.post("/sequence/2", async (req, res) => {
     
     const pNum = req.body.postNum;
 

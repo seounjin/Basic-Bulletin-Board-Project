@@ -11,7 +11,7 @@ function ReportComment(props) {
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
 
-            <Page getRouter={'/api/report/getReportComment'} deleteRouter={'/api/report/deleteReportComment'}
+            <Page getRouter={'/api/report/comment'} deleteRouter={'/api/report/comment/1'}
                 state={'reportComment'}
             
             ></Page>

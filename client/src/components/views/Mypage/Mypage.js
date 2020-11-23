@@ -21,7 +21,7 @@ function Mypage(props) {
             id : localStorage.getItem('userId')
         }
 
-        axios.post('/api/mypage/getActionNum', body)
+        axios.post('/api/mypage/profile', body)
               .then(response => {
                   if (response.data.success) {
                       console.log("data", response.data.info)

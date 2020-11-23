@@ -44,7 +44,8 @@ function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정
         pContent : Content
       }
 
-      axios.post('/api/board/createPost', body)
+      //글 생성
+      axios.post('/api/board/new', body)
             .then(response => {
                 if (response.data.success) {
                   console.log("postNum", response.data.postNum)
@@ -63,8 +64,9 @@ function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정
           pContent : Content
         }
         
+        // 게시글 내용 수정
         // https://stackoverrun.com/ko/q/12507405
-        axios.post('/api/board/modifyPost', body)
+        axios.post('/api/board/post/change', body)
               .then(response => {
                   if (response.data.success && !response.data.isReal) {
                     props.history.push(`/boardform/${props.location.state[0]}`)

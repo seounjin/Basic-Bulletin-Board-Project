@@ -80,7 +80,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
 
     useEffect(() => {
 
-        dispatch(requestBoardForm(body))
+        dispatch(requestBoardForm(parseInt(props.match.params.postNum)))
             .then(response =>{
             if (response.payload.success){
                 console.log("response.payload.content", response.payload.content)

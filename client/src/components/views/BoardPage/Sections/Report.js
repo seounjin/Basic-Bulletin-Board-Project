@@ -34,8 +34,9 @@ function Report(props) {
                 toId: props.toId,
                 date: moment().format('YYYY-MM-DD HH:mm:ss'),
             }
-
-            axios.post('/api/report/saveReportComment', body)
+            
+            // 댓글 신고
+            axios.post('/api/report/comment', body)
             .then(response => {
                 if(response.data.success){
                     if(response.data.report){
@@ -61,8 +62,9 @@ function Report(props) {
                 date: moment().format('YYYY-MM-DD HH:mm:ss'),
                 pContent: board.boardContent.content[0].pContent
             }
-
-            axios.post('/api/report/saveReport', body)
+            
+            // 게시글 신고
+            axios.post('/api/report/post', body)
             .then(response => {
                 if(response.data.success){
                     if(response.data.report){

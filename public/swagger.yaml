@@ -8,7 +8,7 @@ paths:
   ####### User #######
 
   # 유저 회원 가입
-  /api/user/register:
+  /api/users/register:
       post:
           tags:
               - user
@@ -30,7 +30,7 @@ paths:
                   schema:
                       $ref: "#/user/register/response_400"
   # 로그인
-  /api/user/login:
+  /api/users/login:
       post:
           tags:
               - user
@@ -53,7 +53,7 @@ paths:
                   schema:
                       $ref: "#/user/login/response_400"
   # 로그 아웃
-  /api/user/logout: 
+  /api/users/logout: 
       get:
           tags:
               - user
@@ -67,7 +67,60 @@ paths:
                   description: "로그아웃 실패"
                   schema:
                       $ref: "#/user/logout/response_400"
-  
+
+# 토큰 재요청
+  /api/users/tokenRequest: 
+        get:
+            tags:
+                - user
+            summary: "(access token 요청)"
+            responses: 
+                "200":
+                    description: "access token 재발급하여 쿠키에 저장"
+                    schema:
+                        $ref: "#/user/logout/response_200"
+                "400":
+                    description: "access token 실패"
+                    schema:
+                        $ref: "#/user/logout/response_400"
+
+# 공개키 요청
+  /api/users/requestPublicKey: 
+        get:
+            tags:
+                - user
+            summary: "(public key 요청)"
+            responses: 
+                "200":
+                    description: "공개키 응답"
+                    schema:
+                        $ref: "#/user/requestPublicKey/response_200"
+                "400":
+                    description: "에러"
+                    schema:
+                        $ref: "#/user/requestPublicKey/response_400"
+
+# auth
+  /api/users/auth:
+    get:
+      tags:
+          - user
+      summary: "(사용자 인증 요청)"
+      responses: 
+          "사용자 인증 완료 200":
+              description: "유저 정보"
+              schema:
+                  $ref: "#/user/auth/response_200"
+          "로그인하지 않는 유저 200":
+              description: "토큰 없음"
+              schema:
+                  $ref: "#/user/auth/emptyToken"
+          "토큰만료 200":
+              description: "토큰 만료"
+              schema:
+                  $ref: "#/user/auth/expToken"
+
+
   ####### 보드 #######
 
   /api/board/createPost:
@@ -94,19 +147,17 @@ paths:
           schema:
             $ref: '#/board/response_400'
 
-  /api/board/requestBoardForm:
-    post:
+  /api/board/requestBoardForm/{postNum}:
+    get:
       summary: (게시글 요청)
       tags:
         - board
       parameters:
-        - name: body
-          in: body
-          description: "게시글 정보"
-          required: true
-          schema:
-            $ref: '#/board/requestBoardForm/request'
-
+        - name: "postNum"
+          in: "path"
+          description: "7"
+          type: "integer"
+          
       responses:
         '200':
           description: "성공"
@@ -119,18 +170,17 @@ paths:
             $ref: '#/board/response_400'
 
 
-  /api/board/deletePost:
-    post:
+  /api/board/deletePost/{postNum}:
+    delete:
       summary: (게시글 삭제 요청)
       tags:
         - board
       parameters:
-        - name: body
-          in: body
-          description: "게시글 정보"
+        - name: "postNum"
+          in : "path"
+          description: 7
           required: true
-          schema:
-            $ref: '#/board/deletePost/request'
+          type: 'integer'
 
       responses:
         '200':
@@ -173,7 +223,7 @@ paths:
             $ref: '#/board/response_400'
 
   /api/board/getTotal:
-    post:
+    get:
       summary: (전체 게시물의 갯수)
       tags:
         - board
@@ -287,18 +337,17 @@ paths:
 
   ####### 댓글 #######
 
-  /api/comment/deleteComment:
-    post:
+  /api/comment/deleteComment/{cNum}:
+    delete:
       summary: (댓글 삭제)
       tags:
         - comment
       parameters:
-        - name: body
-          in: body
-          description: "삭제할 댓글 정보"
+        - name: "cNum"
+          in: "path"
+          description: "7"
           required: true
-          schema:
-            $ref: '#/comment/deleteComment/request'
+          type: "integer"
 
       responses:
         '200':
@@ -459,18 +508,17 @@ paths:
             $ref: '#/report/response_400'
 
 
-  /api/report/getReportPost:
-    post:
+  /api/report/getReportPost/{page}:
+    get:
       summary: (신고된 게시글 요청)
       tags:
         - report
       parameters:
-        - name: body
-          in: body
-          description: "신고된 게시글 정보"
+        - name: "page"
+          in: "path"
+          description: "게시글 페이지"
           required: true
-          schema:
-            $ref: '#/report/getReportPost/request'
+          type: "integer"
 
       responses:
         '200':
@@ -538,18 +586,17 @@ paths:
             $ref: '#/report/response_400'
 
             
-  /api/report/getReportComment:
-    post:
+  /api/report/getReportComment/{page}:
+    get:
       summary: (신고된 댓글 요청)
       tags:
         - report
       parameters:
-        - name: body
-          in: body
-          description: "신고된 댓글 정보"
+        - name: "page"
+          in: "path"
+          description: "게시글 페이지"
           required: true
-          schema:
-            $ref: '#/report/getReportComment/request'
+          type: "integer"
 
       responses:
         '200':
@@ -868,6 +915,7 @@ board:
 
   unFavorite:
     request:
+      type: "object"
       properties:
         userId:
           type: "string"
@@ -884,6 +932,7 @@ board:
 
   favorite:
     request:
+      type: "object"
       properties:
         userId:
           type: "string"
@@ -901,6 +950,7 @@ board:
 
   getFavorite:
     request:
+      type: "object"
       properties:
         userId:
           type: "string"
@@ -921,6 +971,7 @@ board:
 
   getTotal:
     response_200:
+      type: "object"
       properties:
         success:
           type: "boolean"
@@ -932,6 +983,7 @@ board:
 
   modifyPost:
     request:
+      type: "object"
       properties:
         pNum:
           type: "integer"
@@ -967,6 +1019,7 @@ board:
 
   deletePost:
     request:
+      type: "object"
       properties:
         pNum:
           type: "integer"
@@ -982,6 +1035,7 @@ board:
     
   requestBoardForm:
     request:
+      type: "object"
       properties:
         postNum:
           type: "integer"
@@ -1004,6 +1058,7 @@ board:
   
   createPost:          
     request:
+      type: "object"
       properties:
         writer:
           type: "string"
@@ -1860,3 +1915,61 @@ user:
                 err:
                     type: "string"
                     example: false
+              
+    # requestPublicKey
+    requestPublicKey:
+        response_200:
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                publicKey:
+                  type: "any"
+
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+                    
+    # auth
+    auth:
+        response_200:
+            properties:
+                id:
+                    type: "string"
+                    example: "userId"
+                isAdmin:
+                    type: "boolean"
+                    example: false
+                isAuth:
+                    type: "boolean"
+                    example: true
+                email:
+                    type: "string"
+                    example: "bsj@naver.com"
+                role:
+                    type: "integer"
+                    example: 0
+
+        emptyToken:
+            type: "object"
+            properties:
+                isAuth:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "boolean"
+                    example: true
+        expToken:
+            type: "object"
+            properties:
+                isAuth:
+                    type: "boolean"
+                    example: true
+                exp:
+                    type: "boolean"
+                    example: true

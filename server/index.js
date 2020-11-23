@@ -2,10 +2,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const { CreateKeys } = require("../utils/createKeys");
+
 const cors = require('cors');
-
-
 const port = 5000;
+
+
+CreateKeys();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,7 +18,7 @@ app.use(cookieParser());
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.use('/api/users', require('./routes/users'));
+app.use('/api/user', require('./routes/users'));
 
 app.use('/api/board', require('./routes/board'));
 

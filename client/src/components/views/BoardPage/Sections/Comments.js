@@ -31,7 +31,8 @@ function Comments(props) {
             commentPage: props.commentPage
         }
 
-        axios.post('/api/comment/saveRootComment', body)
+        // 부모 댓글 저장
+        axios.post('/api/comment/parent', body)
             .then(response => {
                 if(response.data.success){
                     setComment("") // 코멘트 초기화

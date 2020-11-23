@@ -53,7 +53,7 @@ function ImageUpload(props) {
                 const formData = new FormData();
                 await formData.append('id', localStorage.getItem('userId'));
                 await formData.append('img', info.file.originFileObj);
-                axios.post('/api/mypage/imageUpload', formData)
+                axios.post('/api/mypage/avatar', formData)
                     .then(response => {
                         if (response.data.success) {
                             console.log("dfdsfsdfsdfsd",response.data)

@@ -3,7 +3,8 @@ const router = express.Router();
 const pool = require('../config/pool');
 const { Page } = require("../pagination/page"); 
 
-router.post("/saveReport", async (req, res) => {
+// 게시글 신고
+router.post("/post", async (req, res) => {
     
     // 신고자가 이 글에 신고를 하엿는지 검사 해야함 (글번호, 신고자)
 
@@ -64,10 +65,11 @@ router.post("/saveReport", async (req, res) => {
 });
 
 
-router.post("/getReportPost", async(req, res) => {
-        
+router.get("/post/:page", async(req, res) => {
+    
     // pNum,currentPage,maxComment, countSql, dataSql
-    const currentPage = req.body.currentPage;
+    // const currentPage = req.body.currentPage;
+    const currentPage = req.params.page;
 
     const maxComment = 10;
 
@@ -87,10 +89,12 @@ router.post("/getReportPost", async(req, res) => {
 });
 
 
-router.post("/deleteReportPost", async (req, res) => {
+router.delete("/post/1/:pNum", async (req, res) => {
 
-    const pNum = req.body.data;
-    
+    console.log("확인", req.params.pNum)
+    // const pNum = req.body.data;
+    const pNum = req.params.pNum;
+
     // 해당 게시판 삭제
     // 해당 게시물 내용 삭제
     // 신고 게시판 삭제
@@ -124,8 +128,8 @@ router.post("/deleteReportPost", async (req, res) => {
 
 });
 
-
-router.post("/saveReportComment", async (req, res) => {
+// 댓글 신고
+router.post("/comment", async (req, res) => {
     
     // 글번호, 댓글내용, 신고사유, 신고한 아이디,신고당한 아이디, 신고 시간 ,고유 넘버
 
@@ -184,11 +188,12 @@ router.post("/saveReportComment", async (req, res) => {
 
 });
 
-router.post("/getReportComment", async(req, res) => {
+router.get("/comment/:page", async(req, res) => {
         
     // pNum,currentPage,maxComment, countSql, dataSql
-    const currentPage = req.body.currentPage;
-
+    // const currentPage = req.body.currentPage;
+    const currentPage = req.params.page;
+    
     const maxComment = 10;
 
     const countSql = "SELECT COUNT(*) as cnt FROM BulletinBoard.ReportComment";
@@ -207,10 +212,10 @@ router.post("/getReportComment", async(req, res) => {
 });
 
 
+// 신고된 댓글 삭제
+router.delete("/comment/1/:pNum", async (req, res) => {
 
-router.post("/deleteReportComment", async (req, res) => {
-
-    const cGroupSquence = req.body.data;
+    const cGroupSquence = req.params.pNum;
     
     // 해당 댓글 null 업데이트
     
