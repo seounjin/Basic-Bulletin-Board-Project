@@ -124,7 +124,7 @@ router.post("/check", async(req, res) => {
 
 });
 
-router.post("/change", async(req, res) => {
+router.post("/change", (req, res) => {
 
     const data = [req.body.password, req.body.email, req.body.id];
 
@@ -268,6 +268,8 @@ router.get("/report/1", async(req, res) => {
 
 router.delete("/report/3/:number", async (req, res) => {
 
+    console.log("/report/3/:number\n", req.params.number)
+
     const rNum = req.params.number;
     
     const conn = await pool.getConnection();
@@ -296,6 +298,8 @@ router.delete("/report/3/:number", async (req, res) => {
 });
 
 router.delete("/report/4/:number", async (req, res) => {
+
+    console.log("/report/4/:number\n", req.params.number)
 
     const rNum = req.params.number;
     
