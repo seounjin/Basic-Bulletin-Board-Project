@@ -164,8 +164,7 @@ router.post("/login", async(req, res) => {
             httpOnly: true,
           });
         res.cookie('accessToken ', token, {
-            // expires: new Date(Date.now() + 100),
-            maxAge:300000,
+            expires: new Date(Date.now() + 604800),
             secure: false, // https 사용할 때 True
             httpOnly: true,
           })
@@ -241,8 +240,9 @@ router.get("/logout", auth, (req, res)=> {
                 if(err) {
                     return res.json({ success: false, err });
                 }
-                 return res.clearCookie('accessToken')
-                    .status(200).send({ success: true })
+                res.clearCookie('accessToken')
+                res.clearCookie('refreshToken')
+                   .status(200).send({ success: true })
             })
         })
         //얻은time으로 로그아웃 time 넣기

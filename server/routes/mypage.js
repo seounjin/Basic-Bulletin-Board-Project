@@ -124,14 +124,34 @@ router.post("/check", async(req, res) => {
 
 });
 
-router.post("/change", (req, res) => {
+router.post("/change", async(req, res) => {
 
-    modifyPrivacy(req.body, (err) => {
+    const data = [req.body.password, req.body.email, req.body.id];
 
-        if (err) return res.json({ success: false, err });
+    const conn = await pool.getConnection();
+    
+    try {
+        await conn.beginTransaction();
+
+        await conn.query("UPDATE `BulletinBoard`.`User` SET `password` = ?, `email` = ? WHERE (`id` = ?)", data);
+
+        await conn.commit();
+
+        conn.release();
 
         return res.status(200).json({ success: true });
-    });
+    
+    } catch (err) {
+
+        console.log("에러",err);
+
+        conn.rollback();
+
+        conn.release();
+
+        return res.json({ success: false, err });
+
+    }
 
 });
 

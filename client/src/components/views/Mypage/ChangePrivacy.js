@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { withRouter, Link } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import axios from 'axios';
+import { encryptPassword } from '../../api/index';
 
 function ChangePrivacy(props) {
 
@@ -39,21 +40,29 @@ function ChangePrivacy(props) {
             return alert('비밀번호를 8 ~ 20 자리로 입력해주세요.')
         }
 
-        const body = {
-            id : localStorage.getItem('userId'),
-            password : Password,
-            email : Email
-        }
 
-        axios.post('/api/mypage/change', body)
-              .then(response => {
-                  if (response.data.success) {
-                      alert('개인정보가 변경되었습니다.')
-                      props.history.push(`/mypage`)
-                  } else {
-                    return alert('개인정보를 변경하는데 실패하였습니다.')
-                  }
-              })
+        encryptPassword(Password)
+            .then(encryption => {
+            
+                const body = {
+                    id : localStorage.getItem('userId'),
+                    password : encryption,
+                    email : Email
+                }
+        
+                axios.post('/api/mypage/change', body)
+                      .then(response => {
+                          if (response.data.success) {
+                              alert('개인정보가 변경되었습니다.')
+                              props.history.push(`/mypage`)
+                          } else {
+                            return alert('개인정보를 변경하는데 실패하였습니다.')
+                          }
+                      })
+        
+        });
+
+        
     };
 
     return (
