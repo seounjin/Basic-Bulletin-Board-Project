@@ -124,7 +124,7 @@ router.post("/check", async(req, res) => {
 
 });
 
-router.post("/change", (req, res) => {
+router.post("/change", async(req, res) => {
 
     const data = [req.body.password, req.body.email, req.body.id];
 
