@@ -826,46 +826,19 @@ paths:
                   schema:
                       $ref: "#/mypage/getMyReportPost/response_400"
 
-  # 사용자 신고 댓글 취소 요청
-  # /api/mypage/cancelmyReportComment:
-  /api/mypage/report/3:
-      delete:
-          tags:
-              - mypage
-          summary: "(사용자 신고 댓글 삭제 요청)"
-          parameters:
-              - in: "query"
-                type: "string"
-                name: "number"
-                description: "삭제하고자 하는 댓글 고유번호"
-                required: true
-                # schema:
-                #   $ref: "#/mypage/cancelmyReportComment/request"
-          responses: 
-              "200":
-                  description: "요청 성공"
-                  schema:
-                      $ref: "#/mypage/cancelmyReportComment/response_200"
-              "400":
-                  description: "요청 실패"
-                  schema:
-                      $ref: "#/mypage/cancelmyReportComment/response_400"
-
   # 사용자 신고 게시글 취소 요청
-  # /api/mypage/cancelmyReportPost:
-  /api/mypage/report/4:
+  # /api/mypage/cancelmyReportComment:
+  /api/mypage/report/3/{number}:
       delete:
           tags:
               - mypage
           summary: "(사용자 신고 게시글 삭제 요청)"
           parameters:
-              - in: "query"
+              - in: "path"
                 type: "string"
                 name: "number"
                 description: "삭제하고자 하는 게시글 고유번호"
                 required: true
-                schema:
-                  $ref: "#/mypage/cancelmyReportPost/request"
           responses: 
               "200":
                   description: "요청 성공"
@@ -875,6 +848,29 @@ paths:
                   description: "요청 실패"
                   schema:
                       $ref: "#/mypage/cancelmyReportPost/response_400"
+
+  # 사용자 신고 댓글 취소 요청
+  # /api/mypage/cancelmyReportPost:
+  /api/mypage/report/4/{number}:
+      delete:
+          tags:
+              - mypage
+          summary: "(사용자 신고 댓글 삭제 요청)"
+          parameters:
+              - in: "path"
+                type: "string"
+                name: "number"
+                description: "삭제하고자 하는 댓글 고유번호"
+                required: true
+          responses: 
+              "200":
+                  description: "요청 성공"
+                  schema:
+                      $ref: "#/mypage/cancelmyReportComment/response_200"
+              "400":
+                  description: "요청 실패"
+                  schema:
+                      $ref: "#/mypage/cancelmyReportComment/response_400"
 
   #사용자 아바타 이미지 업로드
   # /api/mypage/imageUpload:
@@ -1221,18 +1217,21 @@ report:
         pNum:
           type: "integer"
           example: 1
-        content:
-          type: "string"
-          example: "댓글 내용"
         rContent:
           type: "string"
           example: "신고 사유"
+        content:
+          type: "string"
+          example: "댓글 내용"
+        cGroupSquence:
+          type: "integer"
+          example: 1
         fromId:
           type: "string"
-          example: "bsj"
+          example: "user01"
         toId:
           type: "string"
-          example: "invanda"
+          example: "user02"
         date:
           type: "string"
           example: "2020-07-07 12:00:00"
@@ -1663,7 +1662,7 @@ mypage:
                     example: "user01"
                 password:
                     type: "string"
-                    example: "123123"
+                    example: "d/sYxj7YL03RhnbYlQECry9//C+O4PU8fxhPEk25+xzSDuotx0gdsZRQ+u/6H3Azin+5Jm7msBjGH6DU/ESEQg=="
         response_200:
             type: "object"
             properties:
@@ -1690,7 +1689,7 @@ mypage:
                     example: "user01"
                 password:
                     type: "string"
-                    example: "123123"
+                    example: "egq4uzayroVqCCS1Bl2ukYyT8fFSkkXvhCnt0mwEM3HiYqXtkjlswdsp3RQ2CtMyPg5/yS9qCitjyRXWbGkovA=="
                 email:
                     type: "string"
                     example: "user01@naver.com"
@@ -1907,7 +1906,7 @@ user:
                     example: "user01"
                 password:
                     type: "string"
-                    example: "123123"
+                    example: "GwiAy4pn6mQl2wnm2eEhotCcf2rYR/unoUB6697e/bs5QAizAui+sQWqWbhXZY36H8LtR3C0TFXEBDKq8fWtOw=="
                 email:
                     type: "string"
                     example: "user01@naver.com"
@@ -1937,7 +1936,7 @@ user:
                     example: "user01"
                 password:
                     type: "string"
-                    example: "123123"
+                    example: "lYnCIUbuLfAY1Y3C29fxaqFEu5n6RmlG0ngIqlUfeen32vXe5I9DLolLs8XW1lGA4gS/NWVrVy7FM3gLcSULMg=="
                 loginDate:
                     type: "string"
                     example: "2020-11-10 18:13:39.0000000"
@@ -1950,6 +1949,7 @@ user:
                 userId:
                     type: "string"
                     example: "User01"
+                
         response_400:
             type: "object"
             properties:
