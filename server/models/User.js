@@ -41,8 +41,8 @@ const recordUserLoginDate = function(data, cb) {
   
   getConnection((conn) => {
 
-    var sql = 'INSERT INTO `BulletinBoard`.`ConnectionRecord` (`connID`, `connStartDate`, `connEndDate`) VALUES (?, ?, NULL)';
-    var user = [data.id, data.loginDate];
+    const sql = 'INSERT INTO `BulletinBoard`.`ConnectionRecord` (`connID`, `connStartDate`, `connEndDate`) VALUES (?, ?, NULL)';
+    const user = [data.id, data.loginDate];
 
     conn.query(sql, user, function (err, rows, fields) {
 
@@ -132,16 +132,22 @@ const generateToken = function(data, cb) {
 
 const findByToken = function(token, cb) {
 
-    jwt.verify(token,'secret',function(err, decode){
+    jwt.verify(token,'secret',(err, decode) => {
+
+      if (err.name === 'TokenExpiredError') {
+        console.log("토큰time 만료");
+
+        return res.json({ isAuth: true, exp: true });
+    }
 
       getConnection((conn) => {
-        var sql = "SELECT * FROM User WHERE id=? and token=?";
-        var user = [decode, token]
+        const sql = "SELECT * FROM User WHERE id=?";
+        const user = [decode]
+
 
         conn.query(sql, user, function (err, rows, fields) {
   
           if (err) {
-              //console.log(err);
               conn.release();
               return cb(err);
           }

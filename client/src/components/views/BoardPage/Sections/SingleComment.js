@@ -39,8 +39,11 @@ function SingleComment(props) {
 
         const body = { cGroupSquence : props.comment.cGroupSquence }
 
+        const cNum = props.comment.cGroupSquence;
+
+        // 댓글 삭제
         //삭제할 시퀀스 넘버 보내기
-        axios.post('/api/comment/deleteComment', body)
+        axios.delete(`/api/comment/1/${cNum}`)
             .then(response => {
                 if(response.data.success){
                     alert('댓글이 삭제되었습니다')
@@ -78,7 +81,8 @@ function SingleComment(props) {
             pComment: ModifyComment,
         };
 
-        axios.post('/api/comment/modifyComment', body)
+        // 댓글 수정
+        axios.post('/api/comment/change', body)
             .then(response => {
                 if(response.data.success){
                     
@@ -127,8 +131,9 @@ function SingleComment(props) {
                 cID: props.comment.cWriter,
                 commentPage : props.commentPage
             }
-    
-            axios.post('/api/comment/saveChildComment', body)
+            
+            // 자식 댓글 저장
+            axios.post('/api/comment/child', body)
                 .then(response => {
                     if(response.data.success){
                         setReplyComment("") // 코멘트 초기화

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, Input, InputNumber, Button } from 'antd';
 import { withRouter, Link } from 'react-router-dom';
 import axios from 'axios';
+import { encryptPassword } from '../../api/index';
 
 function PwCheck(props) {
 
@@ -21,29 +22,33 @@ function PwCheck(props) {
 
         console.log("이메일", props.location.state.Email)
 
-        const body = {
-            id : localStorage.getItem('userId'),
-            password : Password
-        }
 
-        axios.post('/api/mypage/confirmPassword', body)
-              .then(response => {
-                  if (response.data.success) {
-                      setPassword("");
-                      props.history.push({
-                          pathname: `/changeprivacy`,
-                          state: {Email: props.location.state.Email}
-                      })
-                  } else {
-                    return alert('비밀번호를 확인해주세요.')
-                  }
-              })
+        encryptPassword(Password)
+            .then(encryption => {
+
+                console.log("encryption",encryption);
+                const body = {
+                    id : localStorage.getItem('userId'),
+                    password : encryption
+                }
+
+                axios.post('/api/mypage/check', body)
+                    .then(response => {
+                        if (response.data.success) {
+                            setPassword("");
+                            props.history.push({
+                                pathname: `/changeprivacy`,
+                                state: {Email: props.location.state.Email}
+                            })
+                        } else {
+                            return alert('비밀번호를 확인해주세요.')
+                        }
+                    });
+
+        });
 
     };
 
-    // useEffect(() => {
-    // }, [])
-    
     return (
         <div style={{ position: "absolute", top: '30%', left: '50%', transform: 'translate(-50%, -50%)' }}>
             <h2 style={{ marginLeft: 50 }}> 비밀번호 확인 </h2>

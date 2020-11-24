@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { COMMENT_REQUEST, COMMENT_LATESTCOMMENT } from './types';
 
-
+// 등록순으로 댓글 요청
 export function getComment(commentData) {
 
-    const request = axios.post('/api/comment/getCommentPage',commentData)
+    const request = axios.post('/api/comment/sequence/1',commentData)
         .then(response => response.data)
 
     return {
@@ -13,9 +13,10 @@ export function getComment(commentData) {
     }
 }
 
+// 최신순으로 댓글 요청
 export function getLatestComment(commentData) {
 
-    const request = axios.post('/api/comment/getLatestComment',commentData)
+    const request = axios.post('/api/comment/sequence/2',commentData)
         .then(response => response.data)
 
     return {

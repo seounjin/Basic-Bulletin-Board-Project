@@ -3,6 +3,9 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_actions';
 import { withRouter } from 'react-router-dom'
 import moment from 'moment';
+import { encryptPassword } from '../../api/index';
+
+
 
 function LoginPage(props) {
 
@@ -20,25 +23,30 @@ function LoginPage(props) {
 
     const onSubmitHandler = (event) => {
         event.preventDefault();
-        console.log('Id', Id);
-        console.log('Password', Password);
 
-        let body = {
-            id: Id,
-            password: Password,
-            loginDate: moment().format('YYYY-MM-DD HH:mm:ss')
-        }
+        encryptPassword(Password)
+            .then(encryption => {
+            
+            const body = {
+                id: Id,
+                password: encryption,
+                loginDate: moment().format('YYYY-MM-DD HH:mm:ss')
+            }
+            
+                dispatch(loginUser(body))
+                .then(response => {
+                    if (response.payload.loginSuccess) {
+                        props.history.push('/')
+                        window.localStorage.setItem('userId', response.payload.userId);
+                        alert('환영합니다.')
+                    } else {
+                        alert('아이디와 비밀번호를 확인해주세요.')
+                    }
+                })
+        
+        
+        });
 
-        dispatch(loginUser(body))
-            .then(response => {
-                if (response.payload.loginSuccess) {
-                    props.history.push('/')
-                    window.localStorage.setItem('userId', response.payload.userId);
-                    alert('환영합니다.')
-                } else {
-                    alert('아이디와 비밀번호를 확인해주세요.')
-                }
-            })
     }
 
     return (

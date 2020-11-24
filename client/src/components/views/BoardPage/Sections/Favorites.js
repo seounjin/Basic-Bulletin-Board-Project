@@ -22,8 +22,9 @@ function Favorites(props) {
 
         // 좋아요 안누른 상태
         if(!Favorite){
-
-            axios.post('/api/board/favorite', body)
+            
+            //좋아요 요청
+            axios.post('/api/board/favorite/check', body)
             .then(response => {
                 if(response.data.success){
                     setFavorite(true)
@@ -35,7 +36,8 @@ function Favorites(props) {
 
         }else{ //좋아요 버튼을 누른 상태
 
-            axios.post('/api/board/unFavorite', body)
+            //좋아요 취소 요청
+            axios.post('/api/board/unfavorite', body)
             .then(response => {
                 if(response.data.success){
                     setFavorite(false)
@@ -56,7 +58,7 @@ function Favorites(props) {
         }
 
         //해당 사용자가 좋아요 버튼을 눌렀는지 안눌렀는지 확인하기위해 좋아요 정보를 가져 옴
-        axios.post('/api/board/getFavorite', body)
+        axios.post('/api/board/favorite/check', body)
             .then(response => {
                 if(response.data.success){
                     

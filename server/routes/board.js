@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getBoardList, getBoardContent, boardPostRegister, getPostNum, insertContent, deletePost } = require('../models/Board');
+const { getBoardList } = require('../models/Board');
 const pool = require('../config/pool');
 
 // 안쓰는거 가틈
@@ -15,10 +15,8 @@ router.get("/openpage", (req, res) => {
 
 });
 
-//select문 두 개 쓰는 라우터
-router.post("/createPost", async (req, res) => {
-
-    //console.log("createPost   글을 새로 만듭니다!!!!!!")
+//글 생성
+router.post("/new", async (req, res) => {
 
     const post = req.body;
     const conn = await pool.getConnection();
@@ -55,9 +53,9 @@ router.post("/createPost", async (req, res) => {
 
 // 해당 게시판 (내용,조회수,날짜 응답), db 조회수 업데이트
 
-router.post("/requestBoardForm", async (req, res) => {
+router.get("/post/:postNum", async (req, res) => {
 
-    const postNum = req.body.postNum
+    const postNum = req.params.postNum;
     const conn = await pool.getConnection();
 
     try {
@@ -70,7 +68,7 @@ router.post("/requestBoardForm", async (req, res) => {
         await conn.commit();
 
         conn.release();
-        //console.log("cccc",content);
+
         return res.status(200).json( {success: true, content, postnum:postNum });
     
     } catch (err) {
@@ -85,24 +83,24 @@ router.post("/requestBoardForm", async (req, res) => {
 
 });
 
-
+// 게시글 삭제 요청
 //pNum 하나 들어옴, 해당 pNum의 PostInfo, PostContents, Comment테이블의 행을 제거
-router.post("/deletePost", async (req, res) =>{
+router.delete("/post/1/:postNum", async (req, res) =>{
 
-    const post = req.body;
+    const postNum = req.params.postNum;
     const conn = await pool.getConnection();
     //var e = false;
     
     try {
         await conn.beginTransaction();
         
-        const del_1 = await conn.query('DELETE FROM `BulletinBoard`.`Comment` WHERE (`pNum` = ?)', [post.pNum]);
+        const del_1 = await conn.query('DELETE FROM `BulletinBoard`.`Comment` WHERE (`pNum` = ?)', [postNum]);
         //console.log("Comment삭제 출력: ", del_1);
         
-        const del_2 = await conn.query('DELETE FROM `BulletinBoard`.`PostContents` WHERE (`pNum` = ?)', [post.pNum]);
+        const del_2 = await conn.query('DELETE FROM `BulletinBoard`.`PostContents` WHERE (`pNum` = ?)', [postNum]);
         //console.log("PostContents삭제 출력: ", del_2);
 
-        const del_3 = await conn.query('DELETE FROM `BulletinBoard`.`PostInfo` WHERE (`postnum` = ?)', [post.pNum]);
+        const del_3 = await conn.query('DELETE FROM `BulletinBoard`.`PostInfo` WHERE (`postnum` = ?)', [postNum]);
         //console.log("PostInfo삭제 출력: ", del_3);
         
         await conn.commit();
@@ -113,7 +111,7 @@ router.post("/deletePost", async (req, res) =>{
     
     } catch (err) {
 
-        //console.log("에러가 발생했어요~~!!", err);
+        console.log("글삭제 에러가 발생했어요~~!!", err);
         //e = true;
         conn.rollback();
 
@@ -124,7 +122,8 @@ router.post("/deletePost", async (req, res) =>{
 
 });
 
-router.post("/modifyPost", async (req, res) =>{
+// 게시글 내용 수정
+router.post("/post/change", async (req, res) =>{
 
     //console.log("modifyPost   글의 제목과 내용을 수정합니다.")
 
@@ -171,7 +170,7 @@ router.post("/modifyPost", async (req, res) =>{
     }
 });
 
-router.post("/getTotal", async (req, res) => { // 수정해야함
+router.get("/total", async (req, res) => { // 수정해야함
 
     const conn = await pool.getConnection();
     
@@ -251,8 +250,8 @@ router.post("/getKeywordPage2", async (req, res) => {
     }
 });
 
-
-router.post("/getPage", async (req, res) => {
+// 게시글 목록 요청
+router.post("/page", async (req, res) => {
 
     //console.log("getPage", req.body)
 
@@ -320,8 +319,8 @@ router.post("/getPage", async (req, res) => {
 
 });
 
-    
-router.post("/getFavorite", async (req, res) => {
+//유저가 좋아요 정보를 눌렀는지 확인 요청
+router.post("/favorite/check", async (req, res) => {
 
     const userId = req.body.userId;
     const postNum = req.body.postNum;
@@ -390,7 +389,8 @@ router.post("/favorite", async (req, res) => {
 
 });
 
-router.post("/unFavorite", async (req, res) => {
+// 좋아요 취소 요청
+router.post("/unfavorite", async (req, res) => {
 
     const userId = req.body.userId;
     const postNum = req.body.postNum;

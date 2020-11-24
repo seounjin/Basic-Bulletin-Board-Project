@@ -45,7 +45,7 @@ function ChangePrivacy(props) {
             email : Email
         }
 
-        axios.post('/api/mypage/modifyPrivacy', body)
+        axios.post('/api/mypage/change', body)
               .then(response => {
                   if (response.data.success) {
                       alert('개인정보가 변경되었습니다.')

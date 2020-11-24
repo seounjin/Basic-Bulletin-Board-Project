@@ -11,7 +11,7 @@ function ReportPost(props) {
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
 
-            <Page getRouter={'/api/report/getReportPost'} deleteRouter={'/api/report/deleteReportPost'}
+            <Page getRouter={'/api/report/post'} deleteRouter={'/api/report/post/1'}
                 state={'reportPost'}
             
             ></Page>
