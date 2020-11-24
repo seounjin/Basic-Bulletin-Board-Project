@@ -67,10 +67,68 @@ paths:
                   description: "로그아웃 실패"
                   schema:
                       $ref: "#/user/logout/response_400"
-  
+
+# 토큰 재요청
+  # /api/users/tokenRequest:
+  /api/user/token: 
+        get:
+            tags:
+                - user
+            summary: "(access token 요청)"
+            responses: 
+                "200":
+                    description: "access token 재발급하여 쿠키에 저장"
+                    schema:
+                        $ref: "#/user/logout/response_200"
+                "400":
+                    description: "access token 실패"
+                    schema:
+                        $ref: "#/user/logout/response_400"
+
+# 공개키 요청
+  # /api/users/requestPublicKey:
+  /api/user/publickey:
+        get:
+            tags:
+                - user
+            summary: "(public key 요청)"
+            responses: 
+                "200":
+                    description: "공개키 응답"
+                    schema:
+                        $ref: "#/user/requestPublicKey/response_200"
+                "400":
+                    description: "에러"
+                    schema:
+                        $ref: "#/user/requestPublicKey/response_400"
+
+# auth
+  /api/user/auth:
+    get:
+      tags:
+          - user
+      summary: "(사용자 인증 요청)"
+      responses: 
+          "사용자 인증 완료 200":
+              description: "유저 정보"
+              schema:
+                  $ref: "#/user/auth/response_200"
+          "로그인하지 않는 유저 200":
+              description: "토큰 없음"
+              schema:
+                  $ref: "#/user/auth/emptyToken"
+          "토큰만료 200":
+              description: "토큰 만료"
+              schema:
+                  $ref: "#/user/auth/expToken"
+
+
   ####### 보드 #######
 
-  /api/board/createPost:
+  # /api/board/createPost:
+  # /api/board/post/new:
+  # /api/board/new-post:
+  /api/board/new:
     post:
       summary: (글 생성)
       tags:
@@ -94,19 +152,18 @@ paths:
           schema:
             $ref: '#/board/response_400'
 
-  /api/board/requestBoardForm:
-    post:
+  # /api/board/requestBoardForm/{postNum}:
+  /api/board/post/{postNum}:
+    get:
       summary: (게시글 요청)
       tags:
         - board
       parameters:
-        - name: body
-          in: body
-          description: "게시글 정보"
-          required: true
-          schema:
-            $ref: '#/board/requestBoardForm/request'
-
+        - name: "postNum"
+          in: "path"
+          description: "7"
+          type: "integer"
+          
       responses:
         '200':
           description: "성공"
@@ -119,18 +176,18 @@ paths:
             $ref: '#/board/response_400'
 
 
-  /api/board/deletePost:
-    post:
+  # /api/board/deletePost/{postNum}:
+  /api/board/post/1/{postNum}:
+    delete:
       summary: (게시글 삭제 요청)
       tags:
         - board
       parameters:
-        - name: body
-          in: body
-          description: "게시글 정보"
+        - name: "postNum"
+          in : "path"
+          description: 7
           required: true
-          schema:
-            $ref: '#/board/deletePost/request'
+          type: 'integer'
 
       responses:
         '200':
@@ -143,7 +200,8 @@ paths:
           schema:
             $ref: '#/board/response_400'
 
-  /api/board/modifyPost:
+  # /api/board/modifyPost:
+  /api/board/post/change:
     post:
       summary: (게시글 내용 수정)
       tags:
@@ -172,8 +230,9 @@ paths:
           schema:
             $ref: '#/board/response_400'
 
-  /api/board/getTotal:
-    post:
+  # /api/board/getTotal:
+  /api/board/total:
+    get:
       summary: (전체 게시물의 갯수)
       tags:
         - board
@@ -189,7 +248,9 @@ paths:
           schema:
             $ref: '#/board/response_400'
     
-  /api/board/getFavorite:
+  # /api/board/getFavorite:
+  # /api/board/favorite-check:
+  /api/board/favorite/check:
     post:
       summary: (유저가 좋아요 정보를 눌렀는지 확인 요청)
       tags:
@@ -214,6 +275,7 @@ paths:
             $ref: '#/board/response_400'
 
 
+  # /api/board/favorite/1:
   /api/board/favorite:
     post:
       summary: (좋아요 누름 요청)
@@ -239,7 +301,8 @@ paths:
             $ref: '#/board/response_400'
 
 
-  /api/board/unFavorite:
+  # /api/board/favorite/2:
+  /api/board/unfavorite:
     post:
       summary: (좋아요 취소 요청)
       tags:
@@ -263,7 +326,9 @@ paths:
           schema:
             $ref: '#/board/response_400'
   
-  /api/board/getPage:
+  # /api/board/getPage:
+  # /api/board/list:
+  /api/board/page:
         post:
             tags:
                 - board
@@ -287,18 +352,18 @@ paths:
 
   ####### 댓글 #######
 
-  /api/comment/deleteComment:
-    post:
+  # /api/comment/deleteComment/{cNum}:
+  /api/comment/1/{cNum}:
+    delete:
       summary: (댓글 삭제)
       tags:
         - comment
       parameters:
-        - name: body
-          in: body
-          description: "삭제할 댓글 정보"
+        - name: "cNum"
+          in: "path"
+          description: "7"
           required: true
-          schema:
-            $ref: '#/comment/deleteComment/request'
+          type: "integer"
 
       responses:
         '200':
@@ -310,7 +375,8 @@ paths:
           schema:
             $ref: '#/comment/response_400'
 
-  /api/comment/modifyComment:
+  # /api/comment/modifyComment:
+  /api/comment/change:
     post:
       summary: (댓글 수정)
       tags:
@@ -333,7 +399,8 @@ paths:
           schema:
             $ref: '#/comment/response_400'
   
-  /api/comment/saveRootComment:
+  # /api/comment/saveRootComment:
+  /api/comment/parent:
     post:
       summary: (부모댓글 저장)
       tags:
@@ -356,7 +423,8 @@ paths:
           schema:
             $ref: '#/comment/response_400'
 
-  /api/comment/saveChildComment:
+  # /api/comment/saveChildComment:
+  /api/comment/child:
     post:
       summary: (자식댓글 저장)
       tags:
@@ -379,7 +447,9 @@ paths:
           schema:
             $ref: '#/comment/response_400'
 
-  /api/comment/getCommentPage:
+  # /api/comment/getCommentPage:
+  /api/comment/sequence/1:
+  # /api/comment/registration-sequence:
       post:
         summary: (등록순으로 댓글 요청)
         tags:
@@ -402,7 +472,9 @@ paths:
             schema:
               $ref: '#/comment/response_400'
 
-  /api/comment/getLatestComment:
+  # /api/comment/getLatestComment:
+  /api/comment/sequence/2:
+  # /api/comment/latest-sequence:
         post:
           summary: (최신순으로 댓글 요청)
           tags:
@@ -429,7 +501,8 @@ paths:
 
 ####### 신고 #######
 
-  /api/report/saveReport:
+  # /api/report/saveReport:
+  /api/report/post:
     post:
       summary: (게시글 신고)
       tags:
@@ -459,18 +532,18 @@ paths:
             $ref: '#/report/response_400'
 
 
-  /api/report/getReportPost:
-    post:
+  # /api/report/getReportPost/{page}:
+  /api/report/post/{page}:
+    get:
       summary: (신고된 게시글 요청)
       tags:
         - report
       parameters:
-        - name: body
-          in: body
-          description: "신고된 게시글 정보"
+        - name: "page"
+          in: "path"
+          description: "게시글 페이지"
           required: true
-          schema:
-            $ref: '#/report/getReportPost/request'
+          type: "integer"
 
       responses:
         '200':
@@ -483,15 +556,16 @@ paths:
           schema:
             $ref: '#/report/response_400'
         
-  /api/report/deleteReportPost:
-    post:
+  # /api/report/deleteReportPost:
+  /api/report/post/1/{pNum}:
+    delete:
       summary: (신고된 게시글 삭제)
       tags:
         - report
       parameters:
-        - name: body
-          in: body
-          description: "삭제할 게시글 정보"
+        - name: pNum
+          in: path
+          description: "삭제할 게시글 고유번호"
           required: true
           schema:
             $ref: '#/report/deleteReportPost/request'
@@ -508,7 +582,8 @@ paths:
             $ref: '#/report/response_400'
 
 
-  /api/report/saveReportComment:
+  # /api/report/saveReportComment:
+  /api/report/comment:
     post:
       summary: (댓글 신고)
       tags:
@@ -538,18 +613,18 @@ paths:
             $ref: '#/report/response_400'
 
             
-  /api/report/getReportComment:
-    post:
+  # /api/report/getReportComment/{page}:
+  /api/report/comment/{page}:
+    get:
       summary: (신고된 댓글 요청)
       tags:
         - report
       parameters:
-        - name: body
-          in: body
-          description: "신고된 댓글 정보"
+        - name: "page"
+          in: "path"
+          description: "게시글 페이지"
           required: true
-          schema:
-            $ref: '#/report/getReportComment/request'
+          type: "integer"
 
       responses:
         '200':
@@ -563,18 +638,18 @@ paths:
             $ref: '#/report/response_400'
 
 
-  /api/report/deleteReportComment:
-    post:
+  # /api/report/deleteReportComment:
+  /api/report/comment/1/{pNum}:
+    delete:
       summary: (신고된 댓글 삭제)
       tags:
         - report
       parameters:
-        - name: body
-          in: body
-          description: "삭제할 댓글 정보"
+        - name: pNum
+          type: string
+          in: path
+          description: "삭제할 댓글 고유번호"
           required: true
-          schema:
-            $ref: '#/report/deleteReportComment/request'
 
       responses:
         '200':
@@ -591,7 +666,8 @@ paths:
   ####### mypage #######
 
   # 마이페이지 정보 전달
-  /api/mypage/getActionNum:
+  #/api/mypage/getActionNum:
+  /api/mypage/profile:
     post:
         tags:
             - mypage
@@ -614,7 +690,8 @@ paths:
                     $ref: "#/mypage/getActionNum/response_400"
 
   #마이페이지 비번 확인
-  /api/mypage/confirmPassword:
+  #/api/mypage/confirmPassword:
+  /api/mypage/check:
       post:
           tags:
               - mypage
@@ -636,7 +713,8 @@ paths:
                   schema:
                       $ref: "#/mypage/confirmPassword/response_400"
   # 개인정보 변경
-  /api/mypage/modifyPrivacy:
+  #/api/mypage/modifyPrivacy:
+  /api/mypage/change:
       post:
           tags:
               - mypage
@@ -659,7 +737,8 @@ paths:
                       $ref: "#/mypage/modifyPrivacy/response_400"
 
   # 작성 게시물 요청
-  /api/mypage/getActivity:
+  # /api/mypage/getActivity:
+  /api/mypage/user-post:
       post:
           tags:
               - mypage
@@ -682,18 +761,25 @@ paths:
                       $ref: "#/mypage/getActivity/response_400"
 
   # 사용자 신고 댓글 내역
-  /api/mypage/getMyReportComment:
-      post:
+  # /api/mypage/getMyReportComment:
+  /api/mypage/report/1:
+      get:
           tags:
               - mypage
           summary: "(사용자 신고 댓글 내역 요청)"
           parameters:
-              - in: "body"
-                name: "body"
-                description: ""
+              - in: "query"
+                type: "string"
+                name: "id"
+                description: "신고자 아이디"
                 required: true
-                schema:
-                  $ref: "#/mypage/getMyReportComment/request"
+                # schema:
+                #   $ref: "#/mypage/getMyReportComment/request"
+              - in: "query"
+                type: "string"
+                name: "page"
+                description: "요청 페이지"
+                required: true
           responses: 
               "200":
                   description: "요청 성공"
@@ -705,18 +791,31 @@ paths:
                       $ref: "#/mypage/getMyReportComment/response_400"
 
   # 사용자 신고 게시글 내역
-  /api/mypage/getMyReportPost:
-      post:
+  # /api/mypage/getMyReportPost:
+  /api/mypage/report/2:
+      get:
           tags:
               - mypage
           summary: "(사용자 신고 게시글 내역 요청)"
           parameters:
-              - in: "body"
-                name: "body"
-                description: ""
+              - in: "query"
+                type: "string"
+                name: "id"
+                description: "신고자 아이디"
                 required: true
-                schema:
-                  $ref: "#/mypage/getMyReportPost/request"
+                # schema:
+                #   $ref: "#/mypage/getMyReportComment/request"
+              - in: "query"
+                type: "string"
+                name: "page"
+                description: "요청 페이지"
+                required: true
+              # - in: "body"
+              #   name: "body"
+              #   description: ""
+              #   required: true
+              #   schema:
+              #     $ref: "#/mypage/getMyReportPost/request"
           responses: 
               "200":
                   description: "요청 성공"
@@ -727,16 +826,43 @@ paths:
                   schema:
                       $ref: "#/mypage/getMyReportPost/response_400"
 
-  # 사용자 신고 게시글 취소 요청
-  /api/mypage/cancelmyReportPost:
-      post:
+  # 사용자 신고 댓글 취소 요청
+  # /api/mypage/cancelmyReportComment:
+  /api/mypage/report/3:
+      delete:
           tags:
               - mypage
-          summary: "(사용자 신고 게시글 취소 요청)"
+          summary: "(사용자 신고 댓글 삭제 요청)"
           parameters:
-              - in: "body"
-                name: "body"
-                description: ""
+              - in: "query"
+                type: "string"
+                name: "number"
+                description: "삭제하고자 하는 댓글 고유번호"
+                required: true
+                # schema:
+                #   $ref: "#/mypage/cancelmyReportComment/request"
+          responses: 
+              "200":
+                  description: "요청 성공"
+                  schema:
+                      $ref: "#/mypage/cancelmyReportComment/response_200"
+              "400":
+                  description: "요청 실패"
+                  schema:
+                      $ref: "#/mypage/cancelmyReportComment/response_400"
+
+  # 사용자 신고 게시글 취소 요청
+  # /api/mypage/cancelmyReportPost:
+  /api/mypage/report/4:
+      delete:
+          tags:
+              - mypage
+          summary: "(사용자 신고 게시글 삭제 요청)"
+          parameters:
+              - in: "query"
+                type: "string"
+                name: "number"
+                description: "삭제하고자 하는 게시글 고유번호"
                 required: true
                 schema:
                   $ref: "#/mypage/cancelmyReportPost/request"
@@ -750,31 +876,9 @@ paths:
                   schema:
                       $ref: "#/mypage/cancelmyReportPost/response_400"
 
-  # 사용자 신고 댓글 취소 요청
-  /api/mypage/cancelmyReportComment:
-      post:
-          tags:
-              - mypage
-          summary: "(사용자 신고 댓글 취소 요청)"
-          parameters:
-              - in: "body"
-                name: "body"
-                description: ""
-                required: true
-                schema:
-                  $ref: "#/mypage/cancelmyReportComment/request"
-          responses: 
-              "200":
-                  description: "요청 성공"
-                  schema:
-                      $ref: "#/mypage/cancelmyReportComment/response_200"
-              "400":
-                  description: "요청 실패"
-                  schema:
-                      $ref: "#/mypage/cancelmyReportComment/response_400"
-
   #사용자 아바타 이미지 업로드
-  /api/mypage/imageUpload:
+  # /api/mypage/imageUpload:
+  /api/mypage/avatar:
       post:
           tags:
               - mypage
@@ -868,6 +972,7 @@ board:
 
   unFavorite:
     request:
+      type: "object"
       properties:
         userId:
           type: "string"
@@ -884,6 +989,7 @@ board:
 
   favorite:
     request:
+      type: "object"
       properties:
         userId:
           type: "string"
@@ -901,6 +1007,7 @@ board:
 
   getFavorite:
     request:
+      type: "object"
       properties:
         userId:
           type: "string"
@@ -921,6 +1028,7 @@ board:
 
   getTotal:
     response_200:
+      type: "object"
       properties:
         success:
           type: "boolean"
@@ -932,6 +1040,7 @@ board:
 
   modifyPost:
     request:
+      type: "object"
       properties:
         pNum:
           type: "integer"
@@ -967,6 +1076,7 @@ board:
 
   deletePost:
     request:
+      type: "object"
       properties:
         pNum:
           type: "integer"
@@ -982,6 +1092,7 @@ board:
     
   requestBoardForm:
     request:
+      type: "object"
       properties:
         postNum:
           type: "integer"
@@ -1004,6 +1115,7 @@ board:
   
   createPost:          
     request:
+      type: "object"
       properties:
         writer:
           type: "string"
@@ -1860,3 +1972,61 @@ user:
                 err:
                     type: "string"
                     example: false
+              
+    # requestPublicKey
+    requestPublicKey:
+        response_200:
+            properties:
+                success:
+                    type: "boolean"
+                    example: true
+                publicKey:
+                  type: "any"
+
+        response_400:
+            type: "object"
+            properties:
+                success:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "any"
+                    
+    # auth
+    auth:
+        response_200:
+            properties:
+                id:
+                    type: "string"
+                    example: "userId"
+                isAdmin:
+                    type: "boolean"
+                    example: false
+                isAuth:
+                    type: "boolean"
+                    example: true
+                email:
+                    type: "string"
+                    example: "bsj@naver.com"
+                role:
+                    type: "integer"
+                    example: 0
+
+        emptyToken:
+            type: "object"
+            properties:
+                isAuth:
+                    type: "boolean"
+                    example: false
+                err:
+                    type: "boolean"
+                    example: true
+        expToken:
+            type: "object"
+            properties:
+                isAuth:
+                    type: "boolean"
+                    example: true
+                exp:
+                    type: "boolean"
+                    example: true
