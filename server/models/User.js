@@ -1,273 +1,317 @@
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const getConnection = require('./db');
-const jwt = require('jsonwebtoken');
-const moment = require("moment");
+const mongoose = require('mongoose');
+const config = require("../config/dev");
 
+const userSchema = mongoose.Schema({
+    id: {
+        type: String,
+        maxlength: 20
+    },
+    password: {
+        type: String,
+        minglength: 100,
+        trim: true
+    },
+    email: {
+        type: String,
+        trim: true,
+        unique: 1
+    },
+    role: {
+        type: Number,
+        default: 0
+    },
+    token: {
+        type: String,
+    },
+    avatar: String,
 
-// db 회원정보 저장
-const userRegister = function(data, cb) {
+});
 
-  getConnection((conn) => {
+const User = mongoose.model('User', userSchema);
 
-      //연결 성공
-      bcrypt.genSalt(saltRounds, function(err, salt) {
-        if(err) console.log(err);
+const save = async ({ id, email, password }) => {
+
+    mongoose.connect(config.mongoURI, config.options);
+    const userInfo = new User({ id, email, password, role: 0 });
+    await userInfo.save();
+    await mongoose.disconnect();
     
-        bcrypt.hash(data.password, salt, function(err, hash){
-            if(err) console.log(err);
+};
 
-            var sql = 'INSERT INTO `User` (`id`, `password`, `email`, `role`) VALUES (?, ?, ?, ?)';
-            data.password = hash 
-            var user = [data.id, data.password, data.email, 0];
+
+
+module.exports = { User, save };
+
+// const bcrypt = require('bcrypt');
+// const saltRounds = 10;
+// const getConnection = require('./db');
+// const jwt = require('jsonwebtoken');
+// const moment = require("moment");
+
+
+// // db 회원정보 저장
+// const userRegister = function(data, cb) {
+
+//   getConnection((conn) => {
+
+//       //연결 성공
+//       bcrypt.genSalt(saltRounds, function(err, salt) {
+//         if(err) console.log(err);
     
-            conn.query(sql, user, function (err, rows, fields) { //row == results
+//         bcrypt.hash(data.password, salt, function(err, hash){
+//             if(err) console.log(err);
+
+//             var sql = 'INSERT INTO `User` (`id`, `password`, `email`, `role`) VALUES (?, ?, ?, ?)';
+//             data.password = hash 
+//             var user = [data.id, data.password, data.email, 0];
     
-                if (err) {
-                    return cb(err);
-                }
-                else {
-                  conn.release();
-                  return cb(null);
-                }
-            });
+//             conn.query(sql, user, function (err, rows, fields) { //row == results
+    
+//                 if (err) {
+//                     return cb(err);
+//                 }
+//                 else {
+//                   conn.release();
+//                   return cb(null);
+//                 }
+//             });
             
-        })
-      })
-  } )
-}
+//         })
+//       })
+//   } )
+// }
 
-const recordUserLoginDate = function(data, cb) {
+// const recordUserLoginDate = function(data, cb) {
   
-  getConnection((conn) => {
+//   getConnection((conn) => {
 
-    const sql = 'INSERT INTO `BulletinBoard`.`ConnectionRecord` (`connID`, `connStartDate`, `connEndDate`) VALUES (?, ?, NULL)';
-    const user = [data.id, data.loginDate];
+//     const sql = 'INSERT INTO `BulletinBoard`.`ConnectionRecord` (`connID`, `connStartDate`, `connEndDate`) VALUES (?, ?, NULL)';
+//     const user = [data.id, data.loginDate];
 
-    conn.query(sql, user, function (err, rows, fields) {
+//     conn.query(sql, user, function (err, rows, fields) {
 
-      conn.release();
+//       conn.release();
 
-      if(err) {
-        return cb(err);
-      }
-      else {
-        return cb(null);
-      }
-    })
+//       if(err) {
+//         return cb(err);
+//       }
+//       else {
+//         return cb(null);
+//       }
+//     })
 
-  })
-}
+//   })
+// }
 
-const userLogin = function(data, cb) {
+// const userLogin = function(data, cb) {
 
-  getConnection((conn) => {
+//   getConnection((conn) => {
 
-    var sql = 'SELECT password, id FROM BulletinBoard.User where id=?'
+//     var sql = 'SELECT password, id FROM BulletinBoard.User where id=?'
 
-    var user = [data.id];
-    //console.log(user);
-    conn.query(sql, user, function (err, rows, fields) { //row == results
+//     var user = [data.id];
+//     //console.log(user);
+//     conn.query(sql, user, function (err, rows, fields) { //row == results
 
-        //console.log(rows);
+//         //console.log(rows);
 
-        if (err) {
-            //console.log("err", rows);
-            conn.release();
-            //console.log('로그인 실패!!!!')
-            return cb(err);
-        } 
-        else if(rows.length === 0) {
-          //console.log("rows.length", rows);
-          //err === null, DB에서 모든 속성이 NULL인 행을 돌려줌.
-          conn.release();
-          //console.log('로그인 실패!!!!')
-          return cb(err, false);
-        }
-        else {
-          bcrypt.compare(data.password, rows[0].password, function(err, isMatch){
+//         if (err) {
+//             //console.log("err", rows);
+//             conn.release();
+//             //console.log('로그인 실패!!!!')
+//             return cb(err);
+//         } 
+//         else if(rows.length === 0) {
+//           //console.log("rows.length", rows);
+//           //err === null, DB에서 모든 속성이 NULL인 행을 돌려줌.
+//           conn.release();
+//           //console.log('로그인 실패!!!!')
+//           return cb(err, false);
+//         }
+//         else {
+//           bcrypt.compare(data.password, rows[0].password, function(err, isMatch){
             
-            if (err) {
-              conn.release(); 
-              return cb(err); 
-            }
+//             if (err) {
+//               conn.release(); 
+//               return cb(err); 
+//             }
 
-            conn.release();
-            //console.log('로그인 성공!!!!')
-            cb(null, isMatch);
-          })
-        }
-    });
-  })
-}
+//             conn.release();
+//             //console.log('로그인 성공!!!!')
+//             cb(null, isMatch);
+//           })
+//         }
+//     });
+//   })
+// }
 
 
-const generateToken = function(data, cb) {
+// const generateToken = function(data, cb) {
 
-  var token =  jwt.sign(data.id, 'secret' );
-  var tokenExp  = moment().add(2, 'hours').valueOf();
+//   var token =  jwt.sign(data.id, 'secret' );
+//   var tokenExp  = moment().add(2, 'hours').valueOf();
   
   
-  getConnection((conn) => {
+//   getConnection((conn) => {
 
-    var sql = "UPDATE `User` SET `token` = ?, `tokenExp` = ? WHERE (`id` = ?)"
-    var user = [token, tokenExp, data.id];
-    conn.query(sql, user, function (err, rows, fields) {
+//     var sql = "UPDATE `User` SET `token` = ?, `tokenExp` = ? WHERE (`id` = ?)"
+//     var user = [token, tokenExp, data.id];
+//     conn.query(sql, user, function (err, rows, fields) {
   
-      if (err) {
-          console.log(err);
-          conn.release();
-          return cb(err);
-      }
-      else {
-        conn.release();
-        return cb(null,token);
-      }
+//       if (err) {
+//           console.log(err);
+//           conn.release();
+//           return cb(err);
+//       }
+//       else {
+//         conn.release();
+//         return cb(null,token);
+//       }
 
-    });
+//     });
 
-  })
+//   })
   
-}
+// }
 
-const findByToken = function(token, cb) {
+// const findByToken = function(token, cb) {
 
-    jwt.verify(token,'secret',(err, decode) => {
+//     jwt.verify(token,'secret',(err, decode) => {
 
-      if (err.name === 'TokenExpiredError') {
-        console.log("토큰time 만료");
+//       if (err.name === 'TokenExpiredError') {
+//         console.log("토큰time 만료");
 
-        return res.json({ isAuth: true, exp: true });
-    }
+//         return res.json({ isAuth: true, exp: true });
+//     }
 
-      getConnection((conn) => {
-        const sql = "SELECT * FROM User WHERE id=?";
-        const user = [decode]
+//       getConnection((conn) => {
+//         const sql = "SELECT * FROM User WHERE id=?";
+//         const user = [decode]
 
 
-        conn.query(sql, user, function (err, rows, fields) {
+//         conn.query(sql, user, function (err, rows, fields) {
   
-          if (err) {
-              conn.release();
-              return cb(err);
-          }
-          else {
-            conn.release();
-            return cb(null, rows);
-          }
+//           if (err) {
+//               conn.release();
+//               return cb(err);
+//           }
+//           else {
+//             conn.release();
+//             return cb(null, rows);
+//           }
     
-        });
+//         });
 
       
-      });
+//       });
 
-  })
+//   })
 
-}
+// }
 
-const userLogout = function(userId, cb) {
+// const userLogout = function(userId, cb) {
 
-  getConnection((conn) => {
-    var sql = "UPDATE `User` SET `token` = NULL, `tokenExp` = NULL WHERE (`id` = ?)" ;
-    var user = [userId];
-    conn.query(sql, user, function (err, rows, fields) {
-      if (err) {
-        //console.log(err);
-        conn.release();
-        return cb(err);
-      }
-      else {
-        conn.release();
-        return cb(null);
-      }
-    });
-  });
-}
+//   getConnection((conn) => {
+//     var sql = "UPDATE `User` SET `token` = NULL, `tokenExp` = NULL WHERE (`id` = ?)" ;
+//     var user = [userId];
+//     conn.query(sql, user, function (err, rows, fields) {
+//       if (err) {
+//         //console.log(err);
+//         conn.release();
+//         return cb(err);
+//       }
+//       else {
+//         conn.release();
+//         return cb(null);
+//       }
+//     });
+//   });
+// }
 
-const getLoginTime = function(userId, cb) {
-  console.log("getLoginTime", userId);
-  getConnection((conn) => {
-    var sql = "SELECT date_format(connStartDate, '%Y-%m-%d %H:%i:%s') as dt FROM BulletinBoard.ConnectionRecord where connID = ? and connEndDate is NULL" ;
-    var user = [userId];
-    conn.query(sql, user, function (err, rows, fields) {
-      conn.release();
-      if (err) {
-        return cb(err, null);
-      }
-      else {
-        return cb(null, rows[0].dt);
-      }
-    });
-  });
-}
+// const getLoginTime = function(userId, cb) {
+//   console.log("getLoginTime", userId);
+//   getConnection((conn) => {
+//     var sql = "SELECT date_format(connStartDate, '%Y-%m-%d %H:%i:%s') as dt FROM BulletinBoard.ConnectionRecord where connID = ? and connEndDate is NULL" ;
+//     var user = [userId];
+//     conn.query(sql, user, function (err, rows, fields) {
+//       conn.release();
+//       if (err) {
+//         return cb(err, null);
+//       }
+//       else {
+//         return cb(null, rows[0].dt);
+//       }
+//     });
+//   });
+// }
 
-const setLogoutTime = function(data, cb) {
-  console.log("setLogoutTime", data);
-  getConnection((conn) => {
-    var sql = "UPDATE `BulletinBoard`.`ConnectionRecord` SET `connEndDate` = ? WHERE (`connID` = ?) and (`connStartDate` = ?)" ;
-    var user = [data.logoutTime, data.userId, data.loginTime];
-    conn.query(sql, user, function (err, rows, fields) {
-      conn.release();
-      if (err) {
-        return cb(err);
-      }
-      else {
-        return cb(null);
-      }
-    });
-  });
-}
+// const setLogoutTime = function(data, cb) {
+//   console.log("setLogoutTime", data);
+//   getConnection((conn) => {
+//     var sql = "UPDATE `BulletinBoard`.`ConnectionRecord` SET `connEndDate` = ? WHERE (`connID` = ?) and (`connStartDate` = ?)" ;
+//     var user = [data.logoutTime, data.userId, data.loginTime];
+//     conn.query(sql, user, function (err, rows, fields) {
+//       conn.release();
+//       if (err) {
+//         return cb(err);
+//       }
+//       else {
+//         return cb(null);
+//       }
+//     });
+//   });
+// }
 
-const modifyPrivacy = function(data, cb) {// body ==> id, password, email
+// const modifyPrivacy = function(data, cb) {// body ==> id, password, email
 
-  getConnection((conn) => {
+//   getConnection((conn) => {
 
-      bcrypt.genSalt(saltRounds, function(err, salt) {
-        if(err) console.log(err);
+//       bcrypt.genSalt(saltRounds, function(err, salt) {
+//         if(err) console.log(err);
     
-        bcrypt.hash(data.password, salt, function(err, hash){
-            if(err) console.log(err);
+//         bcrypt.hash(data.password, salt, function(err, hash){
+//             if(err) console.log(err);
 
-            var sql = 'UPDATE `BulletinBoard`.`User` SET `password` = ?, `email` = ? WHERE (`id` = ?)';
-            data.password = hash 
-            var user = [data.password, data.email, data.id];
+//             var sql = 'UPDATE `BulletinBoard`.`User` SET `password` = ?, `email` = ? WHERE (`id` = ?)';
+//             data.password = hash 
+//             var user = [data.password, data.email, data.id];
     
-            conn.query(sql, user, function (err, rows, fields) { //row == results
+//             conn.query(sql, user, function (err, rows, fields) { //row == results
     
-                if (err) {
-                    return cb(err);
-                }
-                else {
-                  conn.release();
-                  return cb(null);
-                }
-            });
-        })
-      })
-  } )
-}
+//                 if (err) {
+//                     return cb(err);
+//                 }
+//                 else {
+//                   conn.release();
+//                   return cb(null);
+//                 }
+//             });
+//         })
+//       })
+//   } )
+// }
 
-const tokenTime = function(data, cb) {
+// const tokenTime = function(data, cb) {
   
-  getConnection((conn) => {
+//   getConnection((conn) => {
 
-    var sql = "SELECT tokenExp FROM BulletinBoard.User WHERE id=?";
-    var user = [data.id];
-    conn.query(sql, user, function (err, rows, fields) {
-    conn.release();
+//     var sql = "SELECT tokenExp FROM BulletinBoard.User WHERE id=?";
+//     var user = [data.id];
+//     conn.query(sql, user, function (err, rows, fields) {
+//     conn.release();
 
-        if (err) {
+//         if (err) {
           
-          return cb(err);
-        }
-        else {
-          return cb(null, rows[0].tokenExp);
-        }
+//           return cb(err);
+//         }
+//         else {
+//           return cb(null, rows[0].tokenExp);
+//         }
 
-    });
-  });
+//     });
+//   });
 
-}
+// }
 
 
-module.exports = { userRegister, userLogin, generateToken, findByToken, userLogout, recordUserLoginDate, getLoginTime, setLogoutTime, modifyPrivacy, tokenTime }
+// module.exports = { userRegister, userLogin, generateToken, findByToken, userLogout, recordUserLoginDate, getLoginTime, setLogoutTime, modifyPrivacy, tokenTime }
