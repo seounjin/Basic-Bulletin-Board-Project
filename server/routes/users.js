@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser } = require('../controllers/users')
+const { registerUser, login, logout } = require('../controllers/users')
 const { auth } = require("../middleware/auth");
 const fs = require('fs');
 
 router.post("/register", registerUser);
+router.post("/login", login);
+// router.get("/logout", auth, logout);
+
 
 // const express = require('express');
 // const { userLogout, getLoginTime, setLogoutTime } = require('../models/User');
@@ -125,10 +128,10 @@ router.get("/publickey", (req, res) => {
 //         const [result] = await conn.query("SELECT password, id FROM BulletinBoard.User where id=?",[userId]);
 
 //         // 해당 ID가 없을 경우
-//         if (result.length === 0){
+//         if(result.length === 0){
 
 //             return res.json({ loginSuccess: false });
-//         }
+//         } 
 
 //         const privateKey = await fs.promises.readFile('./keys/private.pem', 'utf8');
 

@@ -18,7 +18,7 @@ const auth = async(req, res, next) => {
         const userInfo = await findUserInfo(decode.data);
 
         req.token = token;
-        req.user = userInfo[0]
+        req.user = userInfo[0];
         next();
 
 

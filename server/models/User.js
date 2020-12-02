@@ -32,15 +32,44 @@ const User = mongoose.model('User', userSchema);
 const save = async ({ id, email, password }) => {
 
     mongoose.connect(config.mongoURI, config.options);
-    const userInfo = new User({ id, email, password, role: 0 });
-    await userInfo.save();
+    const user = new User({ id, email, password, role: 0 });
+    await user.save();
     await mongoose.disconnect();
     
 };
 
+const findUser = async id => {
 
+    mongoose.connect(config.mongoURI, config.options);
+    
+    const user = await User.findOne({ id:id });
+    await mongoose.disconnect();
 
-module.exports = { User, save };
+    return user;
+};
+
+const saveToken = async (id, refreshToken) => {
+
+    mongoose.connect(config.mongoURI, config.options);
+    
+    const user = await User.findOne({ id:id });
+    user.token = refreshToken;
+
+    await user.save();
+    await mongoose.disconnect();
+
+};
+
+const tokenDelete = async id => {
+
+    mongoose.connect(config.mongoURI, config.options);
+    
+    await User.findOneAndUpdate({ _id: id }, { token: "" });
+    await mongoose.disconnect();
+
+};
+
+module.exports = { save, findUser, saveToken, tokenDelete};
 
 // const bcrypt = require('bcrypt');
 // const saltRounds = 10;

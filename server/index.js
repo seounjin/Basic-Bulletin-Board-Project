@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
-const { CreateKeys } = require("../utils/createKeys");
+const { CreateKeys } = require("./utils/createKeys");
 const cors = require('cors');
 const port = 5000;
 
