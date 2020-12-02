@@ -33,7 +33,7 @@ export default function(SpecificComponent, option, adminRoute = null) {
                     
                     if(response.payload.exp){
                         // 토큰 요청
-                        axios.get('/api/user/tokenRequest')
+                        axios.get('/api/user/token')
                             .then(response => {
                             if (response.data.success) {
                                 console.log("토큰 재발급 성공");

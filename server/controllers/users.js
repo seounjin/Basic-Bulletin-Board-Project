@@ -1,5 +1,17 @@
 const User = require('../models/User');
 const { comparePassword } = require('../utils/password');
+const jwt = require('jsonwebtoken');
+
+const userState = (req, res) => {
+
+    res.status(200).json({
+        id: req.user.id,
+        isAdmin: req.user.role === 1 ? true : false,
+        isAuth: true,
+        email: req.user.email,
+        role: req.user.role
+    });
+};
 
 const registerUser = async(req, res) => {
     
@@ -16,7 +28,6 @@ const registerUser = async(req, res) => {
         return res.status(400).json( { success: false, err } );
     }
 };
-
 
 
 const login = async(req, res) => {
@@ -39,8 +50,8 @@ const login = async(req, res) => {
         }
 
         // 토큰생성
-        const accessToken =  jwt.sign( {data: userId}, 'secret', { expiresIn: '120m' });
-        const refreshToken =  jwt.sign( {data: userId}, 'example', { expiresIn: '14d' });
+        const accessToken =  jwt.sign( {data: id}, 'secret', { expiresIn: '120m' });
+        const refreshToken =  jwt.sign( {data: id}, 'example', { expiresIn: '14d' });
         
 
         await User.saveToken(id, refreshToken);
@@ -71,13 +82,13 @@ const login = async(req, res) => {
 const logout = async(req, res) => {
     
     try {
-        const id = req.user.id;
+        const id = req.user._id;
 
         await User.tokenDelete(id);
 
         res.clearCookie('accessToken')
-                 res.clearCookie('refreshToken')
-                    .status(200).send({ success: true })
+        res.clearCookie('refreshToken')
+           .status(200).send({ success: true })
 
     } catch (err) {
         console.log("에러",err);
@@ -85,4 +96,35 @@ const logout = async(req, res) => {
     }
 };
 
-module.exports = { registerUser, login, logout };
+
+const tokenRequest = async(req, res) => {
+
+    try {
+        const refreshToken = req.cookies.refreshToken;
+
+        const result = await User.tokenSerch(refreshToken);
+
+        if (!result){
+            console.log("refreshToken이 일치하지 않음");
+            return res.status.json( { success: false, err } );
+        }
+
+        const decode = await jwt.verify(refreshToken,'example');
+
+        const token =  await jwt.sign( {data: decode.data}, 'secret', { expiresIn: 30 });
+        
+        return res.cookie("accessToken", token)
+                  .status(200).json( { success: true } );
+
+
+    } catch (err) {
+        console.log("토큰 요청 에러",err);
+        return res.status(400).json( { success: false, err } );
+    }
+  
+};
+
+
+
+
+module.exports = { registerUser, login, logout, tokenRequest, userState };
