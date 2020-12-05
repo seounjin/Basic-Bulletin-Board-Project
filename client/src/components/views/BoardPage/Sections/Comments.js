@@ -34,12 +34,14 @@ function Comments(props) {
         // 부모 댓글 저장
         axios.post('/api/comment/parent', body)
             .then(response => {
+                console.log("response.data",response.data);
                 if(response.data.success){
                     setComment("") // 코멘트 초기화
 
                     body.cGroupSquence = response.data.cGroupSquence
                     props.refreshComment(response.data.comment)// 코멘트 리프래쉬
                 } else {
+                    console.log("실패")
                     alert('댓글 저장에 실패 하셨습니다')
                 }
 

@@ -27,6 +27,7 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-validator": "^6.7.0",
     "jsonwebtoken": "^8.5.1",
     "mkdir": "0.0.2",
     "mkdirp": "^1.0.4",
