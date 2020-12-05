@@ -1,102 +1,126 @@
-const getConnection = require('./db');
 
-// comment table 구성 (게시글 번호, 댓글 작성자, 댓글 내용, 답글을 쓴 답글 아이디, 작성time)
+const mongoose = require('mongoose');
+const config = require("../config/dev");
+const Schema = mongoose.Schema;
 
-
-//댓글 저장
-const saveComment = function(commentData, cb){
-
-
-    getConnection((conn) => {
-
-        var sql = 'INSERT INTO `Comment` (`pNum`, `cWriter`, `pComment`, `responseto`, `date`) VALUES (?, ?, ?, ?, ?)';
-        var comment = [commentData.pNum, commentData.cWriter, commentData.pComment, commentData.responseto, commentData.date];
+//cGroupSquence 댓글 고유 번호
+//gNum 그룹넘버
+// 참고 type: [{type: Schema.ObjectId, ref: 'Message'}]
+const commentSchema = mongoose.Schema({
     
-        conn.query(sql, comment, function (err, rows, fields) { 
-        
-            if (err) {
-                console.log("코멘트에러",err)
-                return cb(err);
-            }
-            else {  
-              conn.release();
-              return cb(rows.insertId, null);
-            }
-        });
+    cWriter: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    pComment: {
+        type: String,
+    },
+    pNum:{
+        type: Number,
+    },
+    gNum:{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    },
+    gDepth: {
+        type: Number,
+    },
+    report: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    date: {
+        type: Date, 
+        default: Date.now,
+    },
+
+});
+
+const Comment = mongoose.model('Comment', commentSchema);
+
+
+const saveParentComment = async ({ pNum, cWriter, pComment, date, gDepth }) => {
+    mongoose.connect(config.mongoURI, config.options);
+    const comment = new Comment({ pNum,cWriter, pComment, date, gDepth });
+    comment.gNum = comment._id;
     
-    })
-}
+    await comment.save();
+    
+    await mongoose.disconnect();
 
+    return comment;
+};
 
-//댓글 가져오기
+const savechildComment = async ({ pNum, gNum, cWriter, pComment, date, gDepth }) => {
+    mongoose.connect(config.mongoURI, config.options);
+    const comment = new Comment({ pNum,gNum, cWriter, pComment, date, gDepth });
+    await comment.save();
+    
+    await mongoose.disconnect();
 
-const getComment = function(pNum, cb){
+    return comment;
+};
 
-    getConnection((conn) => {
-
-        var sql = 'SELECT * FROM BulletinBoard.Comment WHERE pNum = ?';
-        var comment = [pNum];
-
-        conn.query(sql, comment, function (err, rows, fields) { 
+const getComment = async (pNum, currentPage, maxComment) => {
+    mongoose.connect(config.mongoURI, config.options);
         
-            if (err) {
-                return cb(err);
-            }
-            else {
-            conn.release();
-            return cb(rows, null);
-            }
-        });
-    })
+    const comment = await Comment.find({"pNum": pNum})
+                                 .populate('cWriter','-password -token -email')
+                                 .sort({"gNum": 1,"date": 1})
+                                 .skip((currentPage - 1) * maxComment)
+                                 .limit(maxComment);
+    
+    await mongoose.disconnect();
 
-}
+    return comment;
+};
+
+const getLatestComment = async (pNum, currentPage, maxComment) => {
+    mongoose.connect(config.mongoURI, config.options);
+    
+    const comment = await Comment.find({"pNum": pNum})
+                                 .populate('cWriter','-password -token -email')
+                                 .sort({"gNum": -1,"date": 1})
+                                 .skip((currentPage - 1) * maxComment)
+                                 .limit(maxComment);
+    
+    await mongoose.disconnect();
+
+    return comment;
+};
+
+const getCount = async pNum => {
+    mongoose.connect(config.mongoURI, config.options);
+    
+    const cnt = await Comment.countDocuments({"pNum": pNum});
+    
+    await mongoose.disconnect();
+
+    return cnt;
+};
 
 
-// 댓글 삭제
-// 서버에서 삭제할 댓글 넘버를  cGroupSquence 0으로 변경
+const deleteC = async cGroupSquence => {
 
-const deleteComment = function(cGroupSquence, cb){
+    mongoose.connect(config.mongoURI, config.options);
+    
+    await Comment.findOneAndUpdate({ "_id": cGroupSquence }, { "pComment": null });
+    await mongoose.disconnect();
 
-    getConnection((conn) => {
+};
 
-        var sql = 'UPDATE `BulletinBoard`.`Comment` SET `pComment` = NULL WHERE (`cGroupSquence` = ?)';
-        var comment = [cGroupSquence];
 
-        conn.query(sql, comment, function (err, rows, fields) {
-        
-            if (err) {
-                return cb(err);
-            }
-            else {
-            conn.release();
-            return cb(null);
-            }
-        });
-    })
+const modifyComment = async ({ cGroupSquence, pComment }) => {
 
-}
+    mongoose.connect(config.mongoURI, config.options);
+    
+    await Comment.findOneAndUpdate({ "_id": cGroupSquence }, { "pComment": pComment });
+    await mongoose.disconnect();
 
-// 댓글 수정
+};
 
-const modifyComment = function(data, cb){
 
-    getConnection((conn) => {
-
-        var sql = 'UPDATE `BulletinBoard`.`Comment` SET `pComment` = ? WHERE (`cGroupSquence` = ?)';
-        var comment = [data.pComment, data.cGroupSquence];
-
-        conn.query(sql, comment, function (err, rows, fields) { 
-        
-            if (err) {
-                return cb(err);
-            }
-            else {
-            conn.release();
-            return cb(null);
-            }
-        });
-    })
-
-}
-
-module.exports = { saveComment, getComment, deleteComment, modifyComment }
+module.exports = { deleteC, modifyComment, 
+    saveParentComment, getComment, getCount, getLatestComment,
+    savechildComment
+};
