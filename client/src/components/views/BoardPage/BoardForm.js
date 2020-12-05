@@ -56,8 +56,10 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
                dispatch(getComment(commentBody))
                .then(response =>{
                if (response.payload.success){
+                   console.log("response.payload.comment",response.payload.comment)
+
                    setCommentLists(response.payload.comment);
-                   setCommentCnt(response.payload.commentCnt.totalComment);
+                   setCommentCnt(response.payload.commentCnt);
                } else {
                    alert('댓글을 가져오는데 실패했습니다.');
                }
@@ -67,7 +69,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
            .then(response =>{
                if (response.payload.success){
                    setCommentLists(response.payload.comment);
-                   setCommentCnt(response.payload.commentCnt.totalComment);
+                   setCommentCnt(response.payload.commentCnt);
                    console.log("모지",response.payload.comment)
                    
                } else {
@@ -118,13 +120,13 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     }
     
     const deleteComment = (cGroupSquence) => {
-        setCommentLists(CommentLists.map(item => item.cGroupSquence === cGroupSquence 
+        setCommentLists(CommentLists.map(item => item._id === cGroupSquence 
             ? ({...item, pComment: null}) : item
             ))  
     }
 
     const modifyComment = (pComment, cGroupSquence) => {
-        setCommentLists(CommentLists.map(item => item.cGroupSquence === cGroupSquence 
+        setCommentLists(CommentLists.map(item => item._id === cGroupSquence 
             ? ({...item, pComment: pComment}) : item
             ))  
             // type="primary" 
@@ -161,7 +163,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             .then(response =>{
                 if (response.payload.success){
                     setCommentLists(response.payload.comment);
-                    setCommentCnt(response.payload.commentCnt.totalComment);
+                    setCommentCnt(response.payload.commentCnt);
 
                 } else {
                     alert('댓글을 가져오는데 실패했습니다.');
@@ -187,7 +189,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             .then(response =>{
                 if (response.payload.success){
                     setCommentLists(response.payload.comment);
-                    setCommentCnt(response.payload.commentCnt.totalComment);
+                    setCommentCnt(response.payload.commentCnt);
 
                 } else {
                     alert('댓글을 가져오는데 실패했습니다.');

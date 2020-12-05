@@ -37,10 +37,7 @@ function SingleComment(props) {
     const confirm = (event) => { // 댓글 삭제 버튼
         message.success('Click on Yes');
 
-        const body = { cGroupSquence : props.comment.cGroupSquence }
-
-        const cNum = props.comment.cGroupSquence;
-
+        const cNum = props.comment._id;
         // 댓글 삭제
         //삭제할 시퀀스 넘버 보내기
         axios.delete(`/api/comment/1/${cNum}`)
@@ -48,7 +45,7 @@ function SingleComment(props) {
                 if(response.data.success){
                     alert('댓글이 삭제되었습니다')
                     //삭제 된 댓글 리플래쉬
-                    props.deleteFuction(body.cGroupSquence)
+                    props.deleteFuction(props.comment._id)
 
                 } else {
                     alert('댓글 삭제에 실패 하셨습니다')
@@ -77,7 +74,7 @@ function SingleComment(props) {
         
         // 시퀀스 넘버와, 수정된 내용
         let body = {
-            cGroupSquence : props.comment.cGroupSquence,
+            cGroupSquence : props.comment._id,
             pComment: ModifyComment,
         };
 
@@ -86,7 +83,7 @@ function SingleComment(props) {
             .then(response => {
                 if(response.data.success){
                     
-                    props.modifyFunction(ModifyComment, props.comment.cGroupSquence)
+                    props.modifyFunction(ModifyComment, props.comment._id)
                     setModifyComment(""); // 코멘트 초기화
 
                     // 수정한 코멘트 리플래쉬
@@ -99,7 +96,7 @@ function SingleComment(props) {
             
     }
 
-    const actions = (localStorage.getItem('userId') === props.comment.cWriter ? [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>,
+    const actions = (localStorage.getItem('userId') === props.comment.cWriter.id ? [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>,
 
             <span onClick={openModify}> 수정</span>,
 
@@ -112,23 +109,23 @@ function SingleComment(props) {
             ] : localStorage.getItem('userId') &&
             
             [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>, 
-            <span> <Report comment={true} pComment={props.comment.pComment} cGroupSquence={props.comment.cGroupSquence} toId={props.comment.cWriter} ></Report> </span> ]
+            <span> <Report comment={true} pComment={props.comment.pComment} cGroupSquence={props.comment.cGroupSquence} toId={props.comment.cWriter.id} ></Report> </span> ]
 
         )
 
 
         // 댓글 저장
         const onSubmit = (event) =>{
-
+                        
             event.preventDefault();     
             let body = {
                 pNum: board.boardContent.postnum, // 글써져있는곳
                 cWriter: user.userData.id, //작성자
                 pComment: replyComment, // 내용
-                gNum: props.comment.gNum, // 부모 번호
+                gNum: props.comment._id, // 부모 번호
                 gDepth: props.comment.gDepth + 1, // 루트                
                 date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                cID: props.comment.cWriter,
+                cID: props.comment.cWriter.id,
                 commentPage : props.commentPage
             }
             
@@ -160,13 +157,13 @@ function SingleComment(props) {
                 
                     { props.comment.pComment ? <Comment
                         actions={actions}
-                        author={<a> { props.comment.cWriter } </a>}
+                        author={<a> { props.comment.cWriter.id } </a>}
                         avatar={<Avatar shape="square" size="large" src = {`${BASE_URL}/img/${props.comment.avatar}`} icon={ props.comment.avatar == null && <UserOutlined/>} /> }
                         content={
                             <span>
                                 { props.comment.gDepth >= 2 &&
                                     <span style={{fontWeight:'600' }}> 
-                                        {props.comment.cID } &nbsp;&nbsp;  
+                                        {props.comment.cWriter.id } &nbsp;&nbsp;  
                                     </span>
                                 }       
                                 { props.comment.pComment } 
@@ -194,7 +191,7 @@ function SingleComment(props) {
                                 style={{ width: '100%', borderRadius: '5px' }}
                                 onChange={handleChange}
                                 value={replyComment}
-                                placeholder= {props.comment.cWriter + "님에게 답글 쓰기"}
+                                placeholder= {props.comment.cWriter.id + "님에게 답글 쓰기"}
                             />
                             <br />
                             <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>등록</Button>

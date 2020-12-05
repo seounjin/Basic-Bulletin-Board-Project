@@ -4,7 +4,9 @@ const config = require("../config/dev");
 const userSchema = mongoose.Schema({
     id: {
         type: String,
-        maxlength: 20
+        maxlength: 20,
+        trim: true,
+        unique: 1,
     },
     password: {
         type: String,
@@ -48,6 +50,16 @@ const findUser = async id => {
     return user;
 };
 
+const findId = async id => {
+
+    mongoose.connect(config.mongoURI, config.options);
+    
+    const user = await User.findById(id);
+    await mongoose.disconnect();
+
+    return user;
+};
+
 const saveToken = async (id, refreshToken) => {
 
     mongoose.connect(config.mongoURI, config.options);
@@ -80,4 +92,4 @@ const tokenSerch = async token => {
 };
 
 
-module.exports = { save, findUser, saveToken, tokenDelete, tokenSerch };
+module.exports = { save, findUser, saveToken, tokenDelete, tokenSerch, findId};

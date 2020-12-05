@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const userState = (req, res) => {
 
     res.status(200).json({
-        id: req.user.id,
+        id: req.user._id,
         isAdmin: req.user.role === 1 ? true : false,
         isAuth: true,
         email: req.user.email,
@@ -49,9 +49,10 @@ const login = async(req, res) => {
             return res.status(400).json( { loginSuccess: false } );
         }
 
+
         // 토큰생성
-        const accessToken =  jwt.sign( {data: id}, 'secret', { expiresIn: '120m' });
-        const refreshToken =  jwt.sign( {data: id}, 'example', { expiresIn: '14d' });
+        const accessToken =  jwt.sign( {data: user._id.toHexString()}, 'secret', { expiresIn: '120m' });
+        const refreshToken =  jwt.sign( {data: user._id.toHexString()}, 'example', { expiresIn: '14d' });
         
 
         await User.saveToken(id, refreshToken);
