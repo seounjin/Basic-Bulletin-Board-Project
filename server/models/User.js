@@ -92,4 +92,4 @@ const tokenSerch = async token => {
 };
 
 
-module.exports = { save, findUser, saveToken, tokenDelete, tokenSerch, findId};
+module.exports = { save, findUser, saveToken, tokenDelete, tokenSerch, findId, User };

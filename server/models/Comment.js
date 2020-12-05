@@ -94,7 +94,7 @@ const getCount = async pNum => {
     
     const cnt = await Comment.countDocuments({"pNum": pNum});
     
-    await mongoose.disconnect();
+    mongoose.disconnect();
 
     return cnt;
 };

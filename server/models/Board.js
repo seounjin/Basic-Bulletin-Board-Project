@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const config = require("../config/dev");
-const { getNextSequence } = require("./countPost");
+// const { getNextSequence } = require("./countPost");
+const { User } = require("./User");
 
 const BoardSchema = mongoose.Schema({
     postnum: {
@@ -13,7 +14,7 @@ const BoardSchema = mongoose.Schema({
     },
     writer: {
         type: String,
-        maxlength: 20
+        maxlength: 30
     },
     date: {
         type: String,
@@ -34,27 +35,122 @@ const BoardSchema = mongoose.Schema({
 })
 
 // 보드 모델에서 몽고 디비를 이용해 원하는 정보를 얻을 수 있게 로직을 작성!!
-const Board = mongoose.model('Board', BoardSchema)
+const Board = mongoose.model('Board', BoardSchema);
 
-const save = async ({ writer, date, title, pContent }) => {
+////////////게시판 요청 페이지 응답/////////////////
+const page = async ({ keyword, currentPage, PageSize }) => {
 
     mongoose.connect(config.mongoURI, config.options);
 
-    const postnum = await getNextSequence();
-
-    const board = new Board({ postnum : postnum, title : title, writer : writer, 
-        date : date, views : 0, favorite : 0, content : pContent });
-
-    console.log(board)
-
-    await board.save();
+    // 페이지네이션!!!
     
     await mongoose.disconnect();
 
-    return postnum;
+    return Total;
 };
 
-module.exports = { save }
+////////////새로운 게시글 생성/////////////////
+const modifyPost = async ({ pNum, title, pContent }) => {
+
+    mongoose.connect(config.mongoURI, config.options);
+
+    const temp = await Board.findOne( { postnum: pNum } );
+
+    console.log("modifyPost", temp);
+
+    if (title == temp.content) {
+        await mongoose.disconnect();
+        return true;
+    }
+
+    await Board.findByIdAndUpdate(
+        { _id: temp._id },
+        {$set:{title: title, content: pContent}},{new : true},
+        (err, doc) => {
+            if (err) {
+                console.log("modifyPost//Board.findByIdAndUpdate//err")
+            }
+        }
+    )
+    await mongoose.disconnect();
+    return false;
+    // return Total;
+};
+
+///////////특정 게시글 요청 페이지 응답/////////////////
+const removePost = async (postNum) => {
+
+    mongoose.connect(config.mongoURI, config.options);
+
+    const temp = await Board.findOneAndDelete( { postnum: postNum } );
+    //console.log(temp);
+    
+    await mongoose.disconnect();
+
+    return temp;
+};
+
+///////////특정 게시글 요청 페이지 응답/////////////////
+const post = async (postNum) => {
+
+    mongoose.connect(config.mongoURI, config.options);
+
+    const temp = await Board.findOne( { postnum: postNum } );
+    //console.log(temp);
+    
+    await mongoose.disconnect();
+
+    return temp;
+};
+
+////////////게시글의 전체 개수를 응답해줌/////////////////
+const totalPost = async () => {
+
+    mongoose.connect(config.mongoURI, config.options);
+
+    const board = new Board();
+
+    Total = await board.collection.countDocuments();
+    
+    await mongoose.disconnect();
+
+    return Total;
+};
+
+////////////새로운 게시글 생성/////////////////
+const createNewPost = async ({ writer, date, title, pContent }) => {
+
+    mongoose.connect(config.mongoURI, config.options);
+
+    const temp = new Board();
+
+    Total = await temp.collection.countDocuments();
+
+    Total = Total + 1;
+
+    let Writer;
+    await User.findOne(
+        {_id: writer},
+        {},{new : true},
+        (err, doc) => {
+            if (err) {
+                console.log("createNewPost//User.findOne//err")
+            } else {
+                Writer = doc.id;
+            }
+        }
+    )
+
+    const board = new Board({ postnum : Total, title, writer : Writer, date, views : 0, favorite : 0, content : pContent });
+
+    await board.save();
+
+    await mongoose.disconnect();
+
+    return Total;
+};
+
+module.exports = { totalPost, createNewPost, post, removePost, modifyPost }
 
 // const getConnection = require('./db');
 

@@ -1,8 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { newPost } = require('../controllers/boards/newPost');
+const { getTotal } = require('../controllers/boards/getTotal');
+const { getPost } = require('../controllers/boards/getPost');
+const { deletePost } = require('../controllers/boards/deletePost');
+const { changePost } = require('../controllers/boards/changePost');
 
+router.get("/total", getTotal);
 router.post("/new", newPost);
+//router.post("/page", newPost);
+router.get("/post/:postNum", getPost);
+router.delete("/post/1/:postNum", deletePost);
+router.post("/post/change", changePost);
 
 module.exports = router;
 
