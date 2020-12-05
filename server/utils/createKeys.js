@@ -27,10 +27,8 @@ const CreateKeys = async() => {
                }
            });
 
-
-
-           await fs.writeFile("../keys/private.pem", privateKey);
-           await fs.writeFile("../keys/public.pem", publicKey);
+        await fs.writeFile('./keys/private.pem', privateKey);
+        await fs.writeFile('./keys/public.pem', publicKey);
 
        }
 
