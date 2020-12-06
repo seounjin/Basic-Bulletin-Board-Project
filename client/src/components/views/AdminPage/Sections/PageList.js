@@ -15,7 +15,7 @@ function PageList(props) {
                 }}>{ list.pNum }</Link> </td>
                 <td > { list.content } </td>
                 <td > { list.rContent } </td>
-                <td style={{ width: '10%' }}> { list.fromId } </td>
+                <td style={{ width: '10%' }}> { list.fromId.id } </td>
                 <td style={{ width: '10%' }}> { list.date } </td>
                 <td style={{ width: '10%' }}> <Button onClick={ (e) => props.deleteClick(list.cGroupSquence, e) }>삭제</Button> </td>
             </tr>

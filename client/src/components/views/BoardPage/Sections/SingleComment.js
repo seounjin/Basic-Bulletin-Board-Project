@@ -109,7 +109,7 @@ function SingleComment(props) {
             ] : localStorage.getItem('userId') &&
             
             [<span onClick={openReply} key="comment-basic-reply-to">답글쓰기</span>, 
-            <span> <Report comment={true} pComment={props.comment.pComment} cGroupSquence={props.comment.cGroupSquence} toId={props.comment.cWriter.id} ></Report> </span> ]
+            <span> <Report comment={true} pComment={props.comment.pComment} cGroupSquence={props.comment._id} toId={props.comment.cWriter._id} ></Report> </span> ]
 
         )
 

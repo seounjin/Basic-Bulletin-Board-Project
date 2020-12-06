@@ -1,6 +1,4 @@
-
 const mongoose = require('mongoose');
-const config = require("../config/dev");
 const Schema = mongoose.Schema;
 
 //cGroupSquence 댓글 고유 번호
@@ -37,7 +35,6 @@ const commentSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('Comment', commentSchema);
-
 
 // const saveParentComment = async ({ pNum, cWriter, pComment, date, gDepth }) => {
 //     mongoose.connect(config.mongoURI, config.options);
