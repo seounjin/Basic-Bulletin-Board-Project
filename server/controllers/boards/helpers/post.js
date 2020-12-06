@@ -6,8 +6,6 @@ const modifyPost = async ({ pNum, title, pContent }) => {
 
     const temp = await Board.findOne( { postnum: pNum } );
 
-    console.log("modifyPost", temp);
-
     if (title == temp.content) {
         return true;
     }
@@ -35,15 +33,13 @@ const removePost = async (postNum) => {
 ///////////특정 게시글 요청 응답/////////////////
 const post = async (postNum) => {
 
-    const temp = await Board.findOne( { postnum: postNum } );
+    const temp = await Board.findOneAndUpdate( { postnum: postNum }, { $inc: { views: 1 } } );
     
     return temp;
 };
 
 ////////////게시글의 전체 개수를 응답/////////////////
 const totalPost = async () => {
-
-    // const board = new Board();
 
     Total = await Board.collection.countDocuments();
     

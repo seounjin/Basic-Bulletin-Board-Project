@@ -6,14 +6,13 @@ const changePost = async(req, res) => {
 
     try {
         const postInfo = req.body;
-        // const { pNum, title, pContent } = postInfo;
 
         const isReal = await modifyPost(postInfo);
         
         return res.status(200).json( { success: true, isSame: isReal } );
 
     } catch (err) {
-        console.log(err)
+        console.log("changePost", err)
         return res.status(400).json( { success: false, err } );
     }
 };
