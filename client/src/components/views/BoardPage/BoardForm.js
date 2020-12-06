@@ -86,13 +86,13 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
             .then(response =>{
             if (response.payload.success){
                 console.log("response.payload.content", response.payload.content)
-                setcontent(response.payload.content[0].pContent);
-                setPtitle(response.payload.content[0].title )
-                setWriter(response.payload.content[0].writer)
-                setDate(response.payload.content[0].date );
-                setViews(response.payload.content[0].views + 1);
-                setFavoriteCount(response.payload.content[0].favorite);
-                setImage(response.payload.content[0].avatar);
+                setcontent(response.payload.content.content);
+                setPtitle(response.payload.content.title )
+                setWriter(response.payload.content.writer)
+                setDate(response.payload.content.date );
+                setViews(response.payload.content.views + 1);
+                setFavoriteCount(response.payload.content.favorite);
+                setImage(response.payload.content.avatar);
             } else {
                 alert('게시판 내용을 가져오는데 실패했습니다.');
             }

@@ -90,5 +90,4 @@ module.exports = mongoose.model('User', userSchema);
 //     return user;
 // };
 
-
 // module.exports = { save, findUser, saveToken, tokenDelete, tokenSerch, findId};

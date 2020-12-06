@@ -1,123 +1,148 @@
-const getConnection = require('./db');
+const mongoose = require('mongoose');
+//const config = require("../config/dev");
+// const { User } = require("./User");
 
+const BoardSchema = mongoose.Schema({
+    postnum: {
+        type: Number,
+        unique: 1
+    },
+    title: {
+        type: String,
+        maxlength: 60
+    },
+    writer: {
+        type: String,
+        maxlength: 20,
+    },
+    date: {
+        type: String,
+        maxlength: 30
+    },
+    views: {
+        type: Number,
+        default: 0
+    },
+    favorite: {
+        type: Number,
+        default: 0
+    },
+    content: {
+        type: String,
+        maxlength : 500
+    },
+    like: [],
+})
 
-const getBoardList = function(cb){
+module.exports = mongoose.model('Board', BoardSchema);
 
-    getConnection((conn) => {
-        
-        var sql = `SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as date, views, favorite FROM BulletinBoard.PostInfo ORDER BY postnum desc`;
+// ////////////게시판 요청 페이지 응답/////////////////
+// const page = async ({ keyword, currentPage, PageSize }) => {
 
-        conn.query(sql, function (err, rows, fields) {
-            if (err) {
-                conn.release();
-                return cb(err);
-            }
-            else {
-                conn.release();
-                return cb(null, rows);
-            }
-        })
-    })
+//     // 페이지네이션!!!
+    
+//     return Total;
+// };
 
+// const checkFavoritePost = async (postNum, userId) => {
 
-}
+//     //쿼리 바꿔야할 수도 있을 것 같음.
+//     const temp = await Board.findOne({ postnum: postNum })
 
-const getBoardContent = function(postNum, cb){
+//     const found = await temp.like.find(e => e == userId)
+    
+//     if (found == userId) {
+//         return true;
+//     }
+//     return false;
+// };
 
-    getConnection((conn) => {
+// const unfavoritePost = async (postNum, userId) => {
 
-        var sql = "SELECT pContent, date_format(date, '%y.%m.%d. %h:%i') as date FROM BulletinBoard.PostInfo, BulletinBoard.PostContents WHERE postnum = ? and pNum = postnum";
-        var pn = postNum
-        
-        conn.query(sql, pn, function (err, rows, fields) {
-            if (err) {
-                conn.release();
-                return cb(err);
-            }
-            else {
-                conn.release();
-                return cb(rows, null);
-            }
-        })
-    })
+//     await Board.findOneAndUpdate(
+//         { postnum: postNum }, { $pull: { like: userId }, $inc: {favorite: -1 } },{ upsert: true, new : true }
+//     )
+// };
 
+// const favoritePost = async (postNum, userId) => {
 
-}
+//     await Board.findOneAndUpdate(
+//         { postnum: postNum }, { $push: { like: userId }, $inc: {favorite: 1 } },{ upsert: true, new : true }
+//     )
+// };
 
-const boardPostRegister = function(post, cb) {
+// ////////////게시글 수정/////////////////
+// const modifyPost = async ({ pNum, title, pContent }) => {
 
-    getConnection((conn) => {
+//     const temp = await Board.findOne( { postnum: pNum } );
 
-        var sql = 'INSERT INTO `BulletinBoard`.`PostInfo` (`title`, `writer`, `date`, `views`, `favorite`) VALUES (?, ?, ?, ?, ?)';
-        var pi = [post.title, post.writer, post.date, 0, 0]; //postinfo
-      
-            conn.query(sql, pi, function (err, rows, fields) { //row == results
-      
-                if (err) {
-                    return cb(err);
-                }
-                else {
-                    return cb(null)
-                }
-            });
-    })
-}
+//     console.log("modifyPost", temp);
 
-const getPostNum = function(post, cb) {
+//     if (title == temp.content) {
+//         return true;
+//     }
 
-    getConnection((conn) => {
+//     await Board.findByIdAndUpdate(
+//         { _id: temp._id },
+//         {$set:{title: title, content: pContent}},{new : true},
+//         (err, doc) => {
+//             if (err) {
+//                 console.log("modifyPost//Board.findByIdAndUpdate//err")
+//             }
+//         }
+//     )
+//     return false;
+// };
 
-        var sql = 'SELECT postnum FROM BulletinBoard.PostInfo WHERE writer = ? and date = ?';
-        var pi = [post.writer, post.date]; //postinfo
-      
-            conn.query(sql, pi, function (err, rows, fields) { //row == results
-      
-                if (err) {
-                    return cb(err, null);
-                }
-                else {
-                    return cb(null, rows[0].postnum)
-                }
-            });
-    })
-}
+// ///////////특정 게시글 요청 페이지 응답/////////////////
+// const removePost = async (postNum) => {
 
-const insertContent = function(num, post, cb) {
+//     const temp = await Board.findOneAndDelete( { postnum: postNum } );
 
-    getConnection((conn) => {
+//     return temp;
+// };
 
-        var sql = 'INSERT INTO `BulletinBoard`.`PostContents` (`pNum`, `pContent`) VALUES (?, ?)';
-        var pi = [num, post.pContent];
-      
-            conn.query(sql, pi, function (err, rows, fields) { //row == results
-      
-                if (err) {
-                    return cb(err);
-                }
-                else {
-                    return cb(null)
-                }
-            });
-    })
-}
+// ///////////특정 게시글 요청 페이지 응답/////////////////
+// const post = async (postNum) => {
 
-const deletePost = function(post, cb) {
+//     const temp = await Board.findOne( { postnum: postNum } );
+    
+//     return temp;
+// };
 
-    getConnection((conn) => {
+// ////////////게시글의 전체 개수를 응답해줌/////////////////
+// const totalPost = async () => {
 
-        var sql = 'INSERT INTO `BulletinBoard`.`PostInfo` (`title`, `writer`, `date`, `views`, `favorite`) VALUES (?, ?, ?, ?, ?)';
-        var pi = [post.title, post.writer, post.date, 0, 0]; //postinfo
-      
-            conn.query(sql, pi, function (err, rows, fields) { //row == results
-      
-                if (err) {
-                    return cb(err);
-                }
-                else {
-                    return cb(null)
-                }
-            });
-    })
-}
+//     const board = new Board();
 
-module.exports = { getBoardList, getBoardContent, boardPostRegister, getPostNum, insertContent, deletePost }
+//     Total = await board.collection.countDocuments();
+    
+//     return Total;
+// };
+
+// ////////////새로운 게시글 생성/////////////////
+// const createNewPost = async ({ writer, date, title, pContent }) => {
+
+//     const temp = new Board();
+
+//     Total = await temp.collection.countDocuments();
+
+//     Total = Total + 1;
+//     let Writer;
+//     await User.findOne(
+//         {_id: writer},
+//         {},{new : true},
+//         (err, doc) => {
+//             if (err) {
+//                 console.log("createNewPost//User.findOne//err")
+//             } else {
+//                 Writer = doc.id;
+//             }
+//         }
+//     )
+
+//     const board = await new Board({ postnum : Total, title, writer : Writer, date, views : 0, favorite : 0, content : pContent });
+//     await board.save();
+
+//     return Total;
+// };

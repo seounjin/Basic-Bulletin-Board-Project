@@ -68,10 +68,10 @@ function Write(props) { //props.location.state[n] ([0] 새로쓰기인지 수정
         // https://stackoverrun.com/ko/q/12507405
         axios.post('/api/board/post/change', body)
               .then(response => {
-                  if (response.data.success && !response.data.isReal) {
+                  if (response.data.success && !response.data.isSame) {
                     props.history.push(`/boardform/${props.location.state[0]}`)
                   } else {
-                    if (response.data.isReal) {
+                    if (response.data.isSame) {
                       alert('기존 내용으로 게시글을 수정할 수 없습니다.')
                       props.history.goBack();
                       props.history.replace(`/boardform/${props.location.state[0]}`)

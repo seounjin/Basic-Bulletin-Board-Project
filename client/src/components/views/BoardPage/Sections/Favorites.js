@@ -24,7 +24,8 @@ function Favorites(props) {
         if(!Favorite){
             
             //좋아요 요청
-            axios.post('/api/board/favorite/check', body)
+            console.log("favorite, favorite\n")
+            axios.post('/api/board/favorite', body)
             .then(response => {
                 if(response.data.success){
                     setFavorite(true)
