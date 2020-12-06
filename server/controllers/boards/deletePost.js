@@ -1,4 +1,4 @@
-const { removePost } = require('../../models/Board');
+const { removePost } = require('./helpers/post');
 
 const deletePost = async(req, res) => {
 

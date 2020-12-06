@@ -1,4 +1,4 @@
-const {  } = require('../../models/Board');
+const { page } = require('./helpers/page');
 
 const getPage = async(req, res) => {
     //////// PAGENATION ////////

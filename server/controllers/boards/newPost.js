@@ -1,8 +1,6 @@
-const { createNewPost } = require('../../models/Board');
+const { createNewPost } = require('./helpers/post');
 
 const newPost = async(req, res) => { // 글쓴이, 날짜, 글제목, 글내용
-
-    console.log("newPost\n", req.body)
 
     try {
         const boardInfo = req.body;

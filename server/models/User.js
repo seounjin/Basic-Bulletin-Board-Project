@@ -33,60 +33,60 @@ const User = mongoose.model('User', userSchema);
 
 const save = async ({ id, email, password }) => {
 
-    mongoose.connect(config.mongoURI, config.options);
+    // mongoose.connect(config.mongoURI, config.options);
     const user = new User({ id, email, password, role: 0 });
     await user.save();
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
     
 };
 
 const findUser = async id => {
 
-    mongoose.connect(config.mongoURI, config.options);
+    // mongoose.connect(config.mongoURI, config.options);
     
     const user = await User.findOne({ id:id });
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
 
     return user;
 };
 
 const findId = async id => {
 
-    mongoose.connect(config.mongoURI, config.options);
+    // mongoose.connect(config.mongoURI, config.options);
     
     const user = await User.findById(id);
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
 
     return user;
 };
 
 const saveToken = async (id, refreshToken) => {
 
-    mongoose.connect(config.mongoURI, config.options);
+    // mongoose.connect(config.mongoURI, config.options);
     
     const user = await User.findOne({ id:id });
     user.token = refreshToken;
 
     await user.save();
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
 
 };
 
 const tokenDelete = async id => {
 
-    mongoose.connect(config.mongoURI, config.options);
+    // mongoose.connect(config.mongoURI, config.options);
     
     await User.findOneAndUpdate({ _id: id }, { token: "" });
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
 
 };
 
 const tokenSerch = async token => {
 
-    mongoose.connect(config.mongoURI, config.options);
+    // mongoose.connect(config.mongoURI, config.options);
     
     const user =await User.findOne({ token:token });
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
 
     return user;
 };

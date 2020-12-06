@@ -1,8 +1,8 @@
-const { post } = require('../../models/Board');
+const { post } = require('./helpers/post');
 
 const getPost = async(req, res) => {
 
-    console.log("겟포스트입니다~~~~~~~", req.params.postNum);
+    // console.log("겟포스트입니다~~~~~~~", req.params.postNum);
 
     try {
         let content = await post(req.params.postNum);

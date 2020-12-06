@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const { CreateKeys } = require("./utils/createKeys");
 const cors = require('cors');
+const initMongo = require('./config/mogodb')
 const port = 5000;
 
 
@@ -30,3 +31,5 @@ app.use('/api/mypage', require('./routes/mypage'));
 app.use(express.static('public'));
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+initMongo();

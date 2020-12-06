@@ -1,4 +1,4 @@
-const { modifyPost } = require('../../models/Board');
+const { modifyPost } = require('./helpers/post');
 
 const changePost = async(req, res) => {
 

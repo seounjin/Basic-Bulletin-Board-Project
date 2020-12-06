@@ -1,4 +1,4 @@
-const { totalPost } = require('../../models/Board');
+const { totalPost } = require('./helpers/post');
 
 const getTotal = async(req, res) => { // 글쓴이, 날짜, 글제목, 글내용
 

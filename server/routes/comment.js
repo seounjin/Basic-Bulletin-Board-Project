@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { parent, child, registerComment, latestComment, deleteComment, change } = require('../controllers/comment')
+const { validateParent, validateChild, } = require('../controllers/comment/validators');
 
+router.post("/parent", validateParent, parent);
 
-router.post("/parent", parent);
-
-router.post("/child", child);
+router.post("/child", validateChild, child);
 
 router.post("/sequence/1", registerComment);
 

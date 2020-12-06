@@ -36,91 +36,95 @@ const commentSchema = mongoose.Schema({
 
 });
 
-const Comment = mongoose.model('Comment', commentSchema);
+module.exports = mongoose.model('Comment', commentSchema);
 
 
-const saveParentComment = async ({ pNum, cWriter, pComment, date, gDepth }) => {
-    mongoose.connect(config.mongoURI, config.options);
-    const comment = new Comment({ pNum,cWriter, pComment, date, gDepth });
-    comment.gNum = comment._id;
+// const saveParentComment = async ({ pNum, cWriter, pComment, date, gDepth }) => {
+//     mongoose.connect(config.mongoURI, config.options);
+//     const comment = new Comment({ pNum,cWriter, pComment, date, gDepth });
+//     comment.gNum = comment._id;
     
-    await comment.save();
+//     await comment.save();
     
-    await mongoose.disconnect();
+//     await mongoose.disconnect();
 
-    return comment;
-};
+//     return comment;
+// };
 
-const savechildComment = async ({ pNum, gNum, cWriter, pComment, date, gDepth }) => {
-    mongoose.connect(config.mongoURI, config.options);
-    const comment = new Comment({ pNum,gNum, cWriter, pComment, date, gDepth });
-    await comment.save();
+// const savechildComment = async ({ pNum, gNum, cWriter, pComment, date, gDepth }) => {
+//     mongoose.connect(config.mongoURI, config.options);
+//     const comment = new Comment({ pNum,gNum, cWriter, pComment, date, gDepth });
+//     await comment.save();
     
-    await mongoose.disconnect();
+//     await mongoose.disconnect();
 
-    return comment;
-};
+//     return comment;
+// };
 
-const getComment = async (pNum, currentPage, maxComment) => {
-    mongoose.connect(config.mongoURI, config.options);
+// const getComment = async (pNum, currentPage, maxComment) => {
+//     mongoose.connect(config.mongoURI, config.options);
         
-    const comment = await Comment.find({"pNum": pNum})
-                                 .populate('cWriter','-password -token -email')
-                                 .sort({"gNum": 1,"date": 1})
-                                 .skip((currentPage - 1) * maxComment)
-                                 .limit(maxComment);
+//     const comment = await Comment.find({"pNum": pNum})
+//                                  .populate('cWriter','-password -token -email')
+//                                  .sort({"gNum": 1,"date": 1})
+//                                  .skip((currentPage - 1) * maxComment)
+//                                  .limit(maxComment);
     
-    await mongoose.disconnect();
+//     await mongoose.disconnect();
 
-    return comment;
-};
+//     return comment;
+// };
 
-const getLatestComment = async (pNum, currentPage, maxComment) => {
-    mongoose.connect(config.mongoURI, config.options);
+// const getLatestComment = async (pNum, currentPage, maxComment) => {
+//     mongoose.connect(config.mongoURI, config.options);
     
-    const comment = await Comment.find({"pNum": pNum})
-                                 .populate('cWriter','-password -token -email')
-                                 .sort({"gNum": -1,"date": 1})
-                                 .skip((currentPage - 1) * maxComment)
-                                 .limit(maxComment);
+//     const comment = await Comment.find({"pNum": pNum})
+//                                  .populate('cWriter','-password -token -email')
+//                                  .sort({"gNum": -1,"date": 1})
+//                                  .skip((currentPage - 1) * maxComment)
+//                                  .limit(maxComment);
     
-    await mongoose.disconnect();
+//     await mongoose.disconnect();
 
-    return comment;
-};
+//     return comment;
+// };
 
-const getCount = async pNum => {
-    mongoose.connect(config.mongoURI, config.options);
+// const getCount = async pNum => {
+//     mongoose.connect(config.mongoURI, config.options);
     
-    const cnt = await Comment.countDocuments({"pNum": pNum});
+//     const cnt = await Comment.countDocuments({"pNum": pNum});
+//     await mongoose.disconnect();
+
+//     return cnt;
+// };
+
+
+// const deleteC = async cGroupSquence => {
+
+//     mongoose.connect(config.mongoURI, config.options);
     
-    mongoose.disconnect();
+//     await Comment.findOneAndUpdate({ "_id": cGroupSquence }, { "pComment": null });
+//     await mongoose.disconnect();
 
-    return cnt;
-};
+// };
 
 
-const deleteC = async cGroupSquence => {
+// const modifyComment = async ({ cGroupSquence, pComment }) => {
 
-    mongoose.connect(config.mongoURI, config.options);
+//     mongoose.connect(config.mongoURI, config.options);
     
-    await Comment.findOneAndUpdate({ "_id": cGroupSquence }, { "pComment": null });
-    await mongoose.disconnect();
+//     await Comment.findOneAndUpdate({ "_id": cGroupSquence }, { "pComment": pComment });
+//     await mongoose.disconnect();
 
-};
-
-
-const modifyComment = async ({ cGroupSquence, pComment }) => {
-
-    mongoose.connect(config.mongoURI, config.options);
-    
-    await Comment.findOneAndUpdate({ "_id": cGroupSquence }, { "pComment": pComment });
-    await mongoose.disconnect();
-
-};
+// };
 
 
-module.exports = { deleteC, modifyComment, 
-    saveParentComment, getComment, getCount, getLatestComment,
-    savechildComment
-};
+// module.exports = { 
+//     deleteC, 
+//     modifyComment, 
+//     saveParentComment, 
+//     getComment, 
+//     getCount, 
+//     getLatestComment,
+//     savechildComment
+// };
