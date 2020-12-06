@@ -9,19 +9,27 @@ const commentPagenation = async(currentPage, maxComment) => {
     // 카운트 -> 
     // 
 
-    // const result = await ReportComment.find()
-    //                                    .populate('fromId','-password -token -email -role -_id')
-    //                                    .sort({"date": 1})
-    //                                    .skip((currentPage - 1) * maxComment)
-    //                                    .limit(maxComment);
+    const result = await ReportComment.find()
+                                       .populate('fromId','-password -token -email -role -_id')
+                                       .sort({"date": 1})
+                                       .skip((currentPage - 1) * maxComment)
+                                       .limit(maxComment);
 
-    const result = await ReportComment.aggregate([
-        {
-            "$group": {
-                "cGroupSquence": "$cGroupSquence"
-                }
-        }
-    ])
+    // const result = await ReportComment.aggregate([
+    //     {
+    //         $group: {
+    //             _id: { cGroupSquence:"$cGroupSquence" 
+                        
+    //             },
+                
+    //             total: {
+    //                 "$sum": 1
+    //               }  
+    //         },
+                  
+    //     },
+
+    // ])
 
     return result;
 

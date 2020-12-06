@@ -11,9 +11,8 @@ const getReportComment = async(req, res) => {
     try {
         const data = await commentPagenation(currentPage, maxComment);
 
-        console.log("data",data);
         
-        // return res.status(200).json( {success: true , data, count : data.length });
+        return res.status(200).json( {success: true , data, count : data.length });
 
     } catch(err) {
         

@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/pool');
 const { Page } = require("../pagination/page"); 
-const { reportComment, getReportComment } = require('../controllers/report');
+const { reportComment, getReportComment, reportCommentDelete } = require('../controllers/report');
 
 //댓글 신고
 router.post("/comment", reportComment);
 router.get("/comment/:page", getReportComment);
+router.delete("/comment/1/:pNum", reportCommentDelete);
+
 
 // 게시글 신고
 router.post("/post", async (req, res) => {
@@ -218,40 +220,40 @@ router.delete("/post/1/:pNum", async (req, res) => {
 // });
 
 
-// 신고된 댓글 삭제
-router.delete("/comment/1/:pNum", async (req, res) => {
+// // 신고된 댓글 삭제
+// router.delete("/comment/1/:pNum", async (req, res) => {
 
-    const cGroupSquence = req.params.pNum;
+//     const cGroupSquence = req.params.pNum;
     
-    // 해당 댓글 null 업데이트
+//     // 해당 댓글 null 업데이트
     
-    const conn = await pool.getConnection();
+//     const conn = await pool.getConnection();
 
-    try {
+//     try {
 
-        await conn.beginTransaction();
+//         await conn.beginTransaction();
 
-        await conn.query("UPDATE `BulletinBoard`.`Comment` SET `pComment` = NULL WHERE (`cGroupSquence` = ?)",[cGroupSquence]);
+//         await conn.query("UPDATE `BulletinBoard`.`Comment` SET `pComment` = NULL WHERE (`cGroupSquence` = ?)",[cGroupSquence]);
 
-        await conn.query("DELETE FROM `BulletinBoard`.`ReportComment` WHERE (`cGroupSquence` = ?)",[cGroupSquence]);
+//         await conn.query("DELETE FROM `BulletinBoard`.`ReportComment` WHERE (`cGroupSquence` = ?)",[cGroupSquence]);
 
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(200).json( {success: true } );
+//         return res.status(200).json( {success: true } );
     
-    } catch (err) {
+//     } catch (err) {
         
 
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(400).json( { success: false, err } );
-    }
+//         return res.status(400).json( { success: false, err } );
+//     }
 
-});
+// });
 
 
 

@@ -71,7 +71,7 @@ function Page(props) {
         }
 
         // axios.post(props.deleteRouter, body)
-        axios.delete(props.deleteRouter + `/${parseInt(data)}`)  
+        axios.delete(props.deleteRouter + `/${data}`)  
             .then(response => {
                 if(response.data.success){
                     switch(props.state) {
