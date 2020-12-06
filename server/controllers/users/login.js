@@ -13,13 +13,13 @@ const login = async(req, res) => {
         const user = await findUser(id);
 
         if (!user){
-            return res.status(400).json( { loginSuccess: false, err } );
+            return res.json( { loginSuccess: false } );
         }
         
         const result = await comparePassword(password, user.password);
 
         if (!result){                
-            return res.status(400).json( { loginSuccess: false } );
+            return res.json( { loginSuccess: false } );
         }
 
 

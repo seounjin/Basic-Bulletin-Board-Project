@@ -11,7 +11,8 @@ function Report(props) {
     const [ModalState, setModalState] = useState(false);
     const [ModalContent, setModalContent] = useState("");
    
-    const board = useSelector(state => state.board)
+    const board = useSelector(state => state.board);
+    const user = useSelector(state => state.user); 
 
     const reportClick = (event)=>{
         setModalState(true);
@@ -24,13 +25,13 @@ function Report(props) {
         // 글번호, 신고사유, 신고한 아이디,신고당한 아이디, 신고 date
         
         if (props.comment){ 
-
+            
             const body = {
                 pNum: board.boardContent.postnum,
                 rContent: ModalContent,
                 content: props.pComment,
                 cGroupSquence: props.cGroupSquence,
-                fromId: localStorage.getItem('userId'),
+                fromId: user.userData.id,
                 toId: props.toId,
                 date: moment().format('YYYY-MM-DD HH:mm:ss'),
             }
