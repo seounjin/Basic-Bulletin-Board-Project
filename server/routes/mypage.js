@@ -9,151 +9,157 @@ const url = require('url');
 const fs = require('fs');
 const crypto = require("crypto");
 
+const { getProfile, checkPassword, changePrivacy } = require('../controllers/mypage');
 
-router.post("/profile", async (req, res) => {
+router.post("/profile", getProfile);
+router.post("/check", checkPassword);
+router.post("/change", changePrivacy);
 
-    const userId = req.body.id;
 
-    // console.log("클라이언트 데이터 출력",req.body)
+// router.post("/profile", async (req, res) => {
 
-    const conn = await pool.getConnection();
+//     const userId = req.body.id;
 
-    try {//SELECT date_format(connStartDate, '%Y-%m-%d %H:%i') as dt FROM BulletinBoard.ConnectionRecord where connEndDate is not NULL order by connStartDate desc limit 1;
-        await conn.beginTransaction();
+//     // console.log("클라이언트 데이터 출력",req.body)
 
-        const [email] = await conn.query("SELECT email FROM BulletinBoard.User where id = ?", [userId]);
+//     const conn = await pool.getConnection();
+
+//     try {//SELECT date_format(connStartDate, '%Y-%m-%d %H:%i') as dt FROM BulletinBoard.ConnectionRecord where connEndDate is not NULL order by connStartDate desc limit 1;
+//         await conn.beginTransaction();
+
+//         const [email] = await conn.query("SELECT email FROM BulletinBoard.User where id = ?", [userId]);
     
-        const [postNum] = await conn.query("SELECT count(*) as pn FROM BulletinBoard.PostInfo where writer = ?", [userId]);
+//         const [postNum] = await conn.query("SELECT count(*) as pn FROM BulletinBoard.PostInfo where writer = ?", [userId]);
 
-        const [commentNum] = await conn.query("SELECT count(*) as cn FROM BulletinBoard.Comment where cWriter = ?", [userId]);
+//         const [commentNum] = await conn.query("SELECT count(*) as cn FROM BulletinBoard.Comment where cWriter = ?", [userId]);
 
-        const [lastLoginDate] = await conn.query("SELECT date_format(connStartDate, '%Y-%m-%d %H:%i') as lastDate FROM BulletinBoard.ConnectionRecord where connID = ? and connEndDate is not NULL order by connStartDate desc limit 1;", [userId]);
+//         const [lastLoginDate] = await conn.query("SELECT date_format(connStartDate, '%Y-%m-%d %H:%i') as lastDate FROM BulletinBoard.ConnectionRecord where connID = ? and connEndDate is not NULL order by connStartDate desc limit 1;", [userId]);
 
-        const [pcNum] = await conn.query("SELECT count(distinct pNum) as cn FROM BulletinBoard.Comment where cWriter = ?", [userId]);
+//         const [pcNum] = await conn.query("SELECT count(distinct pNum) as cn FROM BulletinBoard.Comment where cWriter = ?", [userId]);
 
-        const [avatar] = await conn.query("SELECT avatar FROM BulletinBoard.User WHERE id=?", [userId]);
+//         const [avatar] = await conn.query("SELECT avatar FROM BulletinBoard.User WHERE id=?", [userId]);
 
-        //console.log("데이터베이스 결과 출력", email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate)
+//         //console.log("데이터베이스 결과 출력", email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate)
 
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        console.log("avatar", avatar)
+//         console.log("avatar", avatar)
 
-        console.log("size", lastLoginDate.length)
+//         console.log("size", lastLoginDate.length)
 
-        if(lastLoginDate.length === 0) {
-            return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, 0, pcNum[0].cn , avatar[0].avatar]} );
-        }
+//         if(lastLoginDate.length === 0) {
+//             return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, 0, pcNum[0].cn , avatar[0].avatar]} );
+//         }
 
-        return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate, pcNum[0].cn , avatar[0].avatar]} );           
+//         return res.status(200).json( {success: true, info: [email[0].email, postNum[0].pn, commentNum[0].cn, lastLoginDate[0].lastDate, pcNum[0].cn , avatar[0].avatar]} );           
     
     
-    } catch (err) {
+//     } catch (err) {
 
-        console.log("에러출력", err);
+//         console.log("에러출력", err);
 
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.json( { success: false, err } );
-    }
+//         return res.json( { success: false, err } );
+//     }
 
-});
+// });
 
-router.post("/check", async(req, res) => {
+// router.post("/check", async(req, res) => {
 
-    const userId = req.body.id;
-    const password = req.body.password;
+//     const userId = req.body.id;
+//     const password = req.body.password;
 
-    const conn = await pool.getConnection();
+//     const conn = await pool.getConnection();
 
 
-    try {
+//     try {
 
-        await conn.beginTransaction();
+//         await conn.beginTransaction();
 
-        const [result] = await conn.query("SELECT password, id FROM BulletinBoard.User where id=?",[userId]);
+//         const [result] = await conn.query("SELECT password, id FROM BulletinBoard.User where id=?",[userId]);
 
-        // 해당 ID가 없을 경우
-        if (result.length === 0){
+//         // 해당 ID가 없을 경우
+//         if (result.length === 0){
 
-            return res.json({ loginSuccess: false });
-        }
+//             return res.json({ loginSuccess: false });
+//         }
 
-        const privateKey = await fs.promises.readFile('./keys/private.pem', 'utf8');
+//         const privateKey = await fs.promises.readFile('./keys/private.pem', 'utf8');
 
-        const dbPassword = crypto.privateDecrypt(privateKey, Buffer.from(result[0].password, "base64")).toString('utf8');
+//         const dbPassword = crypto.privateDecrypt(privateKey, Buffer.from(result[0].password, "base64")).toString('utf8');
 
-        const userPassword = crypto.privateDecrypt(privateKey, Buffer.from(password, "base64")).toString('utf8');
+//         const userPassword = crypto.privateDecrypt(privateKey, Buffer.from(password, "base64")).toString('utf8');
 
-        // 사용자가 보낸 password 복호한것과 데이터베이스에있는 password 복호화해서 비교
-        if (dbPassword !== userPassword){
-            return res.json({ success: false });
-        } 
+//         // 사용자가 보낸 password 복호한것과 데이터베이스에있는 password 복호화해서 비교
+//         if (dbPassword !== userPassword){
+//             return res.json({ success: false });
+//         } 
         
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(200).json({ success: true }); 
+//         return res.status(200).json({ success: true }); 
 
-    } catch (err) {
+//     } catch (err) {
         
-        console.log("에러",err);
+//         console.log("에러",err);
 
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(400).json( { success: false, err } );
-    }
+//         return res.status(400).json( { success: false, err } );
+//     }
 
-    // userLogin(req.body, (err, isMatch) => {
+//     // userLogin(req.body, (err, isMatch) => {
 
-    //     if (err) return res.json({ success: false });
+//     //     if (err) return res.json({ success: false });
 
-    //     if (!isMatch) {
-    //         return res.json({ success: false });
-    //     } else {
-    //         return res.status(200).json({ success: true }); 
-    //     }
-    // })
+//     //     if (!isMatch) {
+//     //         return res.json({ success: false });
+//     //     } else {
+//     //         return res.status(200).json({ success: true }); 
+//     //     }
+//     // })
 
-});
+// });
 
-router.post("/change", async(req, res) => {
+// router.post("/change", async(req, res) => {
 
-    const data = [req.body.password, req.body.email, req.body.id];
+//     const data = [req.body.password, req.body.email, req.body.id];
 
-    const conn = await pool.getConnection();
+//     const conn = await pool.getConnection();
     
-    try {
-        await conn.beginTransaction();
+//     try {
+//         await conn.beginTransaction();
 
-        await conn.query("UPDATE `BulletinBoard`.`User` SET `password` = ?, `email` = ? WHERE (`id` = ?)", data);
+//         await conn.query("UPDATE `BulletinBoard`.`User` SET `password` = ?, `email` = ? WHERE (`id` = ?)", data);
 
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(200).json({ success: true });
+//         return res.status(200).json({ success: true });
     
-    } catch (err) {
+//     } catch (err) {
 
-        console.log("에러",err);
+//         console.log("에러",err);
 
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.json({ success: false, err });
+//         return res.json({ success: false, err });
 
-    }
+//     }
 
-});
+// });
 
 router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, type, id
 

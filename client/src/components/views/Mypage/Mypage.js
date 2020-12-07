@@ -8,7 +8,7 @@ function Mypage(props) {
 
     const [Id, setId] = useState("");
     const [Email, setEmail] = useState("");
-    const [ConnectDate, setConnectDate] = useState("첫 방문");
+    // const [ConnectDate, setConnectDate] = useState("첫 방문");
     const [nComment, setnComment] = useState(0);
 
     const [Img , setImg] = useState("");
@@ -31,9 +31,9 @@ function Mypage(props) {
                       window.sessionStorage.setItem('totalActivityComment', response.data.info[4]);
                       setnComment(response.data.info[2]);
                       setImg(response.data.info[5]);
-                      if (response.data.info[3]) {
-                        setConnectDate(response.data.info[3]);
-                    }
+                    //   if (response.data.info[3]) {
+                    //     setConnectDate(response.data.info[3]);
+                    //   }
                   } else {
                     alert('정보를 가져올 수 없습니다. \n잠시후 다시 시도해주세요.')
                     props.history.push(``)
@@ -66,7 +66,7 @@ function Mypage(props) {
                 <Card title="활동 내역" style={{ width: 300, height: 200 }}>
                     <p>작성한 게시물 수 : <Link to={{pathname : '/activitydetails/1', state : { con: "0"} }}  >{window.sessionStorage.totalActivityPost}</Link></p>
                     <p>작성한 댓글 수 : <Link to={{pathname : '/activitydetails/1', state : { con: "1"} }} >{nComment} </Link>  / {window.sessionStorage.totalActivityComment} posts </p>
-                    <p>최근 접속 일자 : {ConnectDate}</p>
+                    {/* <p>최근 접속 일자 : {ConnectDate}</p> */}
                 </Card>
                 <Card 
                     title="신 고 내 역" 
