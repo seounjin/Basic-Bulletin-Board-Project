@@ -43,13 +43,14 @@ function Page(props) {
             }
         }
 
-        console.log("확인", props.state);
-        console.log("바아디",body)
+        
 
         // axios.post(props.getRouter, body)
         axios.get(props.state === 'myReport' ? props.getRouter + `?id=${localStorage.getItem('userId')}&page=${getPageNum()}`: props.getRouter + `/${getPageNum()}`)
             .then(response => {
                 if(response.data.success){
+                    console.log("response.data", response.data);
+
                     setList(response.data.data);
                     setTotal(response.data.count);
                 } else {

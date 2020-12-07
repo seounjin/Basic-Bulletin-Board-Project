@@ -13,7 +13,7 @@ const registerComment = async(req, res) => {
         const cnt = await getCount(postNum);
 
         //등록순으로 불러오기
-        const comment = await getComment(postNum, commentPage, maxComment);
+        const comment = await getComment(commentData);
 
 
         return res.status(200).json( {success: true , comment, commentCnt : cnt } );

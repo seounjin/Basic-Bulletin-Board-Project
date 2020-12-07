@@ -27,7 +27,7 @@ function PageList(props) {
                         pathname : `/boardform/${list.pNum}` 
                     }}>{ list.pNum }</Link> </td>
                     <td > { list.rContent } </td>
-                    <td style={{ width: '10%' }}> { list.fromId } </td>
+                    <td style={{ width: '10%' }}> { list.fromId.id } </td>
                     <td style={{ width: '10%' }}> { list.date } </td>
                     <td style={{ width: '10%' }}> <Button onClick={ (e) => props.deleteClick(list.pNum, e) }>삭제</Button> </td>
                 </tr>

@@ -58,10 +58,10 @@ function Report(props) {
             const body = {
                 pNum: board.boardContent.postnum,
                 rContent: ModalContent,
-                fromId: localStorage.getItem('userId'),
-                toId: board.boardContent.content[0].writer,
+                fromId: user.userData.id,
+                toId: board.boardContent.content._id,
                 date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                pContent: board.boardContent.content[0].pContent
+                pContent: board.boardContent.pContent
             }
             
             // 게시글 신고

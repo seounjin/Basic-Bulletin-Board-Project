@@ -6,8 +6,6 @@ const reportCommentDelete = async(req, res) => {
     try {
 
         const cGroupSquence = req.params.pNum;
-
-        console.log("aaaaaaaa", cGroupSquence);
         
         await deleteC(cGroupSquence);
 

@@ -8,7 +8,11 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 const crypto = require("crypto");
+const { myReportPost, myReportComment } = require('../controllers/mypage');
 
+
+router.get("/report/1", myReportPost);
+router.get("/report/2", myReportComment);
 
 router.post("/profile", async (req, res) => {
 
@@ -219,52 +223,52 @@ router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, 
 });
 
 
-router.get("/report/2", async(req, res) => {
+// router.get("/report/2", async(req, res) => {
         
-    const queryData = url.parse(req.url, true).query;
-    const fromId = queryData.id;
-    const currentPage = queryData.page
+//     const queryData = url.parse(req.url, true).query;
+//     const fromId = queryData.id;
+//     const currentPage = queryData.page
 
 
-    const maxComment = 10;
+//     const maxComment = 10;
 
-    const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportComment WHERE fromId=?";
+//     const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportComment WHERE fromId=?";
 
-    //pNum,content,from,to,date
-    const dataSql = "SELECT rNum, pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content, cGroupSquence FROM BulletinBoard.ReportComment WHERE fromId=? order by date, date limit ?, ?";
+//     //pNum,content,from,to,date
+//     const dataSql = "SELECT rNum, pNum, content, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content, cGroupSquence FROM BulletinBoard.ReportComment WHERE fromId=? order by date, date limit ?, ?";
 
-    const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
+//     const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
 
-    if (json.success){
-        return res.status(200).json(json);
-    } else {
-        return res.status(400).json(json);
-    }
+//     if (json.success){
+//         return res.status(200).json(json);
+//     } else {
+//         return res.status(400).json(json);
+//     }
 
-});
+// });
 
-router.get("/report/1", async(req, res) => {
+// router.get("/report/1", async(req, res) => {
     
-    const queryData = url.parse(req.url, true).query;
-    const fromId = queryData.id;
-    const currentPage = queryData.page
+//     const queryData = url.parse(req.url, true).query;
+//     const fromId = queryData.id;
+//     const currentPage = queryData.page
     
-    const maxComment = 10;
+//     const maxComment = 10;
 
-    const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportPost WHERE fromId=?";
+//     const countSql = "SELECT COUNT(fromId) as cnt FROM BulletinBoard.ReportPost WHERE fromId=?";
 
-    //pNum,content,from,to,date
-    const dataSql = "SELECT rNum, pNum, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content FROM BulletinBoard.ReportPost WHERE fromId=? order by date, date limit ?, ?";
+//     //pNum,content,from,to,date
+//     const dataSql = "SELECT rNum, pNum, rContent, fromId ,toId, date_format(date, '%y.%m.%d. %H:%i:%s') as date, content FROM BulletinBoard.ReportPost WHERE fromId=? order by date, date limit ?, ?";
 
-    const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
+//     const json = await Page(fromId, currentPage,maxComment, countSql, dataSql);
 
-    if (json.success){
-        return res.status(200).json(json);
-    } else {
-        return res.status(400).json(json);
-    }
+//     if (json.success){
+//         return res.status(200).json(json);
+//     } else {
+//         return res.status(400).json(json);
+//     }
 
-});
+// });
 
 router.delete("/report/3/:number", async (req, res) => {
 
