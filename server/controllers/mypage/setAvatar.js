@@ -1,13 +1,19 @@
-const { avatar } = require('./helpers');
+const { avatar }  = require('./helpers');
 
+// ./public/img/
 const setAvatar = async(req, res) => {
 
     try {
-        const info = await userProfile(req.body.id);
-        return res.status(200).json( { success: true, info: info } );
+
+        const userId = req.body.id;
+        const file = req.file.filename;
+
+        await avatar(userId, file);
+
+        return res.status(200).json( { success: true, file: file } );
 
     } catch (err) {
-        console.log("getProfile  ", err)
+        console.log("setAvatar  ", err)
         return res.status(400).json( { success: false, err } );
     }
 };

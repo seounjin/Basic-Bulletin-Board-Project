@@ -35,8 +35,21 @@ const removePost = async (postNum) => {
 const post = async (postNum) => {
 
     const temp = await Board.findOneAndUpdate( { postnum: postNum }, { $inc: { views: 1 } } );
-    
-    return temp;
+    const temp2 = await User.findOne( { id: temp.writer } );
+    //temp.avatar = temp2.avatar;
+    //console.log("post", temp);
+
+    const ret = {
+        title: temp.title,
+        writer: temp.writer,
+        content: temp.content,
+        views: temp.views,
+        date: temp.date,
+        favorite: temp.favorite,
+        avatar: temp2.avatar
+    }
+    console.log(ret);
+    return ret;
 };
 
 ////////////게시글의 전체 개수를 응답/////////////////
@@ -82,20 +95,9 @@ const createNewPost = async ({ writer, date, title, pContent }) => {
     // let Total = await Board.collection.countDocuments();
     //Total = Total + 1;
 
-    let Writer;
-    await User.findOne(
-        {_id: writer},
-        {},{new : true},
-        (err, doc) => {
-            if (err) {
-                console.log("createNewPost//User.findOne//err")
-            } else {
-                Writer = doc.id;
-            }
-        }
-    )
+    const user = await User.findOne({_id: writer});
 
-    const board = await new Board({ postnum : Total, title, writer : Writer, date, views : 0, favorite : 0, content : pContent });
+    const board = await new Board({ postnum : Total, title, writer : user.id, date, views : 0, favorite : 0, content : pContent });
     await board.save();
 
     return Total;

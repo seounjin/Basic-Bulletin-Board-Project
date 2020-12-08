@@ -4,8 +4,7 @@ const newPost = async(req, res) => { // 글쓴이, 날짜, 글제목, 글내용
 
     try {
         const boardInfo = req.body;
-        // const { writer, date, title, pContent } = boardInfo;
-
+        
         const postnum = await createNewPost(boardInfo);
 
         return res.status(200).json( { success: true, postNum: postnum } );
