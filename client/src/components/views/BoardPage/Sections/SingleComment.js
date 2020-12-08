@@ -158,7 +158,7 @@ function SingleComment(props) {
                     { props.comment.pComment ? <Comment
                         actions={actions}
                         author={<a> { props.comment.cWriter.id } </a>}
-                        avatar={<Avatar shape="square" size="large" src = {`${BASE_URL}/img/${props.comment.avatar}`} icon={ props.comment.avatar == null && <UserOutlined/>} /> }
+                        avatar={<Avatar shape="square" size="large" src = {`${BASE_URL}/img/${props.comment.cWriter.avatar}`} icon={ props.comment.avatar == null && <UserOutlined/>} /> }
                         content={
                             <span>
                                 { props.comment.gDepth >= 2 &&

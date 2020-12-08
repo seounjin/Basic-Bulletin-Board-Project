@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { userLogin, modifyPrivacy } = require('../models/User');
-const pool = require('../config/pool');
-const { Page } = require("../pagination/page"); 
+// const { userLogin, modifyPrivacy } = require('../models/User');
+// const pool = require('../config/pool');
+// const { Page } = require("../pagination/page"); 
 const multer = require('multer');
 const path = require('path');
-const url = require('url');
-const fs = require('fs');
-const crypto = require("crypto");
+// const url = require('url');
+// const fs = require('fs');
+// const crypto = require("crypto");
 
 const { 
         getProfile, 
@@ -16,8 +16,8 @@ const {
         myReportPost,
         myReportComment, 
         myReportPostCancel,
-        myReportCommentCancel
-
+        myReportCommentCancel,
+        setAvatar
 } = require('../controllers/mypage');
 
 router.get("/report/1", myReportPost);
@@ -28,6 +28,21 @@ router.delete("/report/4/:number", myReportCommentCancel);
 router.post("/profile", getProfile);
 router.post("/check", checkPassword);
 router.post("/change", changePrivacy);
+router.post("/user-post");
+
+const storage = multer.diskStorage({
+    destination: './public/img/',
+    filename: function(req, file, cb) {
+      cb(null, "imgfile" + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 }
+});
+
+router.post("/avatar", upload.single('img'), setAvatar);
 
 
 // router.post("/profile", async (req, res) => {
@@ -345,50 +360,50 @@ router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, 
 
 // });
 
-const storage = multer.diskStorage({
-    destination: './public/img/',
-    filename: function(req, file, cb) {
-        console.log("storage  req", req)
-        console.log("storage file", file)
-      cb(null, "imgfile" + Date.now() + path.extname(file.originalname));
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: './public/img/',
+//     filename: function(req, file, cb) {
+//         console.log("storage  req", req)
+//         console.log("storage file", file)
+//       cb(null, "imgfile" + Date.now() + path.extname(file.originalname));
+//     }
+// });
 
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1000000 }
-});
+// const upload = multer({
+//     storage: storage,
+//     limits: { fileSize: 1000000 }
+// });
 
-router.post("/avatar", upload.single('img'), async function(req, res, next) {
+// router.post("/avatar", upload.single('img'), async (req, res, next) => {
 
-    const userId = req.body.id;
+//     const userId = req.body.id;
     
-    const avatar = req.file.filename;
+//     const avatar = req.file.filename;
 
-    console.log("이미지",req.file.filename)
+//     console.log("이미지",req.file.filename)
 
-    const conn = await pool.getConnection();
+//     const conn = await pool.getConnection();
 
-    try {
+//     try {
 
-        await conn.beginTransaction();
+//         await conn.beginTransaction();
 
-        await conn.query("UPDATE `BulletinBoard`.`User` SET `avatar` = ? WHERE (`id` = ?)",[avatar, userId]);
+//         await conn.query("UPDATE `BulletinBoard`.`User` SET `avatar` = ? WHERE (`id` = ?)",[avatar, userId]);
 
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(200).json( { success: true, file: avatar } );
+//         return res.status(200).json( { success: true, file: avatar } );
     
-    } catch (err) {
+//     } catch (err) {
         
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(400).json( { success: false, err } );
-    }
-});
+//         return res.status(400).json( { success: false, err } );
+//     }
+// });
 
 module.exports = router;
