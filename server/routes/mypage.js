@@ -14,6 +14,7 @@ const { getProfile, checkPassword, changePrivacy } = require('../controllers/myp
 router.post("/profile", getProfile);
 router.post("/check", checkPassword);
 router.post("/change", changePrivacy);
+router.post("/user-post");
 
 
 // router.post("/profile", async (req, res) => {

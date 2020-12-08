@@ -1,4 +1,5 @@
 const Board = require('../../../models/Board');
+const Counter = require('../../../models/Counter');
 const User = require('../../../models/User');
 
 ////////////게시글 수정/////////////////
@@ -41,17 +42,46 @@ const post = async (postNum) => {
 ////////////게시글의 전체 개수를 응답/////////////////
 const totalPost = async () => {
 
-    Total = await Board.collection.countDocuments();
-    
+    // Total = await Board.collection.countDocuments();
+    //const temp = await Counter.findOne({kind: "board"});
+    //console.log(temp.total);
+
+    let temp = await Counter.collection.countDocuments();
+
+    let Total;
+    if (temp == 0) {
+        const counter = await new Counter({ total: 0, kind: "board" });
+        await counter.save();
+        Total = 0;
+    } else {
+        const temp = await Counter.findOne({kind: "board"});
+        Total = temp.total;
+    }
+
     return Total;
 };
 
 ////////////새로운 게시글 생성/////////////////
 const createNewPost = async ({ writer, date, title, pContent }) => {
 
-    Total = await Board.collection.countDocuments();
+    // let temp = await Counter.collection.countDocuments();
 
-    Total = Total + 1;
+    let Total;
+    const temp = await Counter.findOneAndUpdate({kind: "board"}, {$inc: {total: 1}});
+    Total = temp.total + 1;
+
+    // if (temp == 0) {
+    //     const counter = await new Counter({ total: 1, kind: "board" });
+    //     await counter.save();
+    //     Total = 1;
+    // } else {
+    //     const temp = await Counter.findOneAndUpdate({kind: "board"}, {$inc: {total: 1}});
+    //     Total = temp.total + 1;
+    // }
+
+    // let Total = await Board.collection.countDocuments();
+    //Total = Total + 1;
+
     let Writer;
     await User.findOne(
         {_id: writer},
