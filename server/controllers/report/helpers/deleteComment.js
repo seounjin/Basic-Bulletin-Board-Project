@@ -7,4 +7,10 @@ const deleteComment = async cGroupSquence => {
     
 };
 
-module.exports = { deleteComment };
+const deleteCommentId = async _id => {
+
+    await ReportComment.deleteOne({ "_id": _id});
+    
+};
+
+module.exports = { deleteComment, deleteCommentId };

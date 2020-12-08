@@ -2,10 +2,10 @@ const { findComment } = require('./findComment');
 const { saveComment } = require('./saveComment');
 const { savePost } = require('./savePost');
 const { commentPagenation } = require('./commentPagenation');
-const { deleteComment } = require('./deleteComment');
+const { deleteComment, deleteCommentId } = require('./deleteComment');
 const { findPost } = require('./findPost');
 const { postPagenation } = require('./postPagenation');
-const { delectPost } = require('./delectPost');
+const { delectPost, delectPostId } = require('./delectPost');
 
 
 module.exports = { findComment, 
@@ -14,5 +14,7 @@ module.exports = { findComment,
                     deleteComment,findPost, 
                     savePost,
                     postPagenation,
-                    delectPost
+                    delectPost,
+                    delectPostId,
+                    deleteCommentId
                 };

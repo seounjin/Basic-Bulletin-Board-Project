@@ -40,9 +40,9 @@ function PageList(props) {
                     }}>{ list.pNum }</Link> </td>
                     <td style={{ width: '50%' }}> { list.content } </td>
                     <td yle={{ width: '20%' }}> { list.rContent } </td>
-                    <td style={{ width: '5%' }}> { list.toId } </td>
+                    <td style={{ width: '5%' }}> { list.toId.writer ? list.toId.writer : list.toId.id} </td>
                     <td style={{ width: '10%' }}> { list.date } </td>
-                    <td style={{ width: '5%' }}> <Button onClick={ (e) => props.deleteClick(list.rNum, e) }> 취소 </Button> </td>
+                    <td style={{ width: '5%' }}> <Button onClick={ (e) => props.deleteClick(list._id, e) }> 취소 </Button> </td>
                 </tr>
         
         } 

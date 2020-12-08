@@ -8,20 +8,26 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 const crypto = require("crypto");
-const { myReportPost, myReportComment } = require('../controllers/mypage');
 
-const { getProfile, checkPassword, changePrivacy } = require('../controllers/mypage');
+const { 
+        getProfile, 
+        checkPassword, 
+        changePrivacy, 
+        myReportPost,
+        myReportComment, 
+        myReportPostCancel,
+        myReportCommentCancel
 
-<<<<<<< HEAD
+} = require('../controllers/mypage');
+
 router.get("/report/1", myReportPost);
 router.get("/report/2", myReportComment);
+router.delete("/report/3/:number", myReportPostCancel);
+router.delete("/report/4/:number", myReportCommentCancel);
 
-router.post("/profile", async (req, res) => {
-=======
 router.post("/profile", getProfile);
 router.post("/check", checkPassword);
 router.post("/change", changePrivacy);
->>>>>>> 7ef2522b3b25393625174d11d7d8d9145caa44ce
 
 
 // router.post("/profile", async (req, res) => {
@@ -179,9 +185,6 @@ router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, 
     if ( req.body.type === '게시물') {
         type = true;
     }
-
-    const conn = await pool.getConnection();
-
     try {
         await conn.beginTransaction();
 
@@ -280,67 +283,67 @@ router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, 
 
 // });
 
-router.delete("/report/3/:number", async (req, res) => {
+// router.delete("/report/3/:number", async (req, res) => {
 
-    console.log("/report/3/:number\n", req.params.number)
+//     console.log("/report/3/:number\n", req.params.number)
 
-    const rNum = req.params.number;
+//     const rNum = req.params.number;
     
-    const conn = await pool.getConnection();
+//     const conn = await pool.getConnection();
 
-    try {
+//     try {
 
-        await conn.beginTransaction();
+//         await conn.beginTransaction();
 
-        await conn.query("DELETE FROM `BulletinBoard`.`ReportPost` WHERE (`rNum` = ?)",[rNum]);
+//         await conn.query("DELETE FROM `BulletinBoard`.`ReportPost` WHERE (`rNum` = ?)",[rNum]);
 
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(200).json( { success: true } );
+//         return res.status(200).json( { success: true } );
     
-    } catch (err) {
+//     } catch (err) {
         
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(400).json( { success: false, err } );
-    }
+//         return res.status(400).json( { success: false, err } );
+//     }
 
-});
+// });
 
-router.delete("/report/4/:number", async (req, res) => {
+// router.delete("/report/4/:number", async (req, res) => {
 
-    console.log("/report/4/:number\n", req.params.number)
+//     console.log("/report/4/:number\n", req.params.number)
 
-    const rNum = req.params.number;
+//     const rNum = req.params.number;
     
-    const conn = await pool.getConnection();
+//     const conn = await pool.getConnection();
 
-    try {
+//     try {
 
-        await conn.beginTransaction();
+//         await conn.beginTransaction();
 
-        await conn.query("DELETE FROM `BulletinBoard`.`ReportComment` WHERE (`rNum` = ?)",[rNum]);
+//         await conn.query("DELETE FROM `BulletinBoard`.`ReportComment` WHERE (`rNum` = ?)",[rNum]);
 
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(200).json( { success: true } );
+//         return res.status(200).json( { success: true } );
     
-    } catch (err) {
+//     } catch (err) {
         
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.status(400).json( { success: false, err } );
-    }
+//         return res.status(400).json( { success: false, err } );
+//     }
 
-});
+// });
 
 const storage = multer.diskStorage({
     destination: './public/img/',

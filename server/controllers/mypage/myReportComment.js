@@ -1,4 +1,5 @@
-const { getComment } = require('../comment/helpers');
+const { commentPagenation } = require('../report/helpers');
+const url = require('url');
 
 
 const myReportComment = async(req, res) => {
@@ -10,8 +11,9 @@ const myReportComment = async(req, res) => {
         const commentPage = queryData.page
         const maxComment = 10;
 
-        const data = await getComment({commentPage,maxComment,fromId});
+        const data = await commentPagenation(commentPage,maxComment,fromId);
         
+        console.log("commentPagenation", data);
 
         return res.status(200).json( {success: true , data, count : data.length });
 

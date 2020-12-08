@@ -7,4 +7,10 @@ const delectPost = async pNum => {
     
 };
 
-module.exports = { delectPost };
+const delectPostId = async _id => {
+
+    await ReportPost.deleteOne({ "_id": _id});
+    
+};
+
+module.exports = { delectPost, delectPostId };

@@ -20,7 +20,7 @@ const reportPostSchema = mongoose.Schema({
     },
     toId: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Board'
     },
     date: {
         type: Date, 

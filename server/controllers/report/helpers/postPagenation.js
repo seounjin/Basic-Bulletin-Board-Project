@@ -1,14 +1,16 @@
-const ReportPost = require('../../../models/ReportPost')
+const ReportPost = require('../../../models/ReportPost');
 
-const postPagenation = async(currentPage, maxComment, fromId=null) => {
+const postPagenation = async(currentPage, maxComment,fromId=null) => {
     
-    console.log("fromId", fromId );
 
-    const result = await ReportPost.find()
-                                    .populate('fromId','-password -token -email -role -_id')
+    const id = fromId ? 'toId': 'fromId';
+    const option = fromId ? 'writer': '-password -token -email -role -_id';
+
+    const result = await ReportPost.find(fromId && {"fromId":fromId} )
+                                    .populate(id, option)
                                     .skip((currentPage - 1) * maxComment)
                                     .limit(maxComment);
-
+    
     return result;
 
 };

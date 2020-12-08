@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { auth } from '../_actions/user_actions';
 import axios from 'axios';
 
@@ -12,7 +12,8 @@ export default function(SpecificComponent, option, adminRoute = null) {
     //false => 로그인한 유저는 출입 불가능한 페이지
     function AuthenticationCheck(props) {
 
-        const dispatch = useDispatch()
+        const dispatch = useDispatch();
+        let user = useSelector(state => state.user);
 
         useEffect(() => {
 
@@ -58,7 +59,7 @@ export default function(SpecificComponent, option, adminRoute = null) {
 
         }, [])
 
-        return <SpecificComponent />
+        return (<SpecificComponent {...props} user={user}/>)
 
     }
 
