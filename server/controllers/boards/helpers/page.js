@@ -4,8 +4,12 @@ const Board = require('../../../models/Board');
 const page = async ({ keyword, currentPage, PageSize }) => {
 
     //// 페이지네이션 ////
-    
-    return Total;
+
+    const board = await Board.find(keyword && {"title":  { $regex: keyword, $options: 'i' } })
+                             .skip((currentPage - 1) * PageSize)
+                             .limit(PageSize);
+    return board;
+
 };
 
 module.exports = { page };

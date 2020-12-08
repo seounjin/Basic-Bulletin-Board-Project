@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const BoardSchema = mongoose.Schema({
     postnum: {
         type: Number,
-        unique: 1
     },
     title: {
         type: String,

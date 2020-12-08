@@ -11,6 +11,7 @@ function Page(props) {
     const [List, setList] = useState([]);
     const [Total, setTotal] = useState(0);
 
+
     const getPageNum = () => {
 
         const { search } = props.location;
@@ -27,29 +28,13 @@ function Page(props) {
 
 
     useEffect(() => {
-
-        let body = {};
-
-
-        if (props.state === 'myReport'){
-            body = {
-                id: localStorage.getItem('userId'),
-                currentPage: getPageNum()
-            }
-
-        } else {
-            body = {
-                currentPage: getPageNum()
-            }
-        }
-
-        console.log("확인", props.state);
-        console.log("바아디",body)
-
-        // axios.post(props.getRouter, body)
-        axios.get(props.state === 'myReport' ? props.getRouter + `?id=${localStorage.getItem('userId')}&page=${getPageNum()}`: props.getRouter + `/${getPageNum()}`)
-            .then(response => {
+        
+        // axios.get(props.state === 'myReport' ? props.getRouter + `?id=${localStorage.getItem('userId')}&page=${getPageNum()}`: props.getRouter + `/${getPageNum()}`)
+        axios.get(props.state === 'myReport' ? props.getRouter + `?id=${props.userId}&page=${getPageNum()}`: props.getRouter + `/${getPageNum()}`)
+        .then(response => {
                 if(response.data.success){
+                    console.log("response.data", response.data);
+
                     setList(response.data.data);
                     setTotal(response.data.count);
                 } else {
@@ -66,12 +51,10 @@ function Page(props) {
         // comment: cGroupSquence
         // Post: pNum
         
-        const body = {
-            data: parseInt(data)
-        }
-
+       
+        console.log("aaaaaaa",data);
         // axios.post(props.deleteRouter, body)
-        axios.delete(props.deleteRouter + `/${parseInt(data)}`)  
+        axios.delete(props.deleteRouter + `/${data}`)  
             .then(response => {
                 if(response.data.success){
                     switch(props.state) {
@@ -84,7 +67,7 @@ function Page(props) {
                             alert("삭제되었습니다.")
                             break;
                         case 'myReport':
-                            setList(List.filter(list => list.rNum !== data));
+                            setList(List.filter(list => list._id !== data));
                             alert("취소되었습니다.")
                             break;
                     }

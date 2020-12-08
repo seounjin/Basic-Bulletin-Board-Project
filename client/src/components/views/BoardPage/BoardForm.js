@@ -51,7 +51,7 @@ function BoardForm(props) { //title, writer, views, favorite, 보드 페이지 �
     };
     
     const requestComment = (commentBody) => {
-
+        
         if (RegisterComment){
                dispatch(getComment(commentBody))
                .then(response =>{

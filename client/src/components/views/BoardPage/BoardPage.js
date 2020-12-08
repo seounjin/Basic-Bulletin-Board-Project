@@ -62,8 +62,8 @@ function BoardPage(props) {
             .then(response =>{
                 if (response.payload.success){
                     setList(response.payload.boardList);
-                    setTotal(response.payload.pageData.totalPage);
-                    setKeyWord(response.payload.pageData.keyWord);
+                    setTotal(response.payload.totalPage);
+                    setKeyWord(response.payload.keyWord);
                     window.scrollTo(0, 0);
                 } else {
                     alert('게시판 정보를 가져오는데 실패했습니다.');
@@ -94,13 +94,13 @@ function BoardPage(props) {
             .then(response =>{
             if (response.payload.success){
                 setList(response.payload.boardList);
-                setTotal(response.payload.pageData.totalPage)
+                setTotal(response.payload.totalPage)
                 
                 if (!getKeyword()) {
                     props.history.push(`${current}?list_num=${pageSize}`)
                 } else {
                     props.history.push(`${current}?list_num=${pageSize}&keyword=${getKeyword()}`)
-                    setKeyWord(response.payload.pageData.keyWord);
+                    setKeyWord(response.payload.keyWord);
                 }
                 window.scrollTo(0, 0)
             } else {
@@ -130,7 +130,7 @@ function BoardPage(props) {
         .then(response =>{
             if (response.payload.success){
                 setList(response.payload.boardList);
-                setTotal(response.payload.pageData.totalPage);
+                setTotal(response.payload.totalPage);
                 window.scrollTo(0, 0);
 
                 if (!getKeyword()) {
@@ -145,7 +145,7 @@ function BoardPage(props) {
                 else {
                     //alert(KeyWord)
                     props.history.push(`${page}?list_num=${getPageSize()}&keyword=${getKeyword()}`)
-                    setKeyWord(response.payload.pageData.keyWord);
+                    setKeyWord(response.payload.keyWord);
                 }
 
             } else {
@@ -166,7 +166,7 @@ function BoardPage(props) {
             .then(response =>{
                 if (response.payload.success){
                     setList(response.payload.boardList);
-                    setTotal(response.payload.pageData.totalPage)
+                    setTotal(response.payload.totalPage)
                     window.scrollTo(0, 0)
                 } else {
                     alert('게시판 정보를 가져오는데 실패했습니다.')
@@ -194,9 +194,9 @@ function BoardPage(props) {
             .then(response =>{
                 if (response.payload.success){
                     setList(response.payload.boardList);
-                    setTotal(response.payload.pageData.totalPage)
+                    setTotal(response.payload.totalPage)
                     props.history.push(`1?list_num=${getPageSize()}&keyword=${value}`)
-                    setKeyWord(response.payload.pageData.keyWord);
+                    setKeyWord(response.payload.keyWord);
                     window.scrollTo(0, 0)
                 } else {
                     alert('게시판 정보를 가져오는데 실패했습니다.')
@@ -214,7 +214,7 @@ function BoardPage(props) {
                     [props.match.params.pageNum]
             }}>{ list.title }</Link></td>
             <td>{ list.writer }</td>
-            <td>{ list.d }</td>
+            <td>{ list.date }</td>
             <td>{ list.views }</td>
             <td>{ list.favorite }</td>
         </tr>

@@ -8,8 +8,7 @@ function MyReport(props) {
 
     const [Report, setReport] = useState(1);
     const [Cancel, setCancel] = useState(3);
-
-
+    
     const handleMenuClick = (event) => {
 
         if (event.key === '1'){
@@ -48,8 +47,11 @@ function MyReport(props) {
               </Dropdown>  
             </div>
             
+            {props.user.userData && 
+              <Page getRouter={'/api/mypage/report/' + Report} deleteRouter={'/api/mypage/report/' + Cancel} state={'myReport'} userId={props.user.userData.id}></Page>
+            }
 
-            <Page getRouter={'/api/mypage/report/' + Report} deleteRouter={'/api/mypage/report/' + Cancel} state={'myReport'} ></Page>
+            {/* <Page getRouter={'/api/mypage/report/' + Report} deleteRouter={'/api/mypage/report/' + Cancel} state={'myReport'} userId={props.user.userData.id}></Page> */}
 
         </div>
     )

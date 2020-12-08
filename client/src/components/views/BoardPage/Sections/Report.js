@@ -25,6 +25,7 @@ function Report(props) {
         // 글번호, 신고사유, 신고한 아이디,신고당한 아이디, 신고 date
         
         if (props.comment){ 
+            console.log("확확인인", props.cGroupSquence);
             
             const body = {
                 pNum: board.boardContent.postnum,
@@ -54,14 +55,13 @@ function Report(props) {
 
 
         } else {
-
             const body = {
                 pNum: board.boardContent.postnum,
                 rContent: ModalContent,
-                fromId: localStorage.getItem('userId'),
-                toId: board.boardContent.content[0].writer,
+                fromId: user.userData.id,
+                toId: board.boardContent.content._id,
                 date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                pContent: board.boardContent.content[0].pContent
+                content: board.boardContent.content.content
             }
             
             // 게시글 신고
