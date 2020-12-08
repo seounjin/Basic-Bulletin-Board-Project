@@ -3,11 +3,12 @@ const router = express.Router();
 const { registerUser, login, logout, tokenRequest, userState } = require('../controllers/users');
 const { auth } = require("../middleware/auth");
 const { publicKey } = require("../controllers/auth");
+const { validateLogin, validateRegister } = require('../controllers/users/validators');
 
 
-router.post("/register", registerUser);
+router.post("/register", validateRegister, registerUser);
 
-router.post("/login", login);
+router.post("/login", validateLogin, login);
 
 router.get("/logout", auth, logout);
 

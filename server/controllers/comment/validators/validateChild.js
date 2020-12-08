@@ -1,5 +1,5 @@
 const { validateResult} = require('../../../middleware/validateResult');
-const { check } = require('express-validator')
+const { check } = require('express-validator');
 
 
 const validateChild = [

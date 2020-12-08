@@ -9,14 +9,15 @@ const { reportComment,
     
     } = require('../controllers/report');
 
+const { validatePost, validateComment } = require('../controllers/report/validators');
 
-router.post("/comment", reportComment);
+router.post("/comment", validateComment, reportComment);
 
 router.get("/comment/:page", getReportComment);
 
 router.delete("/comment/1/:pNum", reportCommentDelete);
 
-router.post("/post", reportPost);
+router.post("/post", validatePost, reportPost);
 
 router.get("/post/:page", getReportPost);
 
