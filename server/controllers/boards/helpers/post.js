@@ -48,7 +48,7 @@ const post = async (postNum) => {
         favorite: temp.favorite,
         avatar: temp2.avatar
     }
-    console.log(ret);
+    //console.log(ret);
     return ret;
 };
 

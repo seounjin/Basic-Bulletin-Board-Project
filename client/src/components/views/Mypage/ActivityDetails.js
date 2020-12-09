@@ -133,7 +133,7 @@ function ActivityDetails(props) {
                 pathname : `/boardform/${list.postnum}` 
             }}>{ list.title }</Link></td>
             <td style={{ width: '20%' }}>{ list.writer }</td>
-            <td style={{ width: '10%' }}>{ list.d }</td>
+            <td style={{ width: '10%' }}>{ list.date }</td>
             <td style={{ width: '10%' }}>{ list.views }</td>
             <td style={{ width: '10%' }}>{ list.favorite }</td>
         </tr>

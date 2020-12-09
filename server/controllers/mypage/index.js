@@ -6,7 +6,9 @@ const { myReportPost } = require('./myReportPost');
 const { myReportComment } = require('./myReportComment');
 const { myReportPostCancel } = require('./myReportPostCancel');
 const { myReportCommentCancel } = require('./myReportCommentCancel');
+const { getUserPost } = require('./getUserPost');
 
 module.exports = {
-    getProfile, checkPassword, changePrivacy, myReportPost, myReportComment,myReportPostCancel, myReportCommentCancel, setAvatar
+    getProfile, checkPassword, changePrivacy, myReportPost, myReportComment,myReportPostCancel, 
+    myReportCommentCancel, setAvatar, getUserPost
 };

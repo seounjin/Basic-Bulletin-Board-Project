@@ -17,7 +17,8 @@ const {
         myReportComment, 
         myReportPostCancel,
         myReportCommentCancel,
-        setAvatar
+        setAvatar,
+        getUserPost
 } = require('../controllers/mypage');
 
 router.get("/report/1", myReportPost);
@@ -28,7 +29,7 @@ router.delete("/report/4/:number", myReportCommentCancel);
 router.post("/profile", getProfile);
 router.post("/check", checkPassword);
 router.post("/change", changePrivacy);
-router.post("/user-post");
+router.post("/user-post", getUserPost);
 
 const storage = multer.diskStorage({
     destination: './public/img/',
@@ -190,65 +191,65 @@ router.post("/avatar", upload.single('img'), setAvatar);
 
 // });
 
-router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, type, id
+// router.post("/user-post", async (req, res) => {// body : currentPage, pageSize, type, id
 
-    const currentPage = parseInt(req.body.currentPage);
+//     const currentPage = parseInt(req.body.currentPage);
 
-    const maxPost = req.body.pageSize;
+//     const maxPost = req.body.pageSize;
 
-    let type = false;
-    if ( req.body.type === '게시물') {
-        type = true;
-    }
-    try {
-        await conn.beginTransaction();
+//     let type = false;
+//     if ( req.body.type === '게시물') {
+//         type = true;
+//     }
+//     try {
+//         await conn.beginTransaction();
 
-        let totalPost;
-        let activityList;
+//         let totalPost;
+//         let activityList;
 
-        if (type) { //post를 원하는 경우
+//         if (type) { //post를 원하는 경우
 
-            //해당 아이디의 post 수를 받는 쿼리 작성.
-            [totalPost] = await conn.query("SELECT count(*) as cnt FROM BulletinBoard.PostInfo where writer = ?", [req.body.id]);
-            //해당 아이디의 post의 정보를 가져오는 쿼리 작성.
-            [activityList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo where writer = ? order by date desc limit ?, ?", [req.body.id, (currentPage - 1) * maxPost, maxPost]);
-        }
-        else { // comment 관련 post를 원하는 경우.
+//             //해당 아이디의 post 수를 받는 쿼리 작성.
+//             [totalPost] = await conn.query("SELECT count(*) as cnt FROM BulletinBoard.PostInfo where writer = ?", [req.body.id]);
+//             //해당 아이디의 post의 정보를 가져오는 쿼리 작성.
+//             [activityList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo where writer = ? order by date desc limit ?, ?", [req.body.id, (currentPage - 1) * maxPost, maxPost]);
+//         }
+//         else { // comment 관련 post를 원하는 경우.
             
-            //해당 아이디의 comment관련 post 수를 받는 쿼리.
-            [totalPost] = await conn.query("SELECT count(distinct pNum) as cnt FROM BulletinBoard.Comment where cWriter = ?", [req.body.id]);
-            //SELECT count(distinct pNum) as cn FROM BulletinBoard.Comment where cWriter = ?
-            [activityList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo where postnum = ANY(SELECT pNum FROM BulletinBoard.Comment where cWriter = ? group by pNum) order by date desc limit ?, ?", [req.body.id, (currentPage - 1) * maxPost, maxPost]);
-        }
+//             //해당 아이디의 comment관련 post 수를 받는 쿼리.
+//             [totalPost] = await conn.query("SELECT count(distinct pNum) as cnt FROM BulletinBoard.Comment where cWriter = ?", [req.body.id]);
+//             //SELECT count(distinct pNum) as cn FROM BulletinBoard.Comment where cWriter = ?
+//             [activityList] = await conn.query("SELECT postnum, title, writer, date_format(date, '%y.%m.%d') as d, views, favorite FROM BulletinBoard.PostInfo where postnum = ANY(SELECT pNum FROM BulletinBoard.Comment where cWriter = ? group by pNum) order by date desc limit ?, ?", [req.body.id, (currentPage - 1) * maxPost, maxPost]);
+//         }
 
-        const pageData = {
-            totalPage : totalPost[0].cnt
-        }
+//         const pageData = {
+//             totalPage : totalPost[0].cnt
+//         }
 
-        console.log("totalPost", pageData);
+//         console.log("totalPost", pageData);
 
-        console.log("activityList", activityList);
+//         console.log("activityList", activityList);
 
-        await conn.commit();
+//         await conn.commit();
 
-        conn.release();
+//         conn.release();
 
-        // console.log("pageData", pageData);
+//         // console.log("pageData", pageData);
 
-        return res.status(200).json( {success: true , activityList, pageData}  );
+//         return res.status(200).json( {success: true , activityList, pageData}  );
     
-    } catch (err) {
+//     } catch (err) {
 
-        //console.log("에러출력", err);
+//         //console.log("에러출력", err);
 
-        conn.rollback();
+//         conn.rollback();
 
-        conn.release();
+//         conn.release();
 
-        return res.json( { success: false, err } );
-    }
+//         return res.json( { success: false, err } );
+//     }
 
-});
+// });
 
 
 // router.get("/report/2", async(req, res) => {
