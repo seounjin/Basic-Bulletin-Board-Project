@@ -7,6 +7,7 @@ pool.js
 uploads
 
 keys
-# public
+
+public/img
 
 dev.js

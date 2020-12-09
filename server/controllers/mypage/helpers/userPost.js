@@ -59,7 +59,8 @@ const userComment = async (info) => {
             }
         },
         { $limit: info.pageSize },
-	    { $skip: (info.currentPage - 1) * info.pageSize }
+        { $skip: (info.currentPage - 1) * info.pageSize },
+        { $sort: { date : -1 } }
     ]);
     console.log("userComment\n",total);
     return total;
