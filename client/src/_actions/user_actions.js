@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-    LOGIN_USER, REGISTER_USER, AUTH_USER
+    LOGIN_USER, REGISTER_USER, AUTH_USER, CHECK_ID
 } from './types'
 
 export function loginUser(dataToSubmit) {
@@ -32,6 +32,17 @@ export function auth() {
 
     return {
         type: AUTH_USER,
+        payload: request
+    }
+}
+
+export function getId(userId) {
+
+    const request = axios.post('/api/user/check', userId)
+        .then(response => response.data)
+
+    return {
+        type: CHECK_ID,
         payload: request
     }
 }

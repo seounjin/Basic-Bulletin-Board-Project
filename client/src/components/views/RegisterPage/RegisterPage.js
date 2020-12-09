@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/user_actions';
 import { withRouter } from 'react-router-dom'
 import { encryptPassword } from '../../api/index';
-
+import CheckId from './Sections/CheckId'
 
 function RegisterPage(props) {
 
@@ -29,6 +29,10 @@ function RegisterPage(props) {
 
     const onConfirmPasswordHandler = (event) => {
         setConfirmPassword(event.currentTarget.value);
+    }
+
+    const availableId = (id) => {
+        setId(id);
     }
 
     // 아이디 중복체크 추가해야함
@@ -97,21 +101,34 @@ function RegisterPage(props) {
                 onSubmit={onSubmitHandler}
             >
                 <label>I D</label>
-                <input type="id" value={Id} onChange={onIdHandler} />
+                <div>
+                    <input type="id" value={Id} onChange={onIdHandler} disabled/>
+                    <CheckId availableId={availableId}></CheckId>
+                </div>
 
                 <label>Password</label>
-                <input type="password" value={Password} onChange={onPasswordHandler} />
+                <div style={{flexGrow:'0'}}>
+                    <input type="password" value={Password} onChange={onPasswordHandler} />
+                </div>
 
                 <label>Confirm Password</label>
-                <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} />
+                <div style={{flexGrow:'0'}}>
+                    <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} />
+                </div>
 
                 <label>Email</label>
-                <input type="email" value={Email} onChange={onEmailHandler} />
+                <div style={{flexGrow:'0'}}>
+                    <input type="email" value={Email} onChange={onEmailHandler} />
+                </div>
 
                 <br />
-                <button type="submit">
-                    회원 가입
-                </button>
+                
+                <div >
+                    <button type="submit">
+                        회원 가입
+                    </button>
+                </div>
+
             </form>
         </div>
     )
