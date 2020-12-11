@@ -3,7 +3,7 @@
 
 - 사용스택: JavaScript, NodeJS - Express FrameWork, React, Redux, MongoDB, Ant Design
 - 개발환경: Ubuntu
-- 개발도구: Visual Studio Code, WorkBench
+- 개발도구: Visual Studio Code
 - 프로젝트기간: 20. 05 ~ 20. 06
 - 프로젝트인원: 2명
 
