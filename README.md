@@ -1,7 +1,7 @@
 서버-클라이언트 웹애플리케이션
 ===        
 
-- 사용스택: JavaScript, NodeJS - Express FrameWork, React, Redux, MySql, Ant Design
+- 사용스택: JavaScript, NodeJS - Express FrameWork, React, Redux, MongoDB, Ant Design
 - 개발환경: Ubuntu
 - 개발도구: Visual Studio Code, WorkBench
 - 프로젝트기간: 20. 05 ~ 20. 06
