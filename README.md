@@ -17,20 +17,20 @@
 	+ Node.js Express 기반 REST API 개발  
 	+ 로그인 처리  
 		+ 사용자 로그인을 처리할시 password를 비대칭 암호화 방식을 사용하여 데이터 전달  
-		+ 클라이언트에서 로그인 요청시 전달받은 crypto 모듈로 암호화된 password를 서버에 있는 개인키를 사용하여 복호화 한다음 db에 저장되있는 password와 비교함  
+		+ 클라이언트에서 로그인 요청시 전달받은 crypto 모듈로 암호화된 password를 서버에 있는 개인키를 사용하여 복호화 한다음 DB에 저장되있는 password와 비교함  
 		+ 클라이언트에서 회원등록 요청시 공개키 전달
 	+ 사용자 인증  
 		+ Access Token과 Refresh Token의 인증 방식을 사용함  
-		+ Access Token과 Refresh Token은 쿠키에 저장 하며 RefreshToken은 db에 저장  
+		+ Access Token과 Refresh Token은 쿠키에 저장 하며 RefreshToken은 DB에 저장  
 		+ Access Token이 만료 되었을때 클라이언트에 정보를 알려주며 Token 요청시 쿠키에있는 RefreshToken과 db에 있는 RefreshToken을 비교하여 검증이 되었을시 새로운 Access Token을 발급해줌  
-		+ 로그아웃 요청시 쿠키에 있는 Token과 db에있는 RefreshToken제거  
+		+ 로그아웃 요청시 쿠키에 있는 Token과 DB에있는 RefreshToken제거  
 	+ 미들웨어  
 		+ Access Token을 사용하여 사용자 인증  
 		+ 클라이언트에서 보내는 데이터를 express-validator 모듈을 사용하여 유효성 검증 
 		
 		
 		
-  + ### 클라이언트    
++ ### 클라이언트    
        
        서버에 정보를 요청하는 페이지는 응답 받은 정보를 화면에 보임.
 
